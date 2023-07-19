@@ -54,6 +54,44 @@ namespace FrontierIsland
         public static Vector3Int origin;
 #endif
 
+        /// <summary>
+        /// Thread safe path finding with A* algorithm.
+        /// 
+        /// <br>
+        /// Centers a search grid of size <see cref="PathRequest.gridSize"/> around <see cref="PathRequest.start"/>
+        /// </br>
+        /// <br>
+        /// and clamps the grid within <see cref="Terrain"/> boundaries.
+        /// </br>
+        /// 
+        /// <para>
+        /// Calls <paramref name="callback"/> on exit.
+        /// 
+        /// <br>
+        /// Exits if path is found, sending results in <see cref="PathResult.path"/> and <see cref="PathResult.success"/> = <see langword="true"/>
+        /// </br>
+        /// 
+        /// <br>
+        /// Exits if path is *NOT* found, with 0 length <see cref="PathResult.path"/> and <see cref="PathResult.success"/> = <see langword="false"/>
+        /// </br>
+        /// </para>
+        /// 
+        /// <para>
+        /// <br>
+        /// NOTE1: Path finder ignores walkabilty on the end node such that it can support 
+        /// </br>
+        /// <br>
+        /// pathing to spcific block rather than just pathing to empty space.
+        /// </br>
+        /// </para>
+        /// 
+        /// <para>
+        /// NOTE2: <see cref="PathRequest.end"/> will be clamped onto the search grid
+        /// </para>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="callback"></param>
         public static void FindPath(PathRequest request, Action<PathResult> callback)
         {
             Vector3Int start = request.start, end = request.end;
@@ -62,6 +100,7 @@ namespace FrontierIsland
             if (!Terrain.Instance.WithinBounds(end.x, end.z)
                 || !Terrain.Instance.WithinBounds(start.x, start.z))
             {
+                // invalid start or end
                 callback(new PathResult(Array.Empty<Vector3Int>(), false, request.callback, request));
                 return;
             }
@@ -76,12 +115,6 @@ namespace FrontierIsland
 
             end.x = Mathf.Clamp(end.x, origin.x, origin.x + gridSizeX - 1);
             end.z = Mathf.Clamp(end.z, origin.z, origin.z + gridSizeZ - 1);
-
-            if (!Terrain.Instance.Walkable(end.x, end.z))
-            {
-                callback(new PathResult(Array.Empty<Vector3Int>(), false, request.callback, request));
-                return;
-            }
 
             if (request.Cancelled) return;
             Node[,] grid            = new Node[gridSizeX, gridSizeZ];
@@ -115,6 +148,7 @@ namespace FrontierIsland
 
                 if (currentNode == endNode)
                 {
+                    // path found
                     List<Node> path = RetracePath(startNode, currentNode);
                     callback(new PathResult(SimplifyPath(path, origin), true, request.callback, request));
                     return;
@@ -142,6 +176,9 @@ namespace FrontierIsland
                     }
                 }
             }
+
+            // did not find path
+            callback(new PathResult(Array.Empty<Vector3Int>(), false, request.callback, request));
         }
 
         private static List<Node> RetracePath(Node startNode, Node endNode)
@@ -161,7 +198,8 @@ namespace FrontierIsland
         {
             List<Vector3Int> waypoints = new List<Vector3Int>();
             Vector2 directionOld = Vector2.zero;
-            for (int i = 1; i < path.Count; i++)
+            waypoints.Add(origin + new Vector3Int(path[0].x, 0, path[0].z));
+            for (int i = 2; i < path.Count; i++)
             {
                 Vector2 directionNew = new Vector2(path[i - 1].x - path[i].x, path[i - 1].z - path[i].z);
                 if (directionNew != directionOld)
@@ -171,6 +209,7 @@ namespace FrontierIsland
                 directionOld = directionNew;
             }
 
+            //// Adds all nodes, no simplification
             //for (int i = 0; i < path.Count; ++i)
             //{
             //    waypoints.Add(origin + new Vector3Int(path[i].x, 0, path[i].z));

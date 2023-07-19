@@ -1,6 +1,7 @@
 using NBT.Tags;
 using UnityEngine;
 using System.Collections;
+using System;
 
 namespace FrontierIsland
 {
@@ -131,26 +132,34 @@ namespace FrontierIsland
                 pathRequest.Cancel();
             }
 
-            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), targetPos, 32, PathCallback);
+            Action<Vector3Int[], bool> callback = (Vector3Int[] path, bool success) =>
+            {
+                if (path.Length > 0)
+                {
+                    this.path = path;
+                    ActionLoop = TraversePath(path);
+                }
+            };
+
+            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), targetPos, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }
 
-        protected virtual void PathCallback(Vector3Int[] path, bool success)
-        {
-            if (path.Length > 0)
-            {
-                this.path = path;
-                ActionLoop = TraversePath(path);
-            }
-        }
-
         protected virtual IEnumerator TraversePath(Vector3Int[] path)
         {
-            for (int i = 0; i < path.Length; ++i)
+            if (path.Length <= 0) yield break;
+            for (int i = 0; i < path.Length - 1; ++i)
             {
                 yield return MoveTo(path[i], MoveSpeed);
             }
+
+            // Path finder ignores walkabilty on the end node such that it can support entities
+            // pathing to block rather than just pathing to empty space.
+            // This means we must check if last waypoint/node is walkable.
+            Vector3Int lastWaypoint = path[path.Length - 1];
+            if (Terrain.Instance.Walkable(lastWaypoint.x, lastWaypoint.z))
+                yield return MoveTo(lastWaypoint, MoveSpeed);
         }
 
         private void OnDrawGizmos()

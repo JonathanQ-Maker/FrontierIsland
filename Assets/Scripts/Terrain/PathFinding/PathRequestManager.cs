@@ -31,6 +31,7 @@ namespace FrontierIsland
 
         void Update()
         {
+            // constantly check for finished path requests
             if (results.Count > 0)
             {
                 int itemsInQueue = results.Count;
@@ -49,6 +50,10 @@ namespace FrontierIsland
             }
         }
 
+        /// <summary>
+        /// Starts a new thread to compute resolve <paramref name="request"/>
+        /// </summary>
+        /// <param name="request"></param>
         public static void RequestPath(PathRequest request)
         {
             Task.Run(() => PathFinding.FindPath(request, Instance.FinishedProcessingPath));
@@ -71,7 +76,7 @@ namespace FrontierIsland
             foreach (PathFinding.Node node in PathFinding.grid)
             {
                 if (node != null)
-                    Gizmos.DrawCube(new Vector3Int(node.x, 0, node.z) + PathFinding.origin, new Vector3(0.5f, 0.5f, 0.5f));
+                    Gizmos.DrawCube(new Vector3Int(node.x, 0, node.z) + PathFinding.origin, new Vector3(0.3f, 0.3f, 0.3f));
             }
         }
 #endif

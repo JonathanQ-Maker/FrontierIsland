@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace FrontierIsland
@@ -55,21 +56,37 @@ namespace FrontierIsland
             State = AnimState.Idle;
         }
 
-        protected virtual IEnumerator Inspect(Vector3Int from, Block block)
+        protected virtual IEnumerator Inspect(Vector3Int[] path, Block block)
         {
-            yield return MoveTo(from, MoveSpeed);
+            yield return TraversePath(path);
             yield return LookAt(block.transform.position);
             State = AnimState.Harvesting;
         }
 
-        public virtual void StartInspect(Vector3Int from, Block block)
+        public virtual void StartInspect(Block block)
         {
-            ActionLoop = Inspect(from, block);
+            if (pathRequest != null)
+            {
+                pathRequest.Cancel();
+            }
+
+            Action<Vector3Int[], bool> callback = (Vector3Int[] path, bool success) =>
+            {
+                if (path.Length > 0)
+                {
+                    this.path = path;
+                    ActionLoop = Inspect(path, block);
+                }
+            };
+
+            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), block.Position, 32, callback);
+            pathRequest = newRequest;
+            PathRequestManager.RequestPath(newRequest);
         }
 
-        protected virtual IEnumerator HarvestBlock(Block block)
+        protected virtual IEnumerator HarvestBlock(Vector3Int[] path, Block block)
         {
-            yield return Inspect(block.Position + Vector3Int.forward, block);
+            yield return Inspect(path, block);
             State = AnimState.Harvesting;
             yield return new WaitForSeconds(block.Hardness);
             Terrain.Instance.DestroyBlock(block);
@@ -78,7 +95,23 @@ namespace FrontierIsland
 
         public virtual void StartHarvestBlock(Block block)
         {
-            ActionLoop = HarvestBlock(block);        
+            if (pathRequest != null)
+            {
+                pathRequest.Cancel();
+            }
+
+            Action<Vector3Int[], bool> callback = (Vector3Int[] path, bool success) =>
+            {
+                if (path.Length > 0)
+                {
+                    this.path = path;
+                    ActionLoop = HarvestBlock(path, block);
+                }
+            };
+
+            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), block.Position, 32, callback);
+            pathRequest = newRequest;
+            PathRequestManager.RequestPath(newRequest);
         }
     }
 }
