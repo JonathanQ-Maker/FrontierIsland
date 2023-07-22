@@ -1,12 +1,42 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+
 namespace FrontierIsland
 {
     public class GameController : MonoBehaviour
     {
-        public Settler entity;
+        [SerializeField]
+        private BlockPrefabs blockPrefabs;
+        [SerializeField]
+        private ItemHandlerPrefabs itemHandlerPrefabs;
+        [SerializeField]
+        private HotBarWindow hotBarWindow;
 
+        public ItemHandlerPrefabs ItemHandlerPrefabs
+        {
+            get { return itemHandlerPrefabs;  }
+        }
+
+        public BlockPrefabs BlockPrefabs 
+        { 
+            get { return blockPrefabs; } 
+        }
+
+        private Settler settler;
+
+        public static GameController Instance { get; private set; }
         private void Awake()
         {
+            if (Instance != null && Instance != this)
+            {
+                Debug.LogError("More than one instance of terrain exists");
+                Destroy(this);
+            }
+            else
+            {
+                Instance = this;
+            }
+
             // enables debug if development build, otherwise disable log
             Debug.unityLogger.logEnabled = Debug.isDebugBuild;
         }
@@ -14,9 +44,19 @@ namespace FrontierIsland
 
         public Transform cube;
 
+
+        private void Start()
+        {
+            cube.rotation = Quaternion.identity;
+        }
         private void Update()
         {
             HandleSelect();
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Debug.Log($"ItemStack instance counts: {ItemStack.ItemCount}");
+            }
         }
 
 
@@ -52,7 +92,7 @@ namespace FrontierIsland
 
                 if (hit.collider.gameObject.TryGetComponent(out ISelectable selectable))
                 {
-                    if (selectable is Block || selectable is Chunk)
+                    if (selectable is Block || selectable is Chunk || selectable is ItemHandler)
                     {
                         if (!cube.gameObject.activeSelf)
                             cube.gameObject.SetActive(true);
@@ -63,7 +103,7 @@ namespace FrontierIsland
                         cube.gameObject.SetActive(false);
                     }
 
-                    if (Input.GetMouseButtonDown(0))
+                    if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                     {
                         selectable.OnSelect();
                         OnSelect(selectable, pos);
@@ -71,9 +111,9 @@ namespace FrontierIsland
 
                     if (Input.GetKeyDown(KeyCode.D))
                     {
-                        if (selectable is MultiBlock)
+                        if (settler != null)
                         {
-                            Terrain.Instance.DestroyMultiBlock((MultiBlock)selectable);
+                            hotBarWindow.SelectionIndex = (hotBarWindow.SelectionIndex + 1) % 10;
                         }
                     }
                 }
@@ -93,19 +133,26 @@ namespace FrontierIsland
         {
             if (selectable is Settler)
             {
-                entity = (Settler)selectable;
+                settler = (Settler)selectable;
+                hotBarWindow.Active = true;
+                hotBarWindow.Inventory = settler.Inventory;
             }
 
-            if (entity != null)
+            if (settler != null)
             {
                 if (selectable is Chunk)
                 {
-                    entity.StartMoveTo(pos);
+                    settler.StartMoveTo(pos);
                 }
 
                 if (selectable is Block)
                 {
-                    entity.StartHarvestBlock((Block)selectable);
+                    settler.StartHarvestBlock((Block)selectable);
+                }
+
+                if (selectable is ItemHandler)
+                {
+                    settler.StartCollectItem((ItemHandler)selectable);
                 }
             }
 

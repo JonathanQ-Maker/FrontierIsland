@@ -94,6 +94,12 @@ namespace FrontierIsland
         /// <param name="callback"></param>
         public static void FindPath(PathRequest request, Action<PathResult> callback)
         {
+            if (request.start.x == request.end.x && request.start.z == request.end.z)
+            {
+                callback(new PathResult(Array.Empty<Vector3Int>(), true, request.callback, request));
+                return;
+            }
+
             Vector3Int start = request.start, end = request.end;
             int gridSize = request.gridSize;
 
@@ -115,6 +121,7 @@ namespace FrontierIsland
 
             end.x = Mathf.Clamp(end.x, origin.x, origin.x + gridSizeX - 1);
             end.z = Mathf.Clamp(end.z, origin.z, origin.z + gridSizeZ - 1);
+            bool clamped = end != request.end;
 
             if (request.Cancelled) return;
             Node[,] grid            = new Node[gridSizeX, gridSizeZ];
@@ -150,7 +157,7 @@ namespace FrontierIsland
                 {
                     // path found
                     List<Node> path = RetracePath(startNode, currentNode);
-                    callback(new PathResult(SimplifyPath(path, origin), true, request.callback, request));
+                    callback(new PathResult(SimplifyPath(path, origin), !clamped, request.callback, request));
                     return;
                 }
 

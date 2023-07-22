@@ -62,21 +62,6 @@ namespace FrontierIsland
             boxCollider.size = meshFilter.mesh.bounds.size;
             boxCollider.center = meshFilter.mesh.bounds.center;
         }
-
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                if (State == TreeState.Normal)
-                {
-                    State = TreeState.Tall;
-                }
-                else
-                {
-                    State = TreeState.Normal;
-                }
-            }
-        }
     }
 }
 

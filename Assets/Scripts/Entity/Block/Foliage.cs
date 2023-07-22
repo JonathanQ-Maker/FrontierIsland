@@ -8,6 +8,8 @@ namespace FrontierIsland
         [SerializeField]
         protected Transform model;
 
+        public override bool Solid { get { return false; } }
+
         private void Start()
         {
             RandomRotate();

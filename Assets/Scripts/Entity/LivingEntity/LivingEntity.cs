@@ -7,6 +7,8 @@ namespace FrontierIsland
 {
     public abstract class LivingEntity : MonoBehaviour, INBTSerializable<CompoundTag>, ISelectable
     {
+        public Vector3Int Position { get { return Vector3Int.FloorToInt(transform.position); } }
+
         private IEnumerator actionLoop;
         protected virtual IEnumerator ActionLoop
         {
@@ -18,7 +20,8 @@ namespace FrontierIsland
                     StopCoroutine(actionLoop);
                 }
                 actionLoop = value;
-                StartCoroutine(actionLoop);
+                if (actionLoop != null)
+                    StartCoroutine(actionLoop);
             }
         }
 
@@ -137,7 +140,10 @@ namespace FrontierIsland
                 if (path.Length > 0)
                 {
                     this.path = path;
-                    ActionLoop = TraversePath(path);
+
+                    Vector3Int lastWaypoint = path[path.Length - 1];
+                    bool walkable = Terrain.Instance.Walkable(lastWaypoint.x, lastWaypoint.z);
+                    ActionLoop = TraversePath(path, walkable);
                 }
             };
 
@@ -146,7 +152,16 @@ namespace FrontierIsland
             PathRequestManager.RequestPath(newRequest);
         }
 
-        protected virtual IEnumerator TraversePath(Vector3Int[] path)
+        /// <summary>
+        /// Traverse the path
+        /// <br>
+        /// <paramref name="inclusive"/> indicates if the entity should traverse ontop of the last waypoint in path.
+        /// </br>
+        /// </summary>
+        /// <param name="path">array of waypoints to pass through</param>
+        /// <param name="inclusive"></param>
+        /// <returns></returns>
+        protected virtual IEnumerator TraversePath(Vector3Int[] path, bool inclusive)
         {
             if (path.Length <= 0) yield break;
             for (int i = 0; i < path.Length - 1; ++i)
@@ -156,14 +171,15 @@ namespace FrontierIsland
 
             // Path finder ignores walkabilty on the end node such that it can support entities
             // pathing to block rather than just pathing to empty space.
-            // This means we must check if last waypoint/node is walkable.
-            Vector3Int lastWaypoint = path[path.Length - 1];
-            if (Terrain.Instance.Walkable(lastWaypoint.x, lastWaypoint.z))
-                yield return MoveTo(lastWaypoint, MoveSpeed);
+            if (inclusive)
+                yield return MoveTo(path[path.Length - 1], MoveSpeed);
         }
 
         private void OnDrawGizmos()
         {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawCube(Vector3Int.FloorToInt(transform.position), new Vector3(0.5f, 0.5f, 0.5f));
+
             if (path == null) return;
             Vector3 size = new Vector3(0.5f, 0.5f, 0.5f);
             Gizmos.color = Color.yellow;

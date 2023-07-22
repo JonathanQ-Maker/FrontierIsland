@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 41c853f5d9ea0694b85aa51c075f533e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - invItemPrefab: {fileID: 8884787269037152499, guid: 187839c081474404a83d92b16567c9e2, type: 3}
+  - itemSlotPrefab: {fileID: 9136606786848684604, guid: b14b7f3c4d6bba14aa04fb39590b242a, type: 3}
+  - windowRect: {instanceID: 0}
+  - gridLayout: {instanceID: 0}
+  - selectionSquare: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

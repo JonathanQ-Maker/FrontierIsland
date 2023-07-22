@@ -1,4 +1,5 @@
 
+using System;
 using UnityEngine;
 
 
@@ -6,7 +7,6 @@ namespace FrontierIsland
 {
     public class Terrain : MonoBehaviour
     {
-        public BlockCollection collection;
         public Chunk chunkPrefab;
 
         private Chunk[] chunks;
@@ -48,7 +48,8 @@ namespace FrontierIsland
 
             for (int i = 0; i < (int)(LengthTiles * 0.8f) * 5; ++i)
             {
-                PlaceBlock(BlockType.Crate, new Vector3Int(Random.Range(0, LengthTiles-1), 0, Random.Range(0, WidthTiles-1)));
+                PlaceBlock((BlockType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(BlockType)).Length), 
+                    new Vector3Int(UnityEngine.Random.Range(0, LengthTiles-1), 0, UnityEngine.Random.Range(0, WidthTiles-1)));
             }
             foreach (Chunk c in chunks)
             c.UpdateChunkMesh();
@@ -111,9 +112,12 @@ namespace FrontierIsland
 
         public bool Walkable(int x, int z)
         {
+            Block block0 = GetBlock(new Vector3Int(x, 0, z));
+            Block block1 = GetBlock(new Vector3Int(x, 1, z));
+
             return GetTile(x, z) != TileType.Air &&
-                GetBlock(new Vector3Int(x, 0, z)) == null &&
-                GetBlock(new Vector3Int(x, 1, z)) == null;
+                 (block0 == null || !block0.Solid) &&
+                 (block1 == null || !block0.Solid);
         }
         #endregion
 
@@ -151,7 +155,7 @@ namespace FrontierIsland
 
         public Block PlaceBlock(BlockType type, Vector3Int pos)
         {
-            Block prefab = collection[type];
+            Block prefab = GameController.Instance.BlockPrefabs[type];
 
             if (prefab is MultiBlock)
             {

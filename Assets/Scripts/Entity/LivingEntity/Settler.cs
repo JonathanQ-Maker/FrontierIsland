@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FrontierIsland
 {
-    public class Settler : LivingEntity
+    public class Settler : LivingEntity, IInventoryHolder
     {
         public enum AnimState
         {
@@ -41,10 +41,20 @@ namespace FrontierIsland
             }
         }
 
+        private Inventory inventory;
+        public virtual Inventory Inventory 
+        {
+            get { return inventory; }
+            set { inventory = value; }
+        }
+
         public void Start()
         {
             if (animator == null)
                 Debug.LogError("Missing animator");
+
+            inventory = new Inventory(10, 1, this);
+            inventory[0, 0] = new WoodAxe();
         }
 
         protected override IEnumerator MoveTo(Vector3Int targetPos, float maxSpeed)
@@ -56,14 +66,14 @@ namespace FrontierIsland
             State = AnimState.Idle;
         }
 
-        protected virtual IEnumerator Inspect(Vector3Int[] path, Block block)
+        #region Inspect
+        protected virtual IEnumerator Inspect(Vector3Int[] path, Vector3 target)
         {
-            yield return TraversePath(path);
-            yield return LookAt(block.transform.position);
-            State = AnimState.Harvesting;
+            yield return TraversePath(path, false);
+            yield return LookAt(target);
         }
 
-        public virtual void StartInspect(Block block)
+        public virtual void StartInspect(Vector3 target)
         {
             if (pathRequest != null)
             {
@@ -75,21 +85,31 @@ namespace FrontierIsland
                 if (path.Length > 0)
                 {
                     this.path = path;
-                    ActionLoop = Inspect(path, block);
+                    ActionLoop = Inspect(path, target);
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), block.Position, 32, callback);
+            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), Vector3Int.FloorToInt(target), 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }
+        #endregion
 
+        #region HarvestBlock
         protected virtual IEnumerator HarvestBlock(Vector3Int[] path, Block block)
         {
-            yield return Inspect(path, block);
+            yield return Inspect(path, block.transform.position);
+            if (block == null) yield break;
+
+            if ((Vector3Int.FloorToInt(transform.position) - block.Position).magnitude > 2)
+            {
+                Debug.LogError("error cannot harvest blocks this far away");
+            }
             State = AnimState.Harvesting;
             yield return new WaitForSeconds(block.Hardness);
-            Terrain.Instance.DestroyBlock(block);
+
+            if (block != null) // is null if destroyed by another
+                Terrain.Instance.DestroyBlock(block);
             State = AnimState.Idle;
         }
 
@@ -105,13 +125,78 @@ namespace FrontierIsland
                 if (path.Length > 0)
                 {
                     this.path = path;
-                    ActionLoop = HarvestBlock(path, block);
+                    if (success)
+                    {
+                        ActionLoop = HarvestBlock(path, block);
+                    }
+                    else
+                    {
+                        ActionLoop = TraversePath(path, false);
+                    }
                 }
             };
 
             PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), block.Position, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
+        }
+        #endregion
+
+        #region CollectItem
+        protected virtual IEnumerator CollectItem(Vector3Int[] path, ItemHandler handler)
+        {
+            yield return Inspect(path, handler.transform.position);
+
+            if (handler == null) yield break; // check if collected by another
+
+            if ((Vector3Int.FloorToInt(transform.position) - handler.transform.position).magnitude > 2)
+            {
+                Debug.LogError("error");
+            }
+            State = AnimState.Harvesting;
+            yield return new WaitForSeconds(0.5f);
+
+            if (handler != null && handler.transform.parent == null) // check if picked up by another
+            {
+                handler.Item.AddToInventory(Inventory);
+            }
+            State = AnimState.Idle;
+        }
+
+        public virtual void StartCollectItem(ItemHandler handler)
+        {
+            if (pathRequest != null)
+            {
+                pathRequest.Cancel();
+            }
+
+            Action<Vector3Int[], bool> callback = (Vector3Int[] path, bool success) =>
+            {
+                this.path = path;
+                if (success)
+                {
+                    ActionLoop = CollectItem(path, handler);
+                }
+                else
+                {
+                    ActionLoop = TraversePath(path, false);
+                }
+            };
+
+            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), handler.Position, 32, callback);
+            pathRequest = newRequest;
+            PathRequestManager.RequestPath(newRequest);
+        }
+        #endregion
+
+        public virtual void OnSetItem(ItemStack newStack, ItemStack oldStack, int index)
+        {
+            
+        }
+
+        public virtual void DropItem(int index)
+        {
+            Inventory.DropItem(index, Position);
         }
     }
 }
