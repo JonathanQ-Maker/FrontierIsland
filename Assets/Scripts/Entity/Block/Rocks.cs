@@ -2,6 +2,15 @@
 {
     public class Rocks : Block
     {
+        public override MaterialType MaterialType 
+        { 
+            get 
+            { 
+                return MaterialType.Rock; 
+            } 
+        }
+
+
         public override float Hardness
         { 
             get

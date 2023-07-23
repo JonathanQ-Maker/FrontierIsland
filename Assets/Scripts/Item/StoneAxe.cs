@@ -1,23 +1,16 @@
 ﻿
 namespace FrontierIsland
 {
-    public class StoneAxe : ItemStack
+    public class StoneAxe : AxeTool
     {
         public override ItemType ItemType
         {
             get { return ItemType.StoneAxe; }
         }
 
-        public override int MaxStackSize { get { return 2; } }
-
-        public StoneAxe(int count) : base(count)
+        protected override float BaseEfficiency
         {
-
-        }
-
-        public StoneAxe() : base(1)
-        {
-
+            get { return 0.25f; }
         }
     }
 }

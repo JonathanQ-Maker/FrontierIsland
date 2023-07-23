@@ -45,6 +45,14 @@ namespace FrontierIsland
             }
         }
 
+        public override MaterialType MaterialType
+        {
+            get
+            {
+                return MaterialType.Wood;
+            }
+        }
+
         private void SetState(TreeState state)
         {
             switch (state)

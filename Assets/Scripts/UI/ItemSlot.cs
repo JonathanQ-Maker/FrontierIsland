@@ -77,7 +77,7 @@ namespace FrontierIsland
             {
                 InventoryItem inventoryItem = eventData.pointerDrag.GetComponent<InventoryItem>();
 
-                if (inventoryItem != null)
+                if (inventoryItem != null && !ReferenceEquals(inventoryItem, this.inventoryItem))
                 {
                     ItemStack item = Window.Inventory.RemoveItem(inventoryItem.SlotIndex);
                     if (this.inventoryItem != null)

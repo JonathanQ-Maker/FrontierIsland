@@ -25,13 +25,12 @@ namespace FrontierIsland
         public ItemHandler InstantiateHandler(Vector3 pos, Transform parent)
         {
             ItemHandler prefab = GameController.Instance.ItemHandlerPrefabs[ItemType];
-            Quaternion quaternion = Quaternion.identity;
 
             // if spawning into world
             if (parent == null)
             {
                 pos -= prefab.ModelTransform.position;
-                quaternion = Quaternion.Euler(-prefab.ModelTransform.eulerAngles);
+                Quaternion quaternion = Quaternion.Euler(-prefab.ModelTransform.eulerAngles);
 
                 if (Handler == null || Handler.ToBeDestroyed)
                 {

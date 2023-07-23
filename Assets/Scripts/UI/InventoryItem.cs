@@ -86,9 +86,10 @@ namespace FrontierIsland
 
         public void OnDrag(PointerEventData eventData)
         {
-            //(transform as RectTransform).anchoredPosition += eventData.delta / slot.InventoryWindow.Canvas.scaleFactor;
             if (eventData.button == InputButton.Left)
+            {
                 transform.position = eventData.position;
+            }
         }
 
         public void OnEndDrag(PointerEventData eventData)

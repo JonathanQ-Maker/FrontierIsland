@@ -5,9 +5,24 @@ namespace FrontierIsland
 {
     public abstract class Block : MonoBehaviour, INBTSerializable<CompoundTag>, ISelectable
     {
-        public virtual BlockType BlockType { get; }
-        public virtual float Hardness { get { return 0.5f; } }
+        /// <summary>
+        /// Block material identifier for tool efficiency calculation
+        /// </summary>
+        public virtual MaterialType MaterialType { get; }
 
+        /// <summary>
+        /// Type identifier
+        /// </summary>
+        public virtual BlockType BlockType { get; }
+
+        /// <summary>
+        /// How long it takes in seconds to break this block
+        /// </summary>
+        public virtual float Hardness { get { return 3f; } }
+
+        /// <summary>
+        /// Can <see cref="LivingEntity"/> move through this block
+        /// </summary>
         public virtual bool Solid { get { return true; } }
 
         public Vector3Int Position 

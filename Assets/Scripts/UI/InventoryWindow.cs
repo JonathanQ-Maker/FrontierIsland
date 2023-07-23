@@ -51,7 +51,15 @@ namespace FrontierIsland
 
         protected virtual void LoadInventory(Inventory inventory)
         {
-            if (inventory == null) return;
+            if (inventory == null)
+            {
+                Debug.LogWarning($"Inventory set null");
+                gameObject.SetActive(false);
+            }
+            else if (!gameObject.activeSelf)
+            {
+                gameObject.SetActive(true);
+            }
 
             if (gridLayout.constraint == CustomGridLayoutGroup.Constraint.FixedColumnCount)
             {

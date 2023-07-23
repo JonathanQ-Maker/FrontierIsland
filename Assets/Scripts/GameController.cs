@@ -106,7 +106,6 @@ namespace FrontierIsland
                     if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                     {
                         selectable.OnSelect();
-                        Debug.Log(selectable);
                         OnSelect(selectable, pos);
                     }
 

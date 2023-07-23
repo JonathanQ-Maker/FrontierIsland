@@ -67,6 +67,8 @@ namespace FrontierIsland
             }
         }
 
+        public ItemStack HeldItem { get { return Inventory[HeldItemIndex]; } }
+
         private ItemHandler heldItemhandler;
 
 
@@ -136,6 +138,16 @@ namespace FrontierIsland
         #endregion
 
         #region HarvestBlock
+        protected virtual float GetHarvestTime(Block block)
+        {
+            float efficiency = 1f;
+            if (HeldItem != null && HeldItem is ToolItem)
+            {
+                efficiency = ((ToolItem)HeldItem).GetEfficiency(block);
+            }
+            return efficiency * block.Hardness;
+        }
+
         protected virtual IEnumerator HarvestBlock(Vector3Int[] path, Block block)
         {
             yield return Inspect(path, block.transform.position);
@@ -146,7 +158,18 @@ namespace FrontierIsland
                 Debug.LogError("error cannot harvest blocks this far away");
             }
             State = AnimState.Harvesting;
-            yield return new WaitForSeconds(block.Hardness);
+
+            float finishTime = GetHarvestTime(block) + Time.time;
+            int itemIndex = HeldItemIndex;
+            while (finishTime > Time.time)
+            {
+                if (itemIndex != HeldItemIndex || block == null)
+                {
+                    State = AnimState.Idle;
+                    yield break;
+                }
+                yield return null;
+            }
 
             if (block != null) // is null if destroyed by another
                 Terrain.Instance.DestroyBlock(block);

@@ -10,6 +10,8 @@ namespace FrontierIsland
 
         public override bool Solid { get { return false; } }
 
+        public override float Hardness { get { return 0.5f; } }
+
         private void Start()
         {
             RandomRotate();

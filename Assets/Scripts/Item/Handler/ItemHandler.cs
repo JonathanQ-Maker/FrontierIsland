@@ -9,7 +9,7 @@ namespace FrontierIsland
 
         public Vector3Int Position 
         {
-            get { return Vector3Int.FloorToInt(transform.position); }
+            get { return Vector3Int.FloorToInt(transform.position + modelTransform.localPosition); }
         }
 
         private ItemStack item;
@@ -55,14 +55,6 @@ namespace FrontierIsland
         {
             toBeDestroyed = true;
             Destroy(gameObject);
-        }
-
-        private void OnDestroy()
-        {
-            if (!toBeDestroyed)
-            {
-                Debug.LogWarning("Should not use Destroy() on item handlers, use Destruct instead.");
-            }
         }
     }
 }

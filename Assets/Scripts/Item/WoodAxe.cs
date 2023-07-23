@@ -1,23 +1,16 @@
 ﻿
 namespace FrontierIsland
 {
-    public class WoodAxe : ItemStack
+    public class WoodAxe : AxeTool
     {
         public override ItemType ItemType
         { 
             get { return ItemType.WoodAxe; }
         }
 
-        public override int MaxStackSize { get { return 1; } }
-
-        public WoodAxe(int count) : base(count)
-        { 
-        
-        }
-
-        public WoodAxe() : base(1)
-        { 
-        
+        protected override float BaseEfficiency
+        {
+            get { return 0.5f; }
         }
     }
 }
