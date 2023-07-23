@@ -24,27 +24,54 @@ namespace FrontierIsland
 
         public ItemHandler InstantiateHandler(Vector3 pos, Transform parent)
         {
-            if (Handler == null)
+            ItemHandler prefab = GameController.Instance.ItemHandlerPrefabs[ItemType];
+            Quaternion quaternion = Quaternion.identity;
+
+            // if spawning into world
+            if (parent == null)
             {
-                ItemHandler prefab = GameController.Instance.ItemHandlerPrefabs[ItemType];
-                ItemHandler handler = Object.Instantiate(prefab, pos, Quaternion.identity, parent);
+                pos -= prefab.ModelTransform.position;
+                quaternion = Quaternion.Euler(-prefab.ModelTransform.eulerAngles);
+
+                if (Handler == null || Handler.ToBeDestroyed)
+                {
+                    ItemHandler handler = Object.Instantiate(prefab, pos, quaternion);
+                    handler.Item = this;
+                    Handler = handler;
+                }
+                else
+                {
+                    Handler.transform.SetParent(null);
+                    Handler.transform.position = pos;
+                    Handler.transform.rotation = quaternion;
+                }
+                Handler.Collider.enabled = true;
+                return Handler;
+            }
+
+            // if spawning as a child
+            if (Handler == null || Handler.ToBeDestroyed)
+            {
+                ItemHandler handler = Object.Instantiate(prefab, parent, false);
                 handler.Item = this;
                 Handler = handler;
-                return handler;
             }
-            Handler.transform.position = pos;
-            Handler.transform.SetParent(parent);
+            else
+            {
+                Handler.transform.SetParent(parent);
+                Handler.transform.localPosition = pos;
+                Handler.transform.localRotation = Quaternion.identity;
+            }
+            Handler.Collider.enabled = false;
             return Handler;
         }
 
-        public bool RemoveHandler()
+        public void RemoveHandler()
         {
             if (Handler != null)
             {
-                Object.Destroy(handler.gameObject);
-                return true;
+                Handler.Destruct();
             }
-            return false;
         }
 
         public Sprite GetIcon()
@@ -73,6 +100,9 @@ namespace FrontierIsland
         /// 
         /// <br>
         /// NOTE: If no avialable slot is found, return -1
+        /// </br>
+        /// <br>
+        /// NOTE: Destroys handler
         /// </br>
         /// </summary>
         /// <param name="item"></param>

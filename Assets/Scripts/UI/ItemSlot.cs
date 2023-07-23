@@ -26,26 +26,30 @@ namespace FrontierIsland
 
         public RectTransform ItemHolder { get { return itemHolder; } }
 
-        private InventoryWindow inventoryWindow;
-        public InventoryWindow InventoryWindow
+        private InventoryWindow window;
+        public InventoryWindow Window
         {
             get
             {
-                return inventoryWindow;
+                return window;
             }
 
             set
             {
-                if (inventoryWindow == null)
+                if (window == null)
                 {
-                    inventoryWindow = value;
+                    window = value;
                     return;
                 }
-                Debug.LogWarning("Cannot re-assign inventoryWindow");
+                Debug.LogWarning("Cannot re-assign window");
             }
         }
 
         private int slotIndex = -1;
+
+        /// <summary>
+        /// The index of the slot in inventory this ItemSlot represents
+        /// </summary>
         public int SlotIndex
         {
             get
@@ -72,12 +76,20 @@ namespace FrontierIsland
             if (eventData.pointerDrag != null)
             {
                 InventoryItem inventoryItem = eventData.pointerDrag.GetComponent<InventoryItem>();
+
                 if (inventoryItem != null)
                 {
-                    if (this.inventoryItem == null)
+                    ItemStack item = Window.Inventory.RemoveItem(inventoryItem.SlotIndex);
+                    if (this.inventoryItem != null)
                     {
-                        inventoryItem.Slot = this;
+                        ItemStack item2 = Window.Inventory.RemoveItem(this.inventoryItem.SlotIndex);
+                        Window.Inventory.SetItem(inventoryItem.SlotIndex, item2);
+                        this.inventoryItem.SlotIndex = inventoryItem.SlotIndex;
+                        Window[inventoryItem.SlotIndex].inventoryItem = this.inventoryItem;
                     }
+                    Window.Inventory.SetItem(SlotIndex, item);
+                    inventoryItem.SlotIndex = SlotIndex;
+                    this.inventoryItem = inventoryItem;
                 }
             }
         }

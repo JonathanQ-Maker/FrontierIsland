@@ -14,6 +14,14 @@ namespace FrontierIsland
         }
 
         [SerializeField]
+        private Transform rightHandPivot;
+        protected Transform RightHandPivot { get { return rightHandPivot; } }
+
+        [SerializeField]
+        private Transform leftHandPivot;
+        protected Transform LeftHandPivot { get { return leftHandPivot; } }
+
+        [SerializeField]
         private Animator animator;
         public Animator Animator
         {
@@ -48,13 +56,45 @@ namespace FrontierIsland
             set { inventory = value; }
         }
 
+        private int heldItemIndex;
+        public virtual int HeldItemIndex
+        {
+            get { return heldItemIndex; }
+            set 
+            {
+                heldItemIndex = value;
+                UpdateHeldItem();
+            }
+        }
+
+        private ItemHandler heldItemhandler;
+
+
         public void Start()
         {
             if (animator == null)
                 Debug.LogError("Missing animator");
 
             inventory = new Inventory(10, 1, this);
-            inventory[0, 0] = new WoodAxe();
+            inventory[1, 0] = new WoodAxe();
+            inventory[2, 0] = new StoneAxe();
+        }
+
+        protected void UpdateHeldItem()
+        {
+            ItemStack heldItem = Inventory[HeldItemIndex];
+            if (heldItemhandler != null)
+            {
+                if (heldItem == null || !ReferenceEquals(heldItemhandler, heldItem.Handler))
+                {
+                    heldItemhandler.Destruct();
+                }
+            }
+
+            if (heldItem != null)
+            {
+                heldItemhandler = heldItem.InstantiateHandler(Vector3.zero, RightHandPivot);
+            }
         }
 
         protected override IEnumerator MoveTo(Vector3Int targetPos, float maxSpeed)
@@ -147,7 +187,7 @@ namespace FrontierIsland
         {
             yield return Inspect(path, handler.transform.position);
 
-            if (handler == null) yield break; // check if collected by another
+            if (handler == null || handler.ToBeDestroyed) yield break; // check if collected by another
 
             if ((Vector3Int.FloorToInt(transform.position) - handler.transform.position).magnitude > 2)
             {
@@ -156,7 +196,7 @@ namespace FrontierIsland
             State = AnimState.Harvesting;
             yield return new WaitForSeconds(0.5f);
 
-            if (handler != null && handler.transform.parent == null) // check if picked up by another
+            if (handler != null && !handler.ToBeDestroyed && handler.transform.parent == null) // check if picked up by another
             {
                 handler.Item.AddToInventory(Inventory);
             }
@@ -189,14 +229,14 @@ namespace FrontierIsland
         }
         #endregion
 
-        public virtual void OnSetItem(ItemStack newStack, ItemStack oldStack, int index)
-        {
-            
-        }
-
         public virtual void DropItem(int index)
         {
             Inventory.DropItem(index, Position);
+        }
+
+        public void OnInventoryChange(int index)
+        {
+            UpdateHeldItem();
         }
     }
 }

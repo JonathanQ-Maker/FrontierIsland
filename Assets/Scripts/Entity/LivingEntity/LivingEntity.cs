@@ -182,10 +182,10 @@ namespace FrontierIsland
 
             if (path == null) return;
             Vector3 size = new Vector3(0.5f, 0.5f, 0.5f);
-            Gizmos.color = Color.yellow;
+            //Gizmos.color = Color.yellow;
 
-            if (pathRequest != null)
-            Gizmos.DrawCube(pathRequest.start, size);
+            //if (pathRequest != null)
+            //Gizmos.DrawCube(pathRequest.start, size);
             Gizmos.color = Color.red;
             foreach (Vector3Int node in path)
             {

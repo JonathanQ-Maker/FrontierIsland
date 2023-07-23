@@ -17,6 +17,11 @@ namespace FrontierIsland
         public CustomGridLayoutGroup gridLayout;
         protected List<ItemSlot> inventorySlots = new List<ItemSlot>();
 
+        public ItemSlot this[int slotIndex]
+        {
+            get { return inventorySlots[slotIndex]; }
+        }
+
         public Canvas Canvas { get; private set; }
         private Inventory inventory;
         public Inventory Inventory
@@ -93,8 +98,9 @@ namespace FrontierIsland
                     if (itemSlot.inventoryItem == null)
                     {
                         InventoryItem item = Instantiate(invItemPrefab, itemSlot.transform);
-                        item.Slot = itemSlot;
-                        item.ItemIndex = index;
+                        item.window = this;
+                        item.SlotIndex = index;
+                        itemSlot.inventoryItem = item;
                     }
                     itemSlot.inventoryItem.UpdateContent();
                 }
@@ -112,7 +118,7 @@ namespace FrontierIsland
         protected void AddInventorySlot()
         {
             ItemSlot slot = Instantiate(itemSlotPrefab, gridLayout.gameObject.transform);
-            slot.InventoryWindow = this;
+            slot.Window = this;
             slot.SlotIndex = inventorySlots.Count;
             inventorySlots.Add(slot);
         }

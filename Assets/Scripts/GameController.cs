@@ -106,6 +106,7 @@ namespace FrontierIsland
                     if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                     {
                         selectable.OnSelect();
+                        Debug.Log(selectable);
                         OnSelect(selectable, pos);
                     }
 
@@ -114,6 +115,7 @@ namespace FrontierIsland
                         if (settler != null)
                         {
                             hotBarWindow.SelectionIndex = (hotBarWindow.SelectionIndex + 1) % 10;
+                            settler.HeldItemIndex = hotBarWindow.SelectionIndex;
                         }
                     }
                 }
@@ -136,6 +138,7 @@ namespace FrontierIsland
                 settler = (Settler)selectable;
                 hotBarWindow.Active = true;
                 hotBarWindow.Inventory = settler.Inventory;
+                hotBarWindow.SelectionIndex = settler.HeldItemIndex;
             }
 
             if (settler != null)

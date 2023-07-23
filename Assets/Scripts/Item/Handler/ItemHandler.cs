@@ -4,6 +4,9 @@ namespace FrontierIsland
 {
     public abstract class ItemHandler : MonoBehaviour, ISelectable
     {
+        private bool toBeDestroyed = false;
+        public bool ToBeDestroyed { get { return toBeDestroyed; } }
+
         public Vector3Int Position 
         {
             get { return Vector3Int.FloorToInt(transform.position); }
@@ -18,23 +21,48 @@ namespace FrontierIsland
                 item = value;
                 if (value == null)
                 {
-                    Destroy(gameObject);
+                    Destruct();
                 }
             }
         }
+
+        [SerializeField]
+        private Transform modelTransform;
+        public Transform ModelTransform { get { return modelTransform; } }
+
+        [SerializeField]
+        private new Collider collider;
+        public Collider Collider { get { return collider; } }
 
         private void Start()
         {
             if (Item == null)
             {
                 Debug.LogError("ItemHandler cannot exit without ItemStack");
-                Destroy(gameObject);
+                Destruct();
             }
         }
 
         public virtual void OnSelect()
         {
             
+        }
+
+        /// <summary>
+        /// Sets ToBeDestroyed flag when Destroying this handler, prevents race conditions
+        /// </summary>
+        public void Destruct()
+        {
+            toBeDestroyed = true;
+            Destroy(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            if (!toBeDestroyed)
+            {
+                Debug.LogWarning("Should not use Destroy() on item handlers, use Destruct instead.");
+            }
         }
     }
 }

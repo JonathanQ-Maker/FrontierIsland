@@ -1,4 +1,5 @@
 ﻿using NBT.Tags;
+using System;
 using System.Numerics;
 using UnityEngine;
 
@@ -57,7 +58,9 @@ namespace FrontierIsland
             ItemStack oldItem = items[index];
             items[index] = itemStack;
             if (Holder != null)
-                Holder.OnSetItem(itemStack, oldItem, index);
+            {
+                Holder.OnInventoryChange(index);
+            }
         }
 
         public ItemStack RemoveItem(int index)
@@ -65,7 +68,9 @@ namespace FrontierIsland
             ItemStack item = items[index];
             items[index] = null;
             if (Holder != null)
-                Holder.OnSetItem(null, item, index);
+            {
+                Holder.OnInventoryChange(index);
+            }
             return item;
         }
 
@@ -74,14 +79,7 @@ namespace FrontierIsland
             ItemStack item = RemoveItem(index);
             if (item != null)
             {
-                ItemHandler handler = item.Handler;
-                if (handler == null)
-                {
-                    return item.InstantiateHandler(position, null);
-                }
-                handler.transform.SetParent(null);
-                handler.transform.position = position;
-                return handler;
+                return item.InstantiateHandler(position, null);
             }
             return null;
         }
@@ -109,6 +107,8 @@ namespace FrontierIsland
                 if (currentItem.Similar(item) && currentItem.count + item.count <= currentItem.MaxStackSize)
                 {
                     currentItem.count += item.count;
+                    if (Holder != null)
+                        Holder.OnInventoryChange(i);
                     return i;
                 }
             }

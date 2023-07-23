@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using static UnityEngine.EventSystems.PointerEventData;
+using System;
 
 namespace FrontierIsland
 {
@@ -12,57 +14,30 @@ namespace FrontierIsland
         [SerializeField]
         private TextMeshProUGUI countDisplay;
 
-        private ItemSlot slot;
-        public ItemSlot Slot
-        {
-            get
-            {
-                return slot;
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    value.AssignInventoryItem(this);
-                    if (ItemIndex != -1) // move item in inventory to match slot inventory item is in
-                    {
-                        ItemStack itemStack = slot.InventoryWindow.Inventory.RemoveItem(ItemIndex);
-                        value.InventoryWindow.Inventory.SetItem(value.SlotIndex, itemStack);
-                        ItemIndex = value.SlotIndex;
-                    }
-                }
-                else
-                {
-                    if (value.InventoryWindow.Inventory.Holder != null)
-                    {
-                        value.InventoryWindow.Inventory.Holder.DropItem(ItemIndex);
-                    }
-                    else
-                    {
-                        value.InventoryWindow.Inventory.RemoveItem(ItemIndex);
-                    }
-                    Destroy(gameObject);
-                    return;
-                }
-                slot = value;
-                ResetPosition();
-            }
-        }
+        [NonSerialized]
+        public InventoryWindow window;
 
         [SerializeField]
-        private int itemIndex = -1;
-        public int ItemIndex
+        private int slotIndex = -1;
+        
+        /// <summary>
+        /// The index that gets the ItemStack this InventoryItem represents
+        /// </summary>
+        public int SlotIndex
         {
             get
             {
-                return itemIndex;
+                return slotIndex;
             }
 
             set
             {
-                itemIndex = value;
-                UpdateContent();
+                slotIndex = value;
+                if (slotIndex != -1)
+                { 
+                    UpdateContent();
+                    ResetPosition();
+                }
             }
         }
 
@@ -70,7 +45,7 @@ namespace FrontierIsland
         {
             get
             {
-                return Slot.InventoryWindow.Inventory[ItemIndex];
+                return window.Inventory[SlotIndex];
             }
         }
 
@@ -84,7 +59,7 @@ namespace FrontierIsland
 
         public void UpdateContent()
         {
-            ItemStack item = slot.InventoryWindow.Inventory[itemIndex];
+            ItemStack item = window.Inventory[SlotIndex];
             image.sprite = item.GetIcon();
             if (item.count == 1)
             {
@@ -99,7 +74,7 @@ namespace FrontierIsland
         public void ResetPosition()
         {
             transform.SetParent(null);
-            transform.SetParent(slot.ItemHolder);
+            transform.SetParent(window[SlotIndex].ItemHolder);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -112,20 +87,21 @@ namespace FrontierIsland
         public void OnDrag(PointerEventData eventData)
         {
             //(transform as RectTransform).anchoredPosition += eventData.delta / slot.InventoryWindow.Canvas.scaleFactor;
-            transform.position = eventData.position;
+            if (eventData.button == InputButton.Left)
+                transform.position = eventData.position;
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (!RectTransformUtility.RectangleContainsScreenPoint(Slot.InventoryWindow.WindowRect, Input.mousePosition))
+            if (!RectTransformUtility.RectangleContainsScreenPoint(window.WindowRect, Input.mousePosition))
             {
-                if (Slot.InventoryWindow.Inventory.Holder != null)
+                if (window.Inventory.Holder != null)
                 {
-                    Slot.InventoryWindow.Inventory.Holder.DropItem(ItemIndex);
+                    window.Inventory.Holder.DropItem(SlotIndex);
                 }
                 else
                 {
-                    Slot.InventoryWindow.Inventory.RemoveItem(ItemIndex);
+                    window.Inventory.RemoveItem(SlotIndex);
                 }
                 Destroy(gameObject);
             }
