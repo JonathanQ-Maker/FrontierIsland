@@ -2,7 +2,10 @@
 {
     public abstract class AxeTool : ToolItem
     {
-        protected virtual float BaseEfficiency { get; }
+        public AxeTool(string name, string description) : base(name, description)
+        {
+
+        }
 
         public override float GetEfficiency(Block block)
         {
@@ -11,6 +14,11 @@
                 return BaseEfficiency;
             }
             return base.GetEfficiency(block);
+        }
+
+        public override string GetToolTip()
+        {
+            return base.GetToolTip() + $"<color=#898989><i>{description}</i></color>";
         }
     }
 }

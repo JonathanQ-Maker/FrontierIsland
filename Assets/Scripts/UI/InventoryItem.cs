@@ -115,23 +115,23 @@ namespace FrontierIsland
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            //GameManager.instance.toolTip.Active = true;
-            //GameManager.instance.toolTip.LoadItemTip(ItemStack);
+            GameController.Instance.ToolTipWindow.Active = true;
+            GameController.Instance.ToolTipWindow.LoadItemTip(ItemStack);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            //GameManager.instance.toolTip.Active = false;
+            GameController.Instance.ToolTipWindow.Active = false;
         }
 
         private void OnDestroy()
         {
-            //GameManager.instance.toolTip.Active = false;
+            GameController.Instance.ToolTipWindow.Active = false;
         }
 
         private void OnDisable()
         {
-            //GameManager.instance.toolTip.Active = false;
+            GameController.Instance.ToolTipWindow.Active = false;
         }
     }
 }

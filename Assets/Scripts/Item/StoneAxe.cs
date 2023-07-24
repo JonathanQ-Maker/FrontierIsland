@@ -3,6 +3,14 @@ namespace FrontierIsland
 {
     public class StoneAxe : AxeTool
     {
+        public StoneAxe() : this("Stone Axe", "An axe made \r\nwith a stone head")
+        {
+
+        }
+        public StoneAxe(string name, string description) : base(name, description)
+        {
+        }
+
         public override ItemType ItemType
         {
             get { return ItemType.StoneAxe; }
@@ -10,7 +18,7 @@ namespace FrontierIsland
 
         protected override float BaseEfficiency
         {
-            get { return 0.25f; }
+            get { return 1.5f; }
         }
     }
 }

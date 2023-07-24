@@ -11,10 +11,17 @@ namespace FrontierIsland
         private ItemHandlerPrefabs itemHandlerPrefabs;
         [SerializeField]
         private HotBarWindow hotBarWindow;
+        [SerializeField]
+        private ToolTipWindow toolTipWindow;
 
         public ItemHandlerPrefabs ItemHandlerPrefabs
         {
             get { return itemHandlerPrefabs;  }
+        }
+
+        public ToolTipWindow ToolTipWindow
+        {
+            get { return toolTipWindow; }
         }
 
         public BlockPrefabs BlockPrefabs 
@@ -52,6 +59,7 @@ namespace FrontierIsland
         private void Update()
         {
             HandleSelect();
+            HandleHotBarInput();
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -67,6 +75,21 @@ namespace FrontierIsland
             East,
             South,
             West
+        }
+
+
+        private void HandleHotBarInput()
+        {
+            for (int i = (int)KeyCode.Alpha1; i <= (int)KeyCode.Alpha9; ++i)
+            {
+                if (Input.GetKeyDown((KeyCode)i))
+                {
+                    int selectedSlot = i - ((int)KeyCode.Alpha0) - 1;
+
+                    hotBarWindow.SelectionIndex = selectedSlot;
+                    settler.HeldItemIndex = hotBarWindow.SelectionIndex;
+                }
+            }
         }
 
         private void HandleSelect()
@@ -107,15 +130,6 @@ namespace FrontierIsland
                     {
                         selectable.OnSelect();
                         OnSelect(selectable, pos);
-                    }
-
-                    if (Input.GetKeyDown(KeyCode.D))
-                    {
-                        if (settler != null)
-                        {
-                            hotBarWindow.SelectionIndex = (hotBarWindow.SelectionIndex + 1) % 10;
-                            settler.HeldItemIndex = hotBarWindow.SelectionIndex;
-                        }
                     }
                 }
                 else if (cube.gameObject.activeSelf)

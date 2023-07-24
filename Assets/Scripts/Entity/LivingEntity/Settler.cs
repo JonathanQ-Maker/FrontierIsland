@@ -77,7 +77,7 @@ namespace FrontierIsland
             if (animator == null)
                 Debug.LogError("Missing animator");
 
-            inventory = new Inventory(10, 1, this);
+            inventory = new Inventory(9, 1, this);
             inventory[1, 0] = new WoodAxe();
             inventory[2, 0] = new StoneAxe();
         }
@@ -145,7 +145,7 @@ namespace FrontierIsland
             {
                 efficiency = ((ToolItem)HeldItem).GetEfficiency(block);
             }
-            return efficiency * block.Hardness;
+            return block.Hardness / efficiency;
         }
 
         protected virtual IEnumerator HarvestBlock(Vector3Int[] path, Block block)
@@ -160,10 +160,10 @@ namespace FrontierIsland
             State = AnimState.Harvesting;
 
             float finishTime = GetHarvestTime(block) + Time.time;
-            int itemIndex = HeldItemIndex;
+            ItemStack heldItem = HeldItem;
             while (finishTime > Time.time)
             {
-                if (itemIndex != HeldItemIndex || block == null)
+                if (!ReferenceEquals(HeldItem, heldItem) || block == null)
                 {
                     State = AnimState.Idle;
                     yield break;

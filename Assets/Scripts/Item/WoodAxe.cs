@@ -1,8 +1,18 @@
 ﻿
+using Unity.VisualScripting;
+
 namespace FrontierIsland
 {
     public class WoodAxe : AxeTool
     {
+        public WoodAxe() : this("Wood Axe", "An axe made \r\nentirely out of wood")
+        { 
+        
+        }
+        public WoodAxe(string name, string description) : base(name, description)
+        {
+        }
+
         public override ItemType ItemType
         { 
             get { return ItemType.WoodAxe; }
@@ -10,7 +20,7 @@ namespace FrontierIsland
 
         protected override float BaseEfficiency
         {
-            get { return 0.5f; }
+            get { return 1.25f; }
         }
     }
 }

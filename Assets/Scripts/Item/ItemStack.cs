@@ -15,6 +15,8 @@ namespace FrontierIsland
         public virtual ItemType ItemType { get; }
         public byte count;
 
+        public string name, description;
+
         private ItemHandler handler;
         public virtual ItemHandler Handler 
         {
@@ -78,9 +80,11 @@ namespace FrontierIsland
             return GameController.Instance.ItemHandlerPrefabs.GetIcon(ItemType);
         }
 
-        public ItemStack(int count)
+        public ItemStack(int count, string name, string description)
         {
-            this.count = (byte)count;
+            this.name           = name;
+            this.description    = description;
+            this.count          = (byte)count;
             itemCount++;
         }
 
@@ -110,6 +114,11 @@ namespace FrontierIsland
         {
             RemoveHandler();
             return inventory.AddItem(this);
+        }
+
+        public virtual string GetToolTip()
+        {
+            return $"<size=14><color=#C5D4E9>{name}<size=12>\r\n";
         }
 
         public void DeserializeNBT(CompoundTag tag)
