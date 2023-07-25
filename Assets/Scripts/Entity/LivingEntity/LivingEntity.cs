@@ -5,9 +5,9 @@ using System;
 
 namespace FrontierIsland
 {
-    public abstract class LivingEntity : MonoBehaviour, INBTSerializable<CompoundTag>, ISelectable
+    public abstract class LivingEntity : MonoBehaviour, INBTSerializable, ISelectable
     {
-        public Vector3Int Position { get { return Vector3Int.FloorToInt(transform.position); } }
+        public Vector3Int Position { get { return Vector3Int.RoundToInt(transform.position); } }
 
         private IEnumerator actionLoop;
         protected virtual IEnumerator ActionLoop
@@ -69,20 +69,6 @@ namespace FrontierIsland
 
         protected PathRequest pathRequest;
         protected Vector3Int[] path;
-
-        public virtual void DeserializeNBT(CompoundTag tag)
-        {
-            MaxHealth = tag.GetInt("MaxHealth", 1);
-            Health = tag.GetInt("Health", 1);
-        }
-
-        public virtual CompoundTag SerializeNBT()
-        {
-            CompoundTag tag = new CompoundTag(2);
-            tag.PutInt("MaxHealth", MaxHealth);
-            tag.PutInt("Health", Health);
-            return tag;
-        }
 
         public void OnSelect()
         {
@@ -147,7 +133,7 @@ namespace FrontierIsland
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), targetPos, 32, callback);
+            PathRequest newRequest = new PathRequest(Vector3Int.RoundToInt(transform.position), targetPos, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }
@@ -178,7 +164,7 @@ namespace FrontierIsland
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawCube(Vector3Int.FloorToInt(transform.position), new Vector3(0.5f, 0.5f, 0.5f));
+            Gizmos.DrawCube(Vector3Int.RoundToInt(transform.position), new Vector3(0.5f, 0.5f, 0.5f));
 
             if (path == null) return;
             Vector3 size = new Vector3(0.5f, 0.5f, 0.5f);
@@ -191,6 +177,16 @@ namespace FrontierIsland
             {
                 Gizmos.DrawCube(node, size);
             }
+        }
+
+        public void ReadFromNBT(CompoundTag nbt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteToNBT(CompoundTag nbt)
+        {
+            throw new NotImplementedException();
         }
     }
 }

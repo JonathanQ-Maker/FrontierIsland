@@ -65,6 +65,12 @@ namespace FrontierIsland
             {
                 Debug.Log($"ItemStack instance counts: {ItemStack.ItemCount}");
             }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                System.GC.Collect();
+                Debug.Log("Force Garbage collector");
+            }
         }
 
 
@@ -158,7 +164,14 @@ namespace FrontierIsland
             {
                 if (selectable is Chunk)
                 {
-                    settler.StartMoveTo(pos);
+                    if (settler.HeldItem is BlockItem)
+                    {
+                        settler.StartPlaceBlock(pos);
+                    }
+                    else
+                    {
+                        settler.StartMoveTo(pos);
+                    }
                 }
 
                 if (selectable is Block)

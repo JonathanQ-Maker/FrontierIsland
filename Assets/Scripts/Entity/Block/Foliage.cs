@@ -5,9 +5,6 @@ namespace FrontierIsland
 {
     public class Foliage : Block
     {
-        [SerializeField]
-        protected Transform model;
-
         public override bool Solid { get { return false; } }
 
         public override float Hardness { get { return 0.5f; } }
@@ -20,7 +17,7 @@ namespace FrontierIsland
         private void RandomRotate()
         {
             float noise = 359f + 89f * transform.position.x + 239f * transform.position.z;
-            model.rotation = Quaternion.Euler(0, noise % 360, 0);
+            Model.rotation = Quaternion.Euler(0, noise % 360, 0);
         }
     }
 }

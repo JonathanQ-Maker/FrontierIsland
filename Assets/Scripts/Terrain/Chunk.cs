@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace FrontierIsland
 {
-    public class Chunk : MonoBehaviour, ISelectable, INBTSerializable<CompoundTag>
+    public class Chunk : MonoBehaviour, ISelectable, INBTSerializable
     {
         public MeshFilter meshFilter;
         public MeshCollider meshCollider;
@@ -332,12 +332,12 @@ namespace FrontierIsland
             //throw new NotImplementedException();
         }
 
-        public CompoundTag SerializeNBT()
+        public void ReadFromNBT(CompoundTag nbt)
         {
             throw new NotImplementedException();
         }
 
-        public void DeserializeNBT(CompoundTag tag)
+        public void WriteToNBT(CompoundTag nbt)
         {
             throw new NotImplementedException();
         }

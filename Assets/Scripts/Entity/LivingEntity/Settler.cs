@@ -80,6 +80,11 @@ namespace FrontierIsland
             inventory = new Inventory(9, 1, this);
             inventory[1, 0] = new WoodAxe();
             inventory[2, 0] = new StoneAxe();
+
+            RocksItem rocks = new RocksItem(2);
+            inventory[0, 0] = rocks;
+
+            inventory[3, 0] = new TreeItem(2, Tree.TreeState.Normal);
         }
 
         protected void UpdateHeldItem()
@@ -90,6 +95,9 @@ namespace FrontierIsland
                 if (heldItem == null || !ReferenceEquals(heldItemhandler, heldItem.Handler))
                 {
                     heldItemhandler.Destruct();
+
+                    // although Destroy() will set this to null, maunally setting to null allows GC to collect it
+                    heldItemhandler = null;
                 }
             }
 
@@ -131,7 +139,7 @@ namespace FrontierIsland
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), Vector3Int.FloorToInt(target), 32, callback);
+            PathRequest newRequest = new PathRequest(Vector3Int.RoundToInt(transform.position), Vector3Int.RoundToInt(target), 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }
@@ -153,7 +161,7 @@ namespace FrontierIsland
             yield return Inspect(path, block.transform.position);
             if (block == null) yield break;
 
-            if ((Vector3Int.FloorToInt(transform.position) - block.Position).magnitude > 2)
+            if ((Vector3Int.RoundToInt(transform.position) - block.Position).magnitude > 2)
             {
                 Debug.LogError("error cannot harvest blocks this far away");
             }
@@ -199,7 +207,55 @@ namespace FrontierIsland
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), block.Position, 32, callback);
+            PathRequest newRequest = new PathRequest(Vector3Int.RoundToInt(transform.position), block.Position, 32, callback);
+            pathRequest = newRequest;
+            PathRequestManager.RequestPath(newRequest);
+        }
+        #endregion
+
+        #region PlaceBlock
+        protected virtual IEnumerator PlaceBlock(Vector3Int[] path)
+        {
+            Vector3Int targetPos = path[path.Length - 1];
+            yield return Inspect(path, targetPos);
+
+            State = AnimState.Harvesting;
+            yield return new WaitForSeconds(0.5f);
+
+            BlockItem blockItem = HeldItem as BlockItem;
+            if (blockItem == null || blockItem.count <= 0) yield break;
+            if (Terrain.Instance.PlaceBlockItem(blockItem, targetPos) != null)
+            {
+                Inventory.ConsumeItem(HeldItemIndex, 1);
+            }
+            State = AnimState.Idle;
+        }
+
+        public virtual void StartPlaceBlock(Vector3Int targetPos)
+        {
+
+            if (pathRequest != null)
+            {
+                pathRequest.Cancel();
+            }
+
+            Action<Vector3Int[], bool> callback = (Vector3Int[] path, bool success) =>
+            {
+                if (path.Length > 0)
+                {
+                    this.path = path;
+                    if (success)
+                    {
+                        ActionLoop = PlaceBlock(path);
+                    }
+                    else
+                    {
+                        ActionLoop = TraversePath(path, false);
+                    }
+                }
+            };
+
+            PathRequest newRequest = new PathRequest(Vector3Int.RoundToInt(transform.position), targetPos, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }
@@ -212,7 +268,7 @@ namespace FrontierIsland
 
             if (handler == null || handler.ToBeDestroyed) yield break; // check if collected by another
 
-            if ((Vector3Int.FloorToInt(transform.position) - handler.transform.position).magnitude > 2)
+            if ((Vector3Int.RoundToInt(transform.position) - handler.transform.position).magnitude > 2)
             {
                 Debug.LogError("error");
             }
@@ -221,7 +277,7 @@ namespace FrontierIsland
 
             if (handler != null && !handler.ToBeDestroyed && handler.transform.parent == null) // check if picked up by another
             {
-                handler.Item.AddToInventory(Inventory);
+                inventory.CollectItem(handler.Item);
             }
             State = AnimState.Idle;
         }
@@ -246,7 +302,7 @@ namespace FrontierIsland
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Vector3Int.FloorToInt(transform.position), handler.Position, 32, callback);
+            PathRequest newRequest = new PathRequest(Vector3Int.RoundToInt(transform.position), handler.Position, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }
@@ -254,7 +310,7 @@ namespace FrontierIsland
 
         public virtual void DropItem(int index)
         {
-            Inventory.DropItem(index, Position);
+            Inventory.DropStack(index, Position);
         }
 
         public void OnInventoryChange(int index)

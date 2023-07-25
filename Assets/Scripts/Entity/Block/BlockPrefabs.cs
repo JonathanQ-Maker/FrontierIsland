@@ -6,8 +6,9 @@ namespace FrontierIsland
 
     public class BlockPrefabs : ScriptableObject
     {
+        // the vairable names "prefabs" and "icons" is use to link to editor
         [SerializeField]
-        private Block[] prefabs; // name is important for editor
+        private Block[] prefabs;
 
         public Block this[BlockType type]
         {

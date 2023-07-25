@@ -15,6 +15,28 @@ namespace FrontierIsland
         private void OnEnable()
         {
             list = new ReorderableList(serializedObject, serializedObject.FindProperty("prefabs"), true, true, true, true);
+            list.onCanAddCallback = (ReorderableList list) =>
+            {
+                return list.count < Enum.GetValues(typeof(BlockType)).Length;
+            };
+            list.drawHeaderCallback = (Rect rect) =>
+            {
+                EditorGUI.LabelField(rect, "Prefabs");
+            };
+            list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            {
+                SerializedProperty prefab = list.serializedProperty.GetArrayElementAtIndex(index);
+
+                Rect labelRect = new Rect(rect.x, rect.y, rect.width * 0.4f, EditorGUIUtility.singleLineHeight);
+                Rect prefabRect = new Rect(rect.x + labelRect.width, rect.y,
+                    rect.width * 0.6f, EditorGUIUtility.singleLineHeight);
+
+                BlockType type = (BlockType)index;
+
+                EditorGUI.LabelField(labelRect, type.ToString());
+                prefab.objectReferenceValue = EditorGUI.ObjectField(prefabRect,
+                    prefab.objectReferenceValue, typeof(Block), false);
+            };
         }
 
         public override void OnInspectorGUI()
@@ -24,28 +46,6 @@ namespace FrontierIsland
             if (prefabCollapsed)
             {
                 list.DoLayoutList();
-                list.onCanAddCallback = (ReorderableList list) =>
-                {
-                    return list.count < Enum.GetValues(typeof(BlockType)).Length;
-                };
-                list.drawHeaderCallback = (Rect rect) =>
-                {
-                    EditorGUI.LabelField(rect, "Prefabs");
-                };
-                list.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-                {
-                    SerializedProperty prefab = list.serializedProperty.GetArrayElementAtIndex(index);
-
-                    Rect labelRect = new Rect(rect.x, rect.y, rect.width * 0.4f, EditorGUIUtility.singleLineHeight);
-                    Rect prefabRect = new Rect(rect.x + labelRect.width, rect.y,
-                        rect.width * 0.6f, EditorGUIUtility.singleLineHeight);
-
-                    BlockType type = (BlockType)index;
-
-                    EditorGUI.LabelField(labelRect, type.ToString());
-                    prefab.objectReferenceValue = EditorGUI.ObjectField(prefabRect,
-                        prefab.objectReferenceValue, typeof(Block), false);
-                };
             }
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(target);

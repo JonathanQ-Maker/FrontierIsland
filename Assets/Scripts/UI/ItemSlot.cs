@@ -73,16 +73,17 @@ namespace FrontierIsland
 
         public void OnDrop(PointerEventData eventData)
         {
+            Debug.Log("DROPPED");
             if (eventData.pointerDrag != null)
             {
                 InventoryItem inventoryItem = eventData.pointerDrag.GetComponent<InventoryItem>();
 
                 if (inventoryItem != null && !ReferenceEquals(inventoryItem, this.inventoryItem))
                 {
-                    ItemStack item = Window.Inventory.RemoveItem(inventoryItem.SlotIndex);
+                    ItemStack item = Window.Inventory.RemoveStack(inventoryItem.SlotIndex);
                     if (this.inventoryItem != null)
                     {
-                        ItemStack item2 = Window.Inventory.RemoveItem(this.inventoryItem.SlotIndex);
+                        ItemStack item2 = Window.Inventory.RemoveStack(this.inventoryItem.SlotIndex);
                         Window.Inventory.SetItem(inventoryItem.SlotIndex, item2);
                         this.inventoryItem.SlotIndex = inventoryItem.SlotIndex;
                         Window[inventoryItem.SlotIndex].inventoryItem = this.inventoryItem;

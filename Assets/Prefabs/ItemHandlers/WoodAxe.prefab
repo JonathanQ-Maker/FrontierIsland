@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93c4580e0cfa9ae4d906517152507d29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modelTransform: {fileID: 7434279542867038327}
+  model: {fileID: 7434279542867038327}
   collider: {fileID: 1498268110897485945}
 --- !u!65 &1498268110897485945
 BoxCollider:

@@ -5,8 +5,7 @@ namespace FrontierIsland
     [CreateAssetMenu(fileName = "ItemHandlerPrefabs", menuName = "FrontierIsland/ItemHandlerPrefabs", order = 1)]
     public class ItemHandlerPrefabs : ScriptableObject
     {
-        // vairable name prefabs is use to link to editor
-
+        // the vairable names "prefabs" and "icons" is use to link to editor
         [SerializeField]
         private ItemHandler[] prefabs;
         [SerializeField]

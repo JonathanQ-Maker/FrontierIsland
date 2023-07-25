@@ -3,9 +3,9 @@ using NBT.Tags;
 
 namespace FrontierIsland
 {
-    public interface INBTSerializable<T> where T : Tag
+    public interface INBTSerializable
     {
-        T SerializeNBT();
-        void DeserializeNBT(T tag);
+        void ReadFromNBT(CompoundTag nbt);
+        void WriteToNBT(CompoundTag nbt);
     }
 }

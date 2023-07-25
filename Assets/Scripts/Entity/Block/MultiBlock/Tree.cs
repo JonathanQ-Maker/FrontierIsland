@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using NBT.Tags;
+using UnityEngine;
 
 namespace FrontierIsland
 {
@@ -25,6 +26,11 @@ namespace FrontierIsland
             get { return state; }
             protected set
             {
+                if (TreeState.Tall == value)
+                {
+                    if (!Terrain.Instance.CanPlaceBlock(Position + new Vector3Int(0, 2, 0)))
+                        return;
+                }
                 state = value;
                 SetState(state);
             }
@@ -69,6 +75,18 @@ namespace FrontierIsland
             }
             boxCollider.size = meshFilter.mesh.bounds.size;
             boxCollider.center = meshFilter.mesh.bounds.center;
+        }
+
+        public override void ReadFromNBT(CompoundTag nbt)
+        {
+            base.ReadFromNBT(nbt);
+            State = (TreeState)nbt.GetByte("state");
+        }
+
+        public override void WriteToNBT(CompoundTag nbt)
+        {
+            base.WriteToNBT(nbt);
+            nbt.PutByte("state", (byte)State);
         }
     }
 }

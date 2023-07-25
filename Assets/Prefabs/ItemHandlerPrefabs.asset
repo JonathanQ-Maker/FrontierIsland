@@ -15,6 +15,12 @@ MonoBehaviour:
   prefabs:
   - {fileID: 2532191259931296603, guid: f6c484c0587bb534aa90e9182f95755f, type: 3}
   - {fileID: 3218227570548776937, guid: 615d1a17a2222224daf63b9f3dde0fc3, type: 3}
+  - {fileID: 1067074653510918793, guid: 0c3820192d3146b4f9202c4508d75b06, type: 3}
+  - {fileID: 1322093442235381772, guid: bcaf51b2ade62384c8b75c8e94f12961, type: 3}
+  - {fileID: 4860996682505575312, guid: 0bcd789856136b8438ea5337548e05d2, type: 3}
   icons:
   - {fileID: 21300000, guid: f06114b2431c2c045a1ffc2703a62f92, type: 3}
   - {fileID: 21300000, guid: ae25325fbc4547249b3b8a0dc78b36d5, type: 3}
+  - {fileID: 21300000, guid: 98a258cc6b5117243a8195010078671e, type: 3}
+  - {fileID: 21300000, guid: dd8d4aa130b43dd4084426df08000c40, type: 3}
+  - {fileID: 21300000, guid: 557f8490558783045b3b7fa230f5847e, type: 3}

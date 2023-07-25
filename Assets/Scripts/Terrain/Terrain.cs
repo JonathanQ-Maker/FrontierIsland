@@ -171,6 +171,17 @@ namespace FrontierIsland
             return block;
         }
 
+        public Block PlaceBlockItem(BlockItem item, Vector3Int pos)
+        {
+            Block block = PlaceBlock(item.BlockType, pos);
+
+            if (item.HasNBT)
+            {
+                block.ReadFromNBT(item.NBT);
+            }
+            return block;
+        }
+
         public void DestroyBlock(Block block)
         {
             Vector3Int pos = block.Position;
@@ -237,7 +248,7 @@ namespace FrontierIsland
 
         public void DestroyMultiBlock(MultiBlock block)
         {
-            Vector3Int pos = Vector3Int.FloorToInt(block.transform.position);
+            Vector3Int pos = Vector3Int.RoundToInt(block.transform.position);
             Vector3Int size = block.Size;
             Chunk chunk = GetOrNewChunk(pos.x, pos.z);
             for (int pY = pos.y; pY < size.y + pos.y; ++pY)

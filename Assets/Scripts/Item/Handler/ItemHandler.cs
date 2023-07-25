@@ -4,12 +4,18 @@ namespace FrontierIsland
 {
     public abstract class ItemHandler : MonoBehaviour, ISelectable
     {
+        /// <summary>
+        /// <see cref="ItemHandler"/> exists as a dropped form in the world
+        /// </summary>
+        public bool Dropped { get { return transform.parent == null; } }
+
         private bool toBeDestroyed = false;
         public bool ToBeDestroyed { get { return toBeDestroyed; } }
 
+
         public Vector3Int Position 
         {
-            get { return Vector3Int.FloorToInt(transform.position + modelTransform.localPosition); }
+            get { return Vector3Int.RoundToInt(transform.position); }
         }
 
         private ItemStack item;
@@ -27,8 +33,8 @@ namespace FrontierIsland
         }
 
         [SerializeField]
-        private Transform modelTransform;
-        public Transform ModelTransform { get { return modelTransform; } }
+        private Transform model;
+        public Transform Model { get { return model; } protected set { model = value; } }
 
         [SerializeField]
         private new Collider collider;
@@ -38,7 +44,7 @@ namespace FrontierIsland
         {
             if (Item == null)
             {
-                Debug.LogError("ItemHandler cannot exit without ItemStack");
+                Debug.LogError("ItemHandler cannot exist without ItemStack");
                 Destruct();
             }
         }

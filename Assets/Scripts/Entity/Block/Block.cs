@@ -3,8 +3,13 @@ using NBT.Tags;
 
 namespace FrontierIsland
 {
-    public abstract class Block : MonoBehaviour, INBTSerializable<CompoundTag>, ISelectable
+    public abstract class Block : MonoBehaviour, INBTSerializable, ISelectable
     {
+        [SerializeField]
+        private Transform model;
+
+        public Transform Model { get { return model; } }
+
         /// <summary>
         /// Block material identifier for tool efficiency calculation
         /// </summary>
@@ -29,25 +34,25 @@ namespace FrontierIsland
         {
             get 
             {
-                return Vector3Int.FloorToInt(transform.position);
+                return Vector3Int.RoundToInt(transform.position);
             }
-        }
-
-        public virtual void DeserializeNBT(CompoundTag tag)
-        {
-
         }
 
         public virtual void OnSelect()
         {
-            //throw new System.NotImplementedException();
+            
         }
 
-        public virtual CompoundTag SerializeNBT()
+        public virtual void ReadFromNBT(CompoundTag nbt)
         {
-            CompoundTag tag = new CompoundTag();
-            tag.PutByte("type", (byte)BlockType);
-            return tag;
+            
         }
+
+        public virtual void WriteToNBT(CompoundTag nbt)
+        {
+
+        }
+
+        //public abstract ItemStack GetItemDrop();
     }
 }

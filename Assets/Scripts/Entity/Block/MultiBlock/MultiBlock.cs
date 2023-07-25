@@ -8,7 +8,7 @@ namespace FrontierIsland
 
         protected virtual void OnDrawGizmosSelected()
         {
-            Vector3Int origin = Vector3Int.FloorToInt(transform.position);
+            Vector3Int origin = Vector3Int.RoundToInt(transform.position);
             float x = origin.x - 0.5f, y = origin.y, z = origin.z - 0.5f;
             Gizmos.DrawLine(new Vector3(x, y, z),                    new Vector3(x, y + Size.y, z));
             Gizmos.DrawLine(new Vector3(x, y + Size.y, z + Size.z),  new Vector3(x, y + Size.y, z));

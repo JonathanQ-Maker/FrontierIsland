@@ -102,7 +102,7 @@ namespace FrontierIsland
                 }
                 else
                 {
-                    window.Inventory.RemoveItem(SlotIndex);
+                    window.Inventory.RemoveStack(SlotIndex);
                 }
                 Destroy(gameObject);
             }

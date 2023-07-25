@@ -3,6 +3,7 @@ namespace FrontierIsland
 {
     public class StoneAxe : AxeTool
     {
+
         public StoneAxe() : this("Stone Axe", "An axe made \r\nwith a stone head")
         {
 
@@ -19,6 +20,13 @@ namespace FrontierIsland
         protected override float BaseEfficiency
         {
             get { return 1.5f; }
+        }
+
+        public override ItemStack DeepClone()
+        {
+            StoneAxe clone = new StoneAxe();
+            CopyTo(clone);
+            return clone;
         }
     }
 }

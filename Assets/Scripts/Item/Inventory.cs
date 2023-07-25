@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FrontierIsland
 {
-    public class Inventory : INBTSerializable<CompoundTag>
+    public class Inventory : INBTSerializable
     {
         private ItemStack[] items;
 
@@ -55,7 +55,6 @@ namespace FrontierIsland
 
         public virtual void SetItem(int index, ItemStack itemStack)
         {
-            ItemStack oldItem = items[index];
             items[index] = itemStack;
             if (Holder != null)
             {
@@ -63,7 +62,7 @@ namespace FrontierIsland
             }
         }
 
-        public ItemStack RemoveItem(int index)
+        public ItemStack RemoveStack(int index)
         { 
             ItemStack item = items[index];
             items[index] = null;
@@ -74,9 +73,68 @@ namespace FrontierIsland
             return item;
         }
 
-        public ItemHandler DropItem(int index, Vector3Int position)
+        /// <summary>
+        /// Places <see cref="ItemStack"/> in first available slot and return index.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns><see langword="true"/> if successfully added all items to inventory</returns>
+        public bool AddItem(ItemStack item)
         {
-            ItemStack item = RemoveItem(index);
+            int firstEmptyIndex = -1;
+            for (int i = 0; i < items.Length; ++i)
+            {
+                ItemStack currentItem = items[i];
+                if (firstEmptyIndex < 0 && currentItem == null)
+                {
+                    firstEmptyIndex = i;
+                }
+
+                if (currentItem != null && currentItem.CombineStack(item))
+                {
+                    if (Holder != null)
+                        Holder.OnInventoryChange(i);
+                    if (item.count <= 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if (firstEmptyIndex >= 0)
+            {
+                SetItem(firstEmptyIndex, item);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Adds <paramref name="item"/> to inventory and removes <see cref="ItemHandler"/> if it is in <see cref="ItemHandler.Dropped"/> state
+        /// </summary>
+        /// <param name="item"></param>
+        public void CollectItem(ItemStack item)
+        {
+            if (AddItem(item)) // succesfully added all items
+            {
+                // handler exists in the world as a dropped form
+                if (item.Handler != null && item.Handler.Dropped)
+                {
+                    item.RemoveHandler();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes <see cref="ItemStack"/> from <paramref name="index"/> and 
+        /// instantiate an <see cref="ItemHandler"/> at <paramref name="position"/>
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="position"></param>
+        /// <returns><see langword="null"/> if target item is <see langword="null"/>, 
+        /// otherwise the instantiated <see cref="ItemHandler"/></returns>
+        public ItemHandler DropStack(int index, Vector3Int position)
+        {
+            ItemStack item = RemoveStack(index);
             if (item != null)
             {
                 return item.InstantiateHandler(position, null);
@@ -85,45 +143,38 @@ namespace FrontierIsland
         }
 
         /// <summary>
-        /// Places <see cref="ItemStack"/> in first available slot and return index.
+        /// Consumes <paramref name="count"/> items from <see cref="ItemStack"/> at <paramref name="index"/>
         /// 
         /// <br>
-        /// NOTE: If no avialable slot is found, return -1
+        /// NOTE1: if resulting item count equals 0 removes <see cref="ItemStack"/> from inventory and removes <see cref="ItemHandler"/>
+        /// </br>
+        /// 
+        /// <br>
+        /// NOTE2: can result in negative count 
         /// </br>
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns>index where the item is added, -1 if no slot is available</returns>
-        public int AddItem(ItemStack item)
+        /// <param name="index"></param>
+        /// <param name="count"></param>
+        public void ConsumeItem(int index, int count)
         {
-            for (int i = 0; i < items.Length; ++i)
+            ItemStack item = this[index];
+            item.count -= count;
+
+            if (item.count <= 0)
             {
-                ItemStack currentItem = items[i];
-                if (currentItem == null)
-                {
-                    SetItem(i, item);
-                    return i;
-                }
-
-                if (currentItem.Similar(item) && currentItem.count + item.count <= currentItem.MaxStackSize)
-                {
-                    currentItem.count += item.count;
-                    if (Holder != null)
-                        Holder.OnInventoryChange(i);
-                    return i;
-                }
+                item.RemoveHandler();
+                RemoveStack(index);
             }
-            return -1;
         }
 
-
-        public void DeserializeNBT(CompoundTag tag)
+        public void ReadFromNBT(CompoundTag nbt)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public CompoundTag SerializeNBT()
+        public void WriteToNBT(CompoundTag nbt)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

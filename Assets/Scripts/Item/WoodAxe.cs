@@ -22,5 +22,12 @@ namespace FrontierIsland
         {
             get { return 1.25f; }
         }
+
+        public override ItemStack DeepClone()
+        {
+            WoodAxe clone = new WoodAxe();
+            CopyTo(clone);
+            return clone;
+        }
     }
 }

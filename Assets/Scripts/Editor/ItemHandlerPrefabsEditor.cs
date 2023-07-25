@@ -9,9 +9,8 @@ namespace FrontierIsland
     public class ItemHandlerPrefabsEditor : Editor
     {
         // see: https://xinyustudio.wordpress.com/2015/07/21/unity3d-using-reorderablelist-in-custom-editor/
-        ReorderableList list;
+        ReorderableList list, icons;
         bool prefabCollapsed, iconCollapsed;
-        ReorderableList icons;
 
         private void OnEnable()
         {
