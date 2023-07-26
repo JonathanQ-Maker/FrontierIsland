@@ -8,6 +8,8 @@ namespace FrontierIsland
     {
         [SerializeField]
         private InventoryItem invItemPrefab;
+        public InventoryItem InvItemPrefab { get { return invItemPrefab; } }
+
         [SerializeField]
         private ItemSlot itemSlotPrefab;
         [SerializeField]
@@ -105,9 +107,8 @@ namespace FrontierIsland
                 {
                     if (itemSlot.inventoryItem == null)
                     {
-                        InventoryItem item = Instantiate(invItemPrefab, itemSlot.transform);
-                        item.window = this;
-                        item.SlotIndex = index;
+                        InventoryItem item = Instantiate(invItemPrefab, itemSlot.ItemHolder);
+                        item.ItemSlot = itemSlot;
                         itemSlot.inventoryItem = item;
                     }
                     itemSlot.inventoryItem.UpdateContent();

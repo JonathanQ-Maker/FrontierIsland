@@ -175,7 +175,7 @@ namespace FrontierIsland
         {
             Block block = PlaceBlock(item.BlockType, pos);
 
-            if (item.HasNBT)
+            if (item.HasNBT && block != null)
             {
                 block.ReadFromNBT(item.NBT);
             }

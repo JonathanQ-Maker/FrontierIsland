@@ -60,8 +60,9 @@ namespace FrontierIsland
         {
             HandleSelect();
             HandleHotBarInput();
+            HandleFocus();
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.F))
             {
                 Debug.Log($"ItemStack instance counts: {ItemStack.ItemCount}");
             }
@@ -147,6 +148,14 @@ namespace FrontierIsland
             {
                 if (cube.gameObject.activeSelf)
                     cube.gameObject.SetActive(false);
+            }
+        }
+
+        private void HandleFocus()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                CameraManager.Instance.StartFocus(settler.transform.position);
             }
         }
 

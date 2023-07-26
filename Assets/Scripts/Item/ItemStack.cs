@@ -74,6 +74,8 @@ namespace FrontierIsland
                     Handler.Model.localRotation = prefab.Model.localRotation;
                 }
             }
+            Handler.transform.localPosition = pos;
+            Handler.transform.localRotation = Quaternion.identity;
             Handler.Collider.enabled = false;
             return Handler;
         }
@@ -110,6 +112,23 @@ namespace FrontierIsland
         }
 
         /// <summary>
+        /// Add <paramref name="count"/> number of items to this stack from <paramref name="other"/>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns><see langword="true"/> if successfully added to the stacks</returns>
+        public bool AddFrom(ItemStack other, int count)
+        {
+            if (Similar(other) && (this.count + count) <= MaxStackSize && other.count >= count)
+            {
+                other.count -= count;
+                this.count += count;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Create a new stack of with <paramref name="count"/> subtracted from this <see cref="ItemStack"/>
         /// </summary>
         /// <param name="count"></param>
@@ -130,7 +149,7 @@ namespace FrontierIsland
         {
             this.name           = name;
             this.description    = description;
-            this.count          = (byte)count;
+            this.count          = count;
             itemCount++;
         }
 

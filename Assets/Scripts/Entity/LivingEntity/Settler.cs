@@ -78,13 +78,11 @@ namespace FrontierIsland
                 Debug.LogError("Missing animator");
 
             inventory = new Inventory(9, 1, this);
-            inventory[1, 0] = new WoodAxe();
-            inventory[2, 0] = new StoneAxe();
-
-            RocksItem rocks = new RocksItem(2);
-            inventory[0, 0] = rocks;
-
-            inventory[3, 0] = new TreeItem(2, Tree.TreeState.Normal);
+            inventory[0, 0] = new RocksItem(2);
+            inventory[1, 0] = new RocksItem(254);
+            inventory[2, 0] = new WoodAxe();
+            inventory[3, 0] = new StoneAxe();
+            inventory[4, 0] = new TreeItem(2, Tree.TreeState.Normal);
         }
 
         protected void UpdateHeldItem()
@@ -223,7 +221,11 @@ namespace FrontierIsland
             yield return new WaitForSeconds(0.5f);
 
             BlockItem blockItem = HeldItem as BlockItem;
-            if (blockItem == null || blockItem.count <= 0) yield break;
+            if (blockItem == null || blockItem.count <= 0)
+            {
+                State = AnimState.Idle;
+                yield break;
+            }
             if (Terrain.Instance.PlaceBlockItem(blockItem, targetPos) != null)
             {
                 Inventory.ConsumeItem(HeldItemIndex, 1);

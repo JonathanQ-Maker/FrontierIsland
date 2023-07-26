@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.EventSystems.PointerEventData;
 
 namespace FrontierIsland
 {
@@ -68,29 +69,86 @@ namespace FrontierIsland
             }
         }
 
+        public ItemStack ItemStack { get { return Window.Inventory[SlotIndex]; } }
+
         [NonSerialized]
         public InventoryItem inventoryItem = null;
 
         public void OnDrop(PointerEventData eventData)
         {
-            Debug.Log("DROPPED");
+            if (eventData.button != InputButton.Left) return;
             if (eventData.pointerDrag != null)
             {
-                InventoryItem inventoryItem = eventData.pointerDrag.GetComponent<InventoryItem>();
-
-                if (inventoryItem != null && !ReferenceEquals(inventoryItem, this.inventoryItem))
+                if (eventData.pointerDrag.TryGetComponent(out InventoryItem other))
                 {
-                    ItemStack item = Window.Inventory.RemoveStack(inventoryItem.SlotIndex);
-                    if (this.inventoryItem != null)
+
+                    if (inventoryItem == null)
                     {
-                        ItemStack item2 = Window.Inventory.RemoveStack(this.inventoryItem.SlotIndex);
-                        Window.Inventory.SetItem(inventoryItem.SlotIndex, item2);
-                        this.inventoryItem.SlotIndex = inventoryItem.SlotIndex;
-                        Window[inventoryItem.SlotIndex].inventoryItem = this.inventoryItem;
+
+                        // empty slot
+                        Window.Inventory.SetItem(SlotIndex, other.ItemStack);
+                        other.ItemSlot = this;
+                        inventoryItem = other;
                     }
-                    Window.Inventory.SetItem(SlotIndex, item);
-                    inventoryItem.SlotIndex = SlotIndex;
-                    this.inventoryItem = inventoryItem;
+                    else if (inventoryItem.ItemStack.Similar(other.ItemStack))
+                    {
+                        // slot with similar items
+                        inventoryItem.ItemStack.CombineStack(other.ItemStack);
+                        if (other.ItemStack.count > 0)
+                        {
+                            // still have left overs
+                            if (other.PrevSlot.ItemStack == null)
+                            {
+                                // previous slot is empty, put item back
+                                ItemSlot prevSlot = other.PrevSlot;
+                                Window.Inventory.SetItem(prevSlot.SlotIndex, other.ItemStack);
+                                other.ItemSlot = prevSlot;
+                                prevSlot.inventoryItem = other;
+                            }
+                            else
+                            {
+                                Window.Inventory.AddItem(other.ItemStack);
+                            }
+                        }
+                    }
+                    else if (other.PrevSlot.ItemStack == null)
+                    {
+                        // different items and our previous slot is empty, swap it
+                        Window.Inventory.SetItem(other.PrevSlot.SlotIndex, inventoryItem.ItemStack);
+                        Window.Inventory.SetItem(SlotIndex, other.ItemStack);
+
+
+                        inventoryItem.ItemSlot = other.PrevSlot;
+                        inventoryItem.ItemSlot.inventoryItem = inventoryItem;
+                        inventoryItem.ResetPosition();
+
+                        other.ItemSlot = this;
+                        inventoryItem = other;
+                    }
+                    else if (other.PrevSlot.ItemStack.Similar(other.ItemStack))
+                    {
+                        // different items, previous slot is not empty
+                        // and previous item is similar, combine them
+                        other.PrevSlot.ItemStack.CombineStack(other.ItemStack);
+                        if (other.ItemStack.count > 0)
+                        {
+                            // still have left overs
+                            Window.Inventory.AddItem(other.ItemStack);
+                        }
+                    }
+
+
+                    //ItemStack item = Window.Inventory.RemoveStack(inventoryItem.SlotIndex);
+                    //if (this.inventoryItem != null)
+                    //{
+                    //    ItemStack item2 = Window.Inventory.RemoveStack(this.inventoryItem.SlotIndex);
+                    //    Window.Inventory.SetItem(inventoryItem.SlotIndex, item2);
+                    //    this.inventoryItem.SlotIndex = inventoryItem.SlotIndex;
+                    //    Window[inventoryItem.SlotIndex].inventoryItem = this.inventoryItem;
+                    //}
+                    //Window.Inventory.SetItem(SlotIndex, item);
+                    //inventoryItem.SlotIndex = SlotIndex;
+                    //this.inventoryItem = inventoryItem;
                 }
             }
         }

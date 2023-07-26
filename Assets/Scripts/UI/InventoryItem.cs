@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 using static UnityEngine.EventSystems.PointerEventData;
 using System;
+using System.Collections;
 
 namespace FrontierIsland
 {
@@ -14,42 +15,55 @@ namespace FrontierIsland
         [SerializeField]
         private TextMeshProUGUI countDisplay;
 
-        [NonSerialized]
-        public InventoryWindow window;
 
-        [SerializeField]
-        private int slotIndex = -1;
-        
-        /// <summary>
-        /// The index that gets the ItemStack this InventoryItem represents
-        /// </summary>
-        public int SlotIndex
+        private ItemSlot prevSlot, itemSlot;
+        public ItemSlot PrevSlot { get { return prevSlot; } }
+        public ItemSlot ItemSlot 
         {
-            get
+            get { return itemSlot; }
+            set 
             {
-                return slotIndex;
-            }
+                if (!ReferenceEquals(value, itemSlot) && itemSlot != null)
+                    prevSlot = itemSlot;
+                itemSlot = value;
 
-            set
-            {
-                slotIndex = value;
-                if (slotIndex != -1)
-                { 
-                    UpdateContent();
-                    ResetPosition();
-                }
-            }
+                if (itemSlot != null)
+                    index = itemSlot.SlotIndex;
+            } 
         }
 
+        public int index;
+
+        private ItemStack itemStack;
         public ItemStack ItemStack
         {
             get
             {
-                return window.Inventory[SlotIndex];
+                if (ItemSlot != null)
+                    return ItemSlot.ItemStack;
+                return itemStack;
             }
         }
 
         private Canvas canvas;
+        private GameObject hover;
+
+
+        private IEnumerator actionLoop;
+        protected virtual IEnumerator ActionLoop
+        {
+            get { return actionLoop; }
+            set
+            {
+                if (actionLoop != null)
+                {
+                    StopCoroutine(actionLoop);
+                }
+                actionLoop = value;
+                if (actionLoop != null)
+                    StartCoroutine(actionLoop);
+            }
+        }
 
         private void Start()
         {
@@ -59,50 +73,113 @@ namespace FrontierIsland
 
         public void UpdateContent()
         {
-            ItemStack item = window.Inventory[SlotIndex];
-            image.sprite = item.GetIcon();
-            if (item.count == 1)
+            image.sprite = ItemStack.GetIcon();
+            if (ItemStack.count == 1)
             {
                 countDisplay.text = string.Empty;
             }
             else
             {
-                countDisplay.text = $"{item.count}";
+                countDisplay.text = $"{ItemStack.count}";
             }
         }
 
         public void ResetPosition()
         {
             transform.SetParent(null);
-            transform.SetParent(window[SlotIndex].ItemHolder);
+            transform.SetParent(ItemSlot.ItemHolder);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            if (eventData.button != InputButton.Left) return;
+
+            if (Input.GetKey(KeyCode.LeftControl) && ItemStack.count > 1)
+            {
+                InventoryItem item = Instantiate(ItemSlot.Window.InvItemPrefab, transform.parent);
+                item.ItemSlot = ItemSlot;
+                ItemSlot.inventoryItem = item;
+                itemStack = ItemSlot.ItemStack.SplitStack(Mathf.CeilToInt(ItemStack.count/2f));
+                UpdateContent();
+            }
+            else
+            {
+                ItemSlot.inventoryItem = null;
+                itemStack = ItemSlot.Window.Inventory.RemoveStack(ItemSlot.SlotIndex);
+            }
+            ItemSlot = null;
+
             transform.SetParent(canvas.transform);
             transform.SetAsLastSibling();
             image.raycastTarget = false;
+            ActionLoop = HandleClick();
+            hover = eventData.pointerEnter;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (eventData.button == InputButton.Left)
+
+            if (eventData.button != InputButton.Left) return;
+            
+            
+            transform.position = eventData.position;
+            hover = eventData.pointerEnter;
+        }
+
+        private IEnumerator HandleClick()
+        {
+            while (true)
             {
-                transform.position = eventData.position;
+                if (Input.GetMouseButtonDown(1))
+                {
+                    if (ItemStack.count > 1)
+                    if (hover.TryGetComponent(out InventoryItem other))
+                    {
+                        if (other.ItemStack.AddFrom(ItemStack, 1))
+                        {
+                            UpdateContent();
+                        }
+                    }
+                    else if (hover.TryGetComponent(out ItemSlot slot))
+                    {
+                        if (slot.inventoryItem == null)
+                        {
+                            slot.Window.Inventory.SetItem(slot.SlotIndex, ItemStack.SplitStack(1));
+                            hover = slot.gameObject;
+                            UpdateContent();
+                        }
+                        else
+                        {
+                            if (slot.inventoryItem.ItemStack.AddFrom(ItemStack, 1))
+                            {
+                                UpdateContent();
+                            }
+                        }
+                    }
+                }
+                yield return null;
             }
         }
 
+        // order of op: up, click, drop, end drag
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (!RectTransformUtility.RectangleContainsScreenPoint(window.WindowRect, Input.mousePosition))
+            if (eventData.button != InputButton.Left) return;
+            if (ItemSlot == null)
             {
-                if (window.Inventory.Holder != null)
+                //if (window.Inventory.Holder != null)
+                //{
+                //    window.Inventory.Holder.DropItem(SlotIndex);
+                //}
+                //else
+                //{
+                //    window.Inventory.RemoveStack(SlotIndex);
+                //}
+                Debug.Log("Destroyed inv item");
+
+                if (ItemStack.count > 0)
                 {
-                    window.Inventory.Holder.DropItem(SlotIndex);
-                }
-                else
-                {
-                    window.Inventory.RemoveStack(SlotIndex);
+                    // TODO: drop remaining items
                 }
                 Destroy(gameObject);
             }
@@ -110,11 +187,17 @@ namespace FrontierIsland
             {
                 ResetPosition();
             }
+
+            // safe to set null because ItemStck is
+            // either dropped or stored through ItemSlot
+            itemStack = null;
             image.raycastTarget = true;
+            ActionLoop = null;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (ItemStack == null) return;
             GameController.Instance.ToolTipWindow.Active = true;
             GameController.Instance.ToolTipWindow.LoadItemTip(ItemStack);
         }

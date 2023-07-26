@@ -66,6 +66,7 @@ namespace FrontierIsland
         { 
             ItemStack item = items[index];
             items[index] = null;
+            item.RemoveHandler();
             if (Holder != null)
             {
                 Holder.OnInventoryChange(index);
