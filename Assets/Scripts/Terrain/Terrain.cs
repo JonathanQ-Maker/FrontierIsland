@@ -46,6 +46,7 @@ namespace FrontierIsland
                 }
             }
 
+
             for (int i = 0; i < (int)(LengthTiles * 0.8f) * 5; ++i)
             {
                 PlaceBlock((BlockType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(BlockType)).Length), 
@@ -186,7 +187,7 @@ namespace FrontierIsland
         {
             Vector3Int pos = block.Position;
             Chunk chunk = GetChunk(pos.x, pos.z);
-            chunk.SetBlock(null, pos.x, pos.y, pos.z);
+            chunk.SetBlock(null, pos.x % Chunk.CHUNK_SIZE, pos.y, pos.z % Chunk.CHUNK_SIZE);
             Destroy(block.gameObject);
         }
 
