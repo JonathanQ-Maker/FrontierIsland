@@ -6,7 +6,7 @@
 
         public override BlockType BlockType { get { return BlockType.Rocks; } }
 
-        public RocksItem(int count) : base(count, "Rocks", "A collection of rocks")
+        public RocksItem(int count) : base(count, "Rocks", "a collection of rocks")
         {
 
         }

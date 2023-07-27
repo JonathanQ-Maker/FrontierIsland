@@ -14,9 +14,9 @@
         void OnInventoryChange(int index);
 
         /// <summary>
-        /// called if holder should drop the item at index
+        /// Called if holder should drop 
         /// </summary>
         /// <param name="index"></param>
-        void DropItem(int index);
+        void DropItem(ItemStack itemStack);
     }
 }

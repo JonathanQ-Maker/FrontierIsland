@@ -24,16 +24,6 @@ namespace FrontierIsland
         public TreeState State
         {
             get { return state; }
-            protected set
-            {
-                if (TreeState.Tall == value)
-                {
-                    if (!Terrain.Instance.CanPlaceBlock(Position + new Vector3Int(0, 2, 0)))
-                        return;
-                }
-                state = value;
-                SetState(state);
-            }
         }
 
         public override BlockType BlockType
@@ -59,15 +49,25 @@ namespace FrontierIsland
             }
         }
 
-        private void SetState(TreeState state)
+        private void TrySetState(TreeState state)
         {
+            TreeState prevState = State;
             switch (state)
             {
                 case TreeState.Normal:
                     meshFilter.sharedMesh = normalTree;
+                    if (prevState == TreeState.Tall)
+                    {
+                        Terrain.Instance.SetBlock(null, Position + new Vector3Int(0, 2, 0));
+                    }
                     break;
                 case TreeState.Tall:
-                    meshFilter.sharedMesh = tallTree;
+                    Vector3Int topBlockPos = Position + new Vector3Int(0, 2, 0);
+                    if (Terrain.Instance.GetBlock(topBlockPos) == null)
+                    {
+                        meshFilter.sharedMesh = tallTree;
+                        Terrain.Instance.SetBlock(this, topBlockPos);
+                    }
                     break;
                 default:
                     Debug.LogWarning($"Set unexpected state {state}");
@@ -80,13 +80,21 @@ namespace FrontierIsland
         public override void ReadFromNBT(CompoundTag nbt)
         {
             base.ReadFromNBT(nbt);
-            State = (TreeState)nbt.GetByte("state");
+            TrySetState((TreeState)nbt.GetByte("state"));
         }
 
         public override void WriteToNBT(CompoundTag nbt)
         {
             base.WriteToNBT(nbt);
             nbt.PutByte("state", (byte)State);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                TrySetState(TreeState.Tall);
+            }
         }
     }
 }

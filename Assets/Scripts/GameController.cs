@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 
 namespace FrontierIsland
@@ -87,6 +88,7 @@ namespace FrontierIsland
 
         private void HandleHotBarInput()
         {
+            if (settler != null)
             for (int i = (int)KeyCode.Alpha1; i <= (int)KeyCode.Alpha9; ++i)
             {
                 if (Input.GetKeyDown((KeyCode)i))
@@ -185,7 +187,9 @@ namespace FrontierIsland
 
                 if (selectable is Block)
                 {
-                    settler.StartHarvestBlock((Block)selectable);
+                    Block block = (Block)selectable;
+                    Assert.IsTrue(ReferenceEquals(Terrain.Instance.GetBlock(block.Position), selectable));
+                    settler.StartHarvestBlock(block);
                 }
 
                 if (selectable is ItemHandler)

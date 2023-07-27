@@ -78,11 +78,15 @@ namespace FrontierIsland
                 Debug.LogError("Missing animator");
 
             inventory = new Inventory(9, 1, this);
-            inventory[0, 0] = new RocksItem(2);
-            inventory[1, 0] = new RocksItem(254);
-            inventory[2, 0] = new WoodAxe();
-            inventory[3, 0] = new StoneAxe();
-            inventory[4, 0] = new TreeItem(2, Tree.TreeState.Normal);
+            inventory[0, 0] = new RocksItem(255);
+            inventory[1, 0] = new WoodAxe();
+            inventory[2, 0] = new StoneAxe();
+            inventory[3, 0] = new TreeItem(255, Tree.TreeState.Normal);
+            inventory[4, 0] = new BinItem(255);
+            inventory[5, 0] = new GrassItem(255);
+            inventory[6, 0] = new CampFireItem(255);
+            inventory[7, 0] = new MushroomsItem(255);
+            inventory[8, 0] = new CrateItem(255);
         }
 
         protected void UpdateHeldItem()
@@ -159,7 +163,9 @@ namespace FrontierIsland
             yield return Inspect(path, block.transform.position);
             if (block == null) yield break;
 
-            if ((Vector3Int.RoundToInt(transform.position) - block.Position).magnitude > 2)
+            Vector3Int delta = Position - block.Position;
+            delta.y = 0;
+            if (delta.magnitude > 2)
             {
                 Debug.LogError("error cannot harvest blocks this far away");
             }
@@ -178,7 +184,9 @@ namespace FrontierIsland
             }
 
             if (block != null) // is null if destroyed by another
+            {
                 Terrain.Instance.DestroyBlock(block);
+            }
             State = AnimState.Idle;
         }
 
@@ -275,7 +283,7 @@ namespace FrontierIsland
                 Debug.LogError("error");
             }
             State = AnimState.Harvesting;
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.25f);
 
             if (handler != null && !handler.ToBeDestroyed && handler.transform.parent == null) // check if picked up by another
             {
@@ -310,9 +318,9 @@ namespace FrontierIsland
         }
         #endregion
 
-        public virtual void DropItem(int index)
+        public virtual void DropItem(ItemStack item)
         {
-            Inventory.DropStack(index, Position);
+            item.InstantiateHandler(Position, null);
         }
 
         public void OnInventoryChange(int index)

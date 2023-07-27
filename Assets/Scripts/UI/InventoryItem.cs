@@ -179,7 +179,8 @@ namespace FrontierIsland
 
                 if (ItemStack.count > 0)
                 {
-                    // TODO: drop remaining items
+                    // drop remaining items, then delete item reference
+                    PrevSlot.Window.Inventory.Holder?.DropItem(itemStack);
                 }
                 Destroy(gameObject);
             }

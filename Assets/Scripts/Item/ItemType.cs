@@ -8,5 +8,9 @@ namespace FrontierIsland
         Rocks,
         Crate,
         Tree,
+        Grass,
+        Mushrooms,
+        CampFire,
+        Bin
     }
 }

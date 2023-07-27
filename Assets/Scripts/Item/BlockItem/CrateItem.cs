@@ -2,7 +2,7 @@
 {
     public class CrateItem : BlockItem
     {
-        public CrateItem(int count) : base(count, "Crate", "Box made of wood planks")
+        public CrateItem(int count) : base(count, "Crate", "box made of wood planks")
         {
 
         }
