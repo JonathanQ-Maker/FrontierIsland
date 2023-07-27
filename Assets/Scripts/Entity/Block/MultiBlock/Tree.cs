@@ -96,6 +96,11 @@ namespace FrontierIsland
                 TrySetState(TreeState.Tall);
             }
         }
+
+        public override ItemStack GetItemDrop()
+        {
+            return new TreeItem(1, TreeState.Normal);
+        }
     }
 }
 

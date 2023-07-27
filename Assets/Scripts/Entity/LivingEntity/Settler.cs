@@ -185,6 +185,15 @@ namespace FrontierIsland
 
             if (block != null) // is null if destroyed by another
             {
+                // Break block and handle item drops from block
+                ItemStack drops = block.GetItemDrop();
+                if (drops != null)
+                {
+                    if (!Inventory.AddItem(drops))
+                    {
+                        drops.InstantiateHandler(block.Position, null);
+                    }
+                }
                 Terrain.Instance.DestroyBlock(block);
             }
             State = AnimState.Idle;

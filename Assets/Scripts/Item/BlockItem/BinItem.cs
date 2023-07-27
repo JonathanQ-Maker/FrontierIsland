@@ -2,7 +2,7 @@
 {
     public class BinItem : BlockItem
     {
-        public BinItem(int count) : base(count, "Bin", "a open roof box")
+        public BinItem(int count) : base(count, "Bin", "an open roof box")
         {
 
         }

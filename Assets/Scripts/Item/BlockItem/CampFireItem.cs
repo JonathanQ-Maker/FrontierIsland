@@ -2,7 +2,7 @@
 {
     public class CampFireItem : BlockItem
     {
-        public CampFireItem(int count) : base(count, "Camp Fire", "a collection of wood\r\nwith burning passion")
+        public CampFireItem(int count) : base(count, "Camp Fire", "a collection of wood\r\nwith a burning passion")
         {
 
         }

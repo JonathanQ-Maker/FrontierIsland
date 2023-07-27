@@ -23,5 +23,10 @@
         {
             get { return BlockType.Rocks; }
         }
+
+        public override ItemStack GetItemDrop()
+        {
+            return new RocksItem(1);
+        }
     }
 }

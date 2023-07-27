@@ -53,6 +53,11 @@ namespace FrontierIsland
 
         }
 
-        //public abstract ItemStack GetItemDrop();
+        /// <summary>
+        /// Returns a new <see cref="ItemStack"/> representing the 
+        /// content dropped from breaking this <see cref="Block"/>
+        /// </summary>
+        /// <returns><see langword="null"/> if no drops </returns>
+        public abstract ItemStack GetItemDrop();
     }
 }

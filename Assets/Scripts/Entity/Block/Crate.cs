@@ -14,6 +14,11 @@
         {
             get { return BlockType.Crate; }
         }
+
+        public override ItemStack GetItemDrop()
+        {
+            return new CrateItem(1);
+        }
     }
 }
 

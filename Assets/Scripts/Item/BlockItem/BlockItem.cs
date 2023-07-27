@@ -12,5 +12,10 @@
         { 
             return GameController.Instance.BlockPrefabs[BlockType];
         }
+
+        public override string GetToolTip()
+        {
+            return base.GetToolTip() + $"<color=#898989><i>{description}</i></color>";
+        }
     }
 }

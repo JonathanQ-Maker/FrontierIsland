@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FrontierIsland
 {
-    public class Foliage : Block
+    public abstract class Foliage : Block
     {
         public override bool Solid { get { return false; } }
 

@@ -14,5 +14,10 @@
         {
             get { return BlockType.Bin; }
         }
+
+        public override ItemStack GetItemDrop()
+        {
+            return new BinItem(1);
+        }
     }
 }
