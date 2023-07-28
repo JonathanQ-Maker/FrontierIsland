@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace FrontierIsland
@@ -78,15 +79,16 @@ namespace FrontierIsland
                 Debug.LogError("Missing animator");
 
             inventory = new Inventory(9, 1, this);
-            inventory[0, 0] = new RocksItem(255);
-            inventory[1, 0] = new WoodAxe();
-            inventory[2, 0] = new StoneAxe();
-            inventory[3, 0] = new TreeItem(255, Tree.TreeState.Normal);
-            inventory[4, 0] = new BinItem(255);
-            inventory[5, 0] = new GrassItem(255);
-            inventory[6, 0] = new CampFireItem(255);
-            inventory[7, 0] = new MushroomsItem(255);
-            inventory[8, 0] = new CrateItem(255);
+            inventory[0, 0] = new WoodAxe();
+            inventory[1, 0] = new CrateItem(255);
+            //inventory[0, 0] = new RocksItem(255);
+            //inventory[2, 0] = new StoneAxe();
+            //inventory[3, 0] = new TreeItem(255, Tree.TreeState.Normal);
+            //inventory[4, 0] = new BinItem(255);
+            //inventory[5, 0] = new GrassItem(255);
+            //inventory[6, 0] = new CampFireItem(255);
+            //inventory[7, 0] = new MushroomsItem(255);
+            
         }
 
         protected void UpdateHeldItem()
@@ -141,7 +143,7 @@ namespace FrontierIsland
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Vector3Int.RoundToInt(transform.position), Vector3Int.RoundToInt(target), 32, callback);
+            PathRequest newRequest = new PathRequest(Position, Vector3Int.RoundToInt(target), 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }
@@ -222,27 +224,28 @@ namespace FrontierIsland
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Vector3Int.RoundToInt(transform.position), block.Position, 32, callback);
+            PathRequest newRequest = new PathRequest(Position, block.Position, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }
         #endregion
 
         #region PlaceBlock
-        protected virtual IEnumerator PlaceBlock(Vector3Int[] path)
+        protected virtual IEnumerator PlaceBlock(Vector3Int[] path, Vector3Int targetPos)
         {
-            Vector3Int targetPos = path[path.Length - 1];
             yield return Inspect(path, targetPos);
+
+            if (!Terrain.Instance.CanPlaceBlock(targetPos)) yield break;
 
             State = AnimState.Harvesting;
             yield return new WaitForSeconds(0.5f);
 
-            BlockItem blockItem = HeldItem as BlockItem;
-            if (blockItem == null || blockItem.count <= 0)
+            if (HeldItem is not BlockItem blockItem || blockItem.count <= 0)
             {
                 State = AnimState.Idle;
                 yield break;
             }
+
             if (Terrain.Instance.PlaceBlockItem(blockItem, targetPos) != null)
             {
                 Inventory.ConsumeItem(HeldItemIndex, 1);
@@ -252,10 +255,36 @@ namespace FrontierIsland
 
         public virtual void StartPlaceBlock(Vector3Int targetPos)
         {
-
             if (pathRequest != null)
             {
                 pathRequest.Cancel();
+            }
+
+            Vector3Int currentPos = Position;
+            if (targetPos.x == currentPos.x && targetPos.z == currentPos.z)
+            {
+                // trying to place block at where Settler is standing
+                if (Terrain.Instance.Walkable(currentPos.x, currentPos.z + 1))
+                {
+                    // can walk north
+                    ActionLoop = PlaceBlock(new Vector3Int[] { currentPos + Vector3Int.forward, currentPos}, targetPos);
+                }
+                else if (Terrain.Instance.Walkable(currentPos.x + 1, currentPos.z))
+                {
+                    // can walk east
+                    ActionLoop = PlaceBlock(new Vector3Int[] { currentPos + Vector3Int.right, currentPos }, targetPos);
+                }
+                else if (Terrain.Instance.Walkable(currentPos.x, currentPos.z - 1))
+                {
+                    // can walk south
+                    ActionLoop = PlaceBlock(new Vector3Int[] { currentPos + Vector3Int.back, currentPos }, targetPos);
+                }
+                else if (Terrain.Instance.Walkable(currentPos.x - 1, currentPos.z))
+                {
+                    // can walk west
+                    ActionLoop = PlaceBlock(new Vector3Int[] { currentPos + Vector3Int.left, currentPos }, targetPos);
+                }
+                return; // cannot find an open spot to move out of the way, exit
             }
 
             Action<Vector3Int[], bool> callback = (Vector3Int[] path, bool success) =>
@@ -265,7 +294,7 @@ namespace FrontierIsland
                     this.path = path;
                     if (success)
                     {
-                        ActionLoop = PlaceBlock(path);
+                        ActionLoop = PlaceBlock(path, targetPos);
                     }
                     else
                     {
@@ -274,7 +303,7 @@ namespace FrontierIsland
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Vector3Int.RoundToInt(transform.position), targetPos, 32, callback);
+            PathRequest newRequest = new PathRequest(Position, targetPos, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }
@@ -287,7 +316,7 @@ namespace FrontierIsland
 
             if (handler == null || handler.ToBeDestroyed) yield break; // check if collected by another
 
-            if ((Vector3Int.RoundToInt(transform.position) - handler.transform.position).magnitude > 2)
+            if ((Position - handler.transform.position).magnitude > 2)
             {
                 Debug.LogError("error");
             }
@@ -321,7 +350,7 @@ namespace FrontierIsland
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Vector3Int.RoundToInt(transform.position), handler.Position, 32, callback);
+            PathRequest newRequest = new PathRequest(Position, handler.Position, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }

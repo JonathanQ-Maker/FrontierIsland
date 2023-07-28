@@ -1,13 +1,39 @@
 using UnityEngine;
 using NBT.Tags;
-using System.Security.Authentication;
 
 namespace FrontierIsland
 {
+    /*
+     * =======================================
+     *  How to make an item in FrontierIsland
+     * =======================================
+     * 
+     * 1. Add item type to ItemType enum
+     * 
+     * 2. Create a concrete class inheriting from ItemStack
+     * 
+     * 3. Create a concrete class inheriting from ItemHandler
+     * 
+     * 4. Create a prefab in Editor with ItemHandler attached to the 
+     * top-most gameobject and a child gameobject called "Model" which 
+     * holds the mesh of the ItemHandler. Make sure the top-most gameobject 
+     * has zero position, identity rotation
+     * and the prefab has a collider
+     * 
+     * 5. Adjust ItemHandler's Model transform such that it displays
+     * properly when attached to settler's hand pivots 
+     * 
+     * 6. Finally, link ItemHandler prefab to ItemHandlerPrefabs
+     * ScriptibleObject as well as an icon 
+     */
+
     public abstract class ItemStack : INBTSerializable, ICopyable<ItemStack>
     {
         private static int itemCount = 0; // Total number of item instances
 
+        /// <summary>
+        /// For memory leak debugging
+        /// </summary>
         public static int ItemCount { get { return itemCount; } }
 
 
@@ -28,6 +54,24 @@ namespace FrontierIsland
             protected set { handler = value; }
         }
 
+        /// <summary>
+        /// Instantiate the corresponding <see cref="ItemHandler"/> to this <see cref="ItemStack"/> to <paramref name="pos"/>
+        /// <br></br>
+        /// <br>
+        /// NOTE1: If an <see cref="ItemHandler"/> already exists will instead move to <paramref name="pos"/>
+        /// </br>
+        /// <br>
+        /// NOTE2: If <paramref name="parent"/> is null, will reset <see cref="ItemHandler.Model"/> transform. For the offset on 
+        /// </br>
+        /// <br>
+        /// <see cref="ItemHandler.Model"/> is intended for when held by <see cref="Settler"/>
+        /// </br>
+        /// <br>NOTE3: If <paramref name="parent"/> is not null, <paramref name="pos"/> is in 
+        /// localspace and <see cref="ItemHandler.Collider"/> is disabled</br>
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="parent"></param>
+        /// <returns></returns>
         public virtual ItemHandler InstantiateHandler(Vector3 pos, Transform parent)
         {
             ItemHandler prefab = GameController.Instance.ItemHandlerPrefabs[ItemType];
@@ -80,14 +124,22 @@ namespace FrontierIsland
             return Handler;
         }
 
+        /// <summary>
+        /// Destroy the <see cref="ItemHandler"/> using <see cref="ItemHandler.Destruct()"/>
+        /// </summary>
         public void RemoveHandler()
         {
             if (Handler != null)
             {
+                // Sets ToBeDestroyed flag when Destroying this handler, prevents race conditions
                 Handler.Destruct();
             }
         }
 
+        /// <summary>
+        /// Get the Icon image corresponding to this <see cref="ItemStack"/>
+        /// </summary>
+        /// <returns></returns>
         public virtual Sprite GetIcon()
         { 
             return GameController.Instance.ItemHandlerPrefabs.GetIcon(ItemType);
@@ -95,10 +147,9 @@ namespace FrontierIsland
 
         /// <summary>
         /// Combines the stacks
-        /// 
         /// </summary>
         /// <param name="other"></param>
-        /// <returns><see langword="true"/> if successfully combined the stacks</returns>
+        /// <returns><see langword="true"/> if successfully combined at least one item from <paramref name="other"/></returns>
         public bool CombineStack(ItemStack other)
         {
             if (Similar(other) && count < MaxStackSize)
@@ -116,7 +167,7 @@ namespace FrontierIsland
         /// 
         /// </summary>
         /// <param name="other"></param>
-        /// <returns><see langword="true"/> if successfully added to the stacks</returns>
+        /// <returns><see langword="true"/> if successfully added <paramref name="count"/> to this stack</returns>
         public bool AddFrom(ItemStack other, int count)
         {
             if (Similar(other) && (this.count + count) <= MaxStackSize && other.count >= count)

@@ -138,7 +138,7 @@ namespace FrontierIsland
                     if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
                     {
                         selectable.OnSelect();
-                        OnSelect(selectable, pos);
+                        OnSelect(selectable, pos, hit.normal);
                     }
                 }
                 else if (cube.gameObject.activeSelf)
@@ -161,7 +161,7 @@ namespace FrontierIsland
             }
         }
 
-        private void OnSelect(ISelectable selectable, Vector3Int pos)
+        private void OnSelect(ISelectable selectable, Vector3Int pos, Vector3 normal)
         {
             if (selectable is Settler)
             {
@@ -173,28 +173,54 @@ namespace FrontierIsland
 
             if (settler != null)
             {
-                if (selectable is Chunk)
+                if (settler.HeldItem is BlockItem)
                 {
-                    if (settler.HeldItem is BlockItem)
+                    if (selectable is Chunk)
                     {
-                        settler.StartPlaceBlock(pos);
+                        settler.StartPlaceBlock(pos + Vector3Int.up);
+                        return;
                     }
-                    else
+                    else if (selectable is Block)
                     {
-                        settler.StartMoveTo(pos);
+                        BlockFace face = GetSelectBlockFace(normal);
+
+                        switch (face)
+                        {
+                            case BlockFace.North:
+                                settler.StartPlaceBlock(pos + Vector3Int.forward);
+                                break;
+                            case BlockFace.East:
+                                settler.StartPlaceBlock(pos + Vector3Int.right);
+                                break;
+                            case BlockFace.South:
+                                settler.StartPlaceBlock(pos + Vector3Int.back);
+                                break;
+                            case BlockFace.West:
+                                settler.StartPlaceBlock(pos + Vector3Int.left);
+                                break;
+                            case BlockFace.Top:
+                                settler.StartPlaceBlock(pos + Vector3Int.up);
+                                break;
+                        }
+                        return;
                     }
                 }
 
-                if (selectable is Block)
+
+                if (selectable is Chunk)
                 {
-                    Block block = (Block)selectable;
+                    settler.StartMoveTo(pos);
+                }
+
+                if (selectable is Block block)
+                {
                     Assert.IsTrue(ReferenceEquals(Terrain.Instance.GetBlock(block.Position), selectable));
                     settler.StartHarvestBlock(block);
                 }
 
-                if (selectable is ItemHandler)
+                if (selectable is ItemHandler handler)
                 {
-                    settler.StartCollectItem((ItemHandler)selectable);
+                    settler.StartCollectItem(handler);
                 }
             }
 

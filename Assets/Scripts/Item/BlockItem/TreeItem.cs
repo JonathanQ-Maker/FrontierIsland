@@ -1,4 +1,5 @@
 ﻿using NBT.Tags;
+using UnityEngine;
 
 namespace FrontierIsland
 {
@@ -15,6 +16,7 @@ namespace FrontierIsland
             if (!HasNBT)
             {
                 NBT = new CompoundTag(1);
+                Debug.Log($"State: {state}");
                 State = state;
             }
         }

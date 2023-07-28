@@ -8,11 +8,11 @@ namespace FrontierIsland
         public enum TreeState : byte
         {
             Normal,
-            Tall
+            Grown
         }
 
         [SerializeField]
-        private Mesh normalTree, tallTree;
+        private Mesh normalTree, grownTree;
 
         [SerializeField]
         private MeshFilter meshFilter;
@@ -35,9 +35,7 @@ namespace FrontierIsland
         {
             get
             {
-                if (State == TreeState.Normal)
-                    return new Vector3Int(1, 2, 1);
-                return new Vector3Int(1, 3, 1);
+                return new Vector3Int(1, 2, 1);
             }
         }
 
@@ -56,18 +54,9 @@ namespace FrontierIsland
             {
                 case TreeState.Normal:
                     meshFilter.sharedMesh = normalTree;
-                    if (prevState == TreeState.Tall)
-                    {
-                        Terrain.Instance.SetBlock(null, Position + new Vector3Int(0, 2, 0));
-                    }
                     break;
-                case TreeState.Tall:
-                    Vector3Int topBlockPos = Position + new Vector3Int(0, 2, 0);
-                    if (Terrain.Instance.GetBlock(topBlockPos) == null)
-                    {
-                        meshFilter.sharedMesh = tallTree;
-                        Terrain.Instance.SetBlock(this, topBlockPos);
-                    }
+                case TreeState.Grown:
+                    meshFilter.sharedMesh = grownTree;
                     break;
                 default:
                     Debug.LogWarning($"Set unexpected state {state}");
@@ -93,13 +82,13 @@ namespace FrontierIsland
         {
             if (Input.GetKeyDown(KeyCode.G))
             {
-                TrySetState(TreeState.Tall);
+                TrySetState(TreeState.Grown);
             }
         }
 
         public override ItemStack GetItemDrop()
         {
-            return new TreeItem(1, TreeState.Normal);
+            return new TreeItem(1, State);
         }
     }
 }

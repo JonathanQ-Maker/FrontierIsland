@@ -53,11 +53,6 @@ namespace FrontierIsland
                     new Vector3Int(UnityEngine.Random.Range(0, LengthTiles-1), 0, UnityEngine.Random.Range(0, WidthTiles-1)));
             }
 
-            for (int i = 0; i < Chunk.CHUNK_SIZE; ++i)
-            {
-                PlaceBlock(BlockType.Crate,
-                    new Vector3Int(16, 2, i));
-            }
             foreach (Chunk c in chunks)
             c.UpdateChunkMesh();
         }
@@ -117,14 +112,34 @@ namespace FrontierIsland
             return WithinBounds(x, z) && y >= 0 && y < Chunk.CHUNK_HEIGHT;
         }
 
-        public bool Walkable(int x, int z)
+        /// <summary>
+        /// Check if location is walkable
+        /// <br>
+        /// NOTE: Does not check if is wihtin bounds for faster computation
+        /// </br>
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="z"></param>
+        /// <returns><see langword="true"/> if walkable</returns>
+        public bool WalkableUnchecked(int x, int z)
         {
             Block block0 = GetBlock(new Vector3Int(x, 0, z));
             Block block1 = GetBlock(new Vector3Int(x, 1, z));
 
             return GetTile(x, z) != TileType.Air &&
                  (block0 == null || !block0.Solid) &&
-                 (block1 == null || !block0.Solid);
+                 (block1 == null || !block1.Solid);
+        }
+
+        /// <summary>
+        /// Check if location is walkable
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="z"></param>
+        /// <returns><see langword="true"/> if walkable</returns>
+        public bool Walkable(int x, int z)
+        {
+            return WithinBounds(x, z) && WalkableUnchecked(x, z);
         }
         #endregion
 
@@ -162,6 +177,9 @@ namespace FrontierIsland
 
         /// <summary>
         /// Sets <paramref name="block"/> reference at <paramref name="pos"/>
+        /// <br>
+        /// NOTE: Should check if within bounds
+        /// </br>
         /// </summary>
         /// <param name="block"></param>
         /// <param name="pos"></param>
@@ -239,6 +257,9 @@ namespace FrontierIsland
 
         /// <summary>
         /// Get <see cref="Block"/> reference at <paramref name="pos"/>
+        /// <br>
+        /// NOTE: should check if within bounds
+        /// </br>
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
@@ -264,7 +285,7 @@ namespace FrontierIsland
         /// <returns><see langword="true"/> if there is space</returns>
         public bool CanPlaceBlock(Vector3Int pos)
         {
-            return GetBlock(pos) == null;
+            return WithinBounds(pos.x, pos.y, pos.z) && GetBlock(pos) == null;
         }
 
         /// <summary>

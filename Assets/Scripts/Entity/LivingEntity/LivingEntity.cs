@@ -128,7 +128,7 @@ namespace FrontierIsland
                     this.path = path;
 
                     Vector3Int lastWaypoint = path[path.Length - 1];
-                    bool walkable = Terrain.Instance.Walkable(lastWaypoint.x, lastWaypoint.z);
+                    bool walkable = Terrain.Instance.WalkableUnchecked(lastWaypoint.x, lastWaypoint.z);
                     ActionLoop = TraversePath(path, walkable);
                 }
             };

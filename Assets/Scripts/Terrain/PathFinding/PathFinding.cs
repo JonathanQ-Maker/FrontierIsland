@@ -237,7 +237,7 @@ namespace FrontierIsland
                 node = grid[centerNode.x, centerNode.z + 1];
                 if (node == null)
                 {
-                    upWalkable = Terrain.Instance.Walkable(worldPos.x, worldPos.z + 1);
+                    upWalkable = Terrain.Instance.WalkableUnchecked(worldPos.x, worldPos.z + 1);
                     node = new Node(upWalkable, centerNode.x, centerNode.z + 1);
                     grid[centerNode.x, centerNode.z + 1] = node;
                 }
@@ -249,7 +249,7 @@ namespace FrontierIsland
                 node = grid[centerNode.x + 1, centerNode.z];
                 if (node == null)
                 {
-                    rightWalkable = Terrain.Instance.Walkable(worldPos.x + 1, worldPos.z);
+                    rightWalkable = Terrain.Instance.WalkableUnchecked(worldPos.x + 1, worldPos.z);
                     node = new Node(rightWalkable, centerNode.x + 1, centerNode.z);
                     grid[centerNode.x + 1, centerNode.z] = node;
                 }
@@ -261,7 +261,7 @@ namespace FrontierIsland
                 node = grid[centerNode.x, centerNode.z - 1];
                 if (node == null)
                 {
-                    downWalkable = Terrain.Instance.Walkable(worldPos.x, worldPos.z - 1);
+                    downWalkable = Terrain.Instance.WalkableUnchecked(worldPos.x, worldPos.z - 1);
                     node = new Node(downWalkable, centerNode.x, centerNode.z - 1);
                     grid[centerNode.x, centerNode.z - 1] = node;
                 }
@@ -273,7 +273,7 @@ namespace FrontierIsland
                 node = grid[centerNode.x - 1, centerNode.z];
                 if (node == null)
                 {
-                    leftWalkable = Terrain.Instance.Walkable(worldPos.x - 1, worldPos.z);
+                    leftWalkable = Terrain.Instance.WalkableUnchecked(worldPos.x - 1, worldPos.z);
                     node = new Node(leftWalkable, centerNode.x - 1, centerNode.z);
                     grid[centerNode.x - 1, centerNode.z] = node;
                 }
@@ -289,7 +289,7 @@ namespace FrontierIsland
                     node = grid[centerNode.x + 1, centerNode.z + 1];
                     if (node == null)
                     {
-                        bool walkable = Terrain.Instance.Walkable(worldPos.x + 1, worldPos.z + 1);
+                        bool walkable = Terrain.Instance.WalkableUnchecked(worldPos.x + 1, worldPos.z + 1);
                         node = new Node(walkable, centerNode.x + 1, centerNode.z + 1);
                         grid[centerNode.x + 1, centerNode.z + 1] = node;
                     }
@@ -301,7 +301,7 @@ namespace FrontierIsland
                     node = grid[centerNode.x - 1, centerNode.z + 1];
                     if (node == null)
                     {
-                        bool walkable = Terrain.Instance.Walkable(worldPos.x - 1, worldPos.z + 1);
+                        bool walkable = Terrain.Instance.WalkableUnchecked(worldPos.x - 1, worldPos.z + 1);
                         node = new Node(walkable, centerNode.x - 1, centerNode.z + 1);
                         grid[centerNode.x - 1, centerNode.z + 1] = node;
                     }
@@ -316,7 +316,7 @@ namespace FrontierIsland
                     node = grid[centerNode.x + 1, centerNode.z - 1];
                     if (node == null)
                     {
-                        bool walkable = Terrain.Instance.Walkable(worldPos.x + 1, worldPos.z - 1);
+                        bool walkable = Terrain.Instance.WalkableUnchecked(worldPos.x + 1, worldPos.z - 1);
                         node = new Node(walkable, centerNode.x + 1, centerNode.z - 1);
                         grid[centerNode.x + 1, centerNode.z - 1] = node;
                     }
@@ -328,7 +328,7 @@ namespace FrontierIsland
                     node = grid[centerNode.x - 1, centerNode.z - 1];
                     if (node == null)
                     {
-                        bool walkable = Terrain.Instance.Walkable(worldPos.x - 1, worldPos.z - 1);
+                        bool walkable = Terrain.Instance.WalkableUnchecked(worldPos.x - 1, worldPos.z - 1);
                         node = new Node(walkable, centerNode.x - 1, centerNode.z - 1);
                         grid[centerNode.x - 1, centerNode.z - 1] = node;
                     }
