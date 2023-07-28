@@ -10,9 +10,10 @@ namespace FrontierIsland
     /// Item Slot for handling reciving dropped InventoryItem
     /// 
     /// Prefab Hierarchy:
-    ///     ItemSlot (script goes here, no visuals, drop hitbox)
+    ///     ItemSlot (script goes here, slot sprite here, drop hitbox)
     ///         ItemHolder (InventoryItem's parent, assures InventoryItem is 
-    ///                     smaller than slot by using VerticalLayoutGroup, full stretch, slot sprite here)
+    ///                     smaller than slot by using VerticalLayoutGroup 
+    ///                     and control child width/heigh true, full stretch)
     ///             InventoryItem (script, handles dragging and item icon display, item sprite)
     ///         ItemSlot Overlay (full stretch, overlays of the item slot goes here, e.g. selection square)
     /// </summary>
@@ -114,9 +115,8 @@ namespace FrontierIsland
                     else if (other.PrevSlot.ItemStack == null)
                     {
                         // different items and our previous slot is empty, swap it
-                        Window.Inventory.SetItem(other.PrevSlot.SlotIndex, inventoryItem.ItemStack);
+                        other.PrevSlot.Window.Inventory.SetItem(other.PrevSlot.SlotIndex, inventoryItem.ItemStack);
                         Window.Inventory.SetItem(SlotIndex, other.ItemStack);
-
 
                         inventoryItem.ItemSlot = other.PrevSlot;
                         inventoryItem.ItemSlot.inventoryItem = inventoryItem;
@@ -136,19 +136,6 @@ namespace FrontierIsland
                             Window.Inventory.AddItem(other.ItemStack);
                         }
                     }
-
-
-                    //ItemStack item = Window.Inventory.RemoveStack(inventoryItem.SlotIndex);
-                    //if (this.inventoryItem != null)
-                    //{
-                    //    ItemStack item2 = Window.Inventory.RemoveStack(this.inventoryItem.SlotIndex);
-                    //    Window.Inventory.SetItem(inventoryItem.SlotIndex, item2);
-                    //    this.inventoryItem.SlotIndex = inventoryItem.SlotIndex;
-                    //    Window[inventoryItem.SlotIndex].inventoryItem = this.inventoryItem;
-                    //}
-                    //Window.Inventory.SetItem(SlotIndex, item);
-                    //inventoryItem.SlotIndex = SlotIndex;
-                    //this.inventoryItem = inventoryItem;
                 }
             }
         }

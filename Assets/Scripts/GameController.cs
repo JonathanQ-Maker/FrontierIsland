@@ -223,13 +223,6 @@ namespace FrontierIsland
                     settler.StartCollectItem(handler);
                 }
             }
-
-            //if (selectable is Chunk)
-            //{
-            //    //Terrain.Instance.SetTile(TileType.Air, pos.x, pos.z, true);
-            //    Block block = Terrain.Instance.PlaceBlock(BlockType.Tree, pos + Vector3Int.up);
-            //    Debug.Log(block != null);
-            //}
         }
 
         private BlockFace GetSelectBlockFace(Vector3 normal)

@@ -379,7 +379,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6312250364145813854, guid: 3b083fefa9257c548a9094c8f6ed86e6, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6312250364145813854, guid: 3b083fefa9257c548a9094c8f6ed86e6, type: 3}
       propertyPath: m_AnchorMax.x
@@ -735,7 +735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 419867932500791837, guid: 9ca02f603fa1e0d4bbec543446a0b7fe, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 419867932500791837, guid: 9ca02f603fa1e0d4bbec543446a0b7fe, type: 3}
       propertyPath: m_AnchorMax.x
@@ -903,6 +903,10 @@ PrefabInstance:
       propertyPath: toolTipWindow
       value: 
       objectReference: {fileID: 1659283981}
+    - target: {fileID: 7650559311168869531, guid: 40d7837f74d76be43ace9de85fe44563, type: 3}
+      propertyPath: inventoryWindow
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7650559311168869533, guid: 40d7837f74d76be43ace9de85fe44563, type: 3}
       propertyPath: m_Name
       value: GameController
