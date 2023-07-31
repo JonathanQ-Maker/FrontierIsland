@@ -1,0 +1,45 @@
+﻿using System;
+using UnityEngine;
+
+namespace FrontierIsland
+{
+    /// <summary>
+    /// An atlas of all items
+    /// </summary>
+    public static class ItemAtlas
+    {
+        private static readonly ItemStack[] items = new ItemStack[Enum.GetValues(typeof(ItemType)).Length];
+
+        private static void RegisterItem(ItemStack item)
+        {
+            items[(int)item.ItemType] = item;
+        }
+
+        /// <summary>
+        /// Gets the <paramref name="itemType"/> instance in <see cref="ItemAtlas"/>
+        /// </summary>
+        /// <param name="itemType"></param>
+        /// <returns></returns>
+        public static ItemStack Get(ItemType itemType)
+        {
+            return items[(int)itemType];
+        }
+
+
+        /// <summary>
+        /// Registers all game items
+        /// </summary>
+        public static void SetUp()
+        {
+            RegisterItem(new WoodAxe());
+            RegisterItem(new StoneAxe());
+            RegisterItem(new RocksItem(1));
+            RegisterItem(new CrateItem(1));
+            RegisterItem(new TreeItem(1, Tree.TreeState.Normal));
+            RegisterItem(new GrassItem(1));
+            RegisterItem(new MushroomsItem(1));
+            RegisterItem(new CampFireItem(1));
+            RegisterItem(new BinItem(1));
+        }
+    }
+}

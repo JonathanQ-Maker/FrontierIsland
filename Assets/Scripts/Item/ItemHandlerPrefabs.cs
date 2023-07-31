@@ -18,10 +18,5 @@ namespace FrontierIsland
                 return prefabs[(int)type];
             }
         }
-
-        public Sprite GetIcon(ItemType type)
-        { 
-            return icons[(int)type];
-        }
     }
 }

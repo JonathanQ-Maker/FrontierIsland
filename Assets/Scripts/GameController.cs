@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
@@ -11,23 +12,32 @@ namespace FrontierIsland
         [SerializeField]
         private ItemHandlerPrefabs itemHandlerPrefabs;
         [SerializeField]
-        private HotBarWindow hotBarWindow;
+        private ItemIcons itemIcons;
         [SerializeField]
-        private ToolTipWindow toolTipWindow;
+        private HotBarUI hotBarWindow;
+        [SerializeField]
+        private ToolTipUI toolTipWindow;
+        [SerializeField]
+        private RectTransform helpPanel;
 
         public ItemHandlerPrefabs ItemHandlerPrefabs
         {
             get { return itemHandlerPrefabs;  }
         }
 
-        public ToolTipWindow ToolTipWindow
-        {
-            get { return toolTipWindow; }
-        }
-
         public BlockPrefabs BlockPrefabs 
         { 
             get { return blockPrefabs; } 
+        }
+
+        public ItemIcons ItemIcons
+        {
+            get { return itemIcons; }
+        }
+        
+        public ToolTipUI ToolTipWindow
+        {
+            get { return toolTipWindow; }
         }
 
         private Settler settler;
@@ -47,6 +57,9 @@ namespace FrontierIsland
 
             // enables debug if development build, otherwise disable log
             Debug.unityLogger.logEnabled = Debug.isDebugBuild;
+
+            ItemAtlas.SetUp();
+            RecipeCollections.SetUp();
         }
 
 
@@ -62,6 +75,8 @@ namespace FrontierIsland
             HandleSelect();
             HandleHotBarInput();
             HandleFocus();
+            HandleHelpPanel();
+
 
             if (Input.GetKeyDown(KeyCode.F))
             {
@@ -84,7 +99,6 @@ namespace FrontierIsland
             South,
             West
         }
-
 
         private void HandleHotBarInput()
         {
@@ -158,6 +172,14 @@ namespace FrontierIsland
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 CameraManager.Instance.StartFocus(settler.transform.position);
+            }
+        }
+
+        private void HandleHelpPanel()
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                helpPanel.gameObject.SetActive(!helpPanel.gameObject.activeSelf);
             }
         }
 

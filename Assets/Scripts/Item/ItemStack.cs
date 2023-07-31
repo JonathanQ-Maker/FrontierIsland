@@ -44,6 +44,7 @@ namespace FrontierIsland
 
         public virtual int MaxStackSize { get { return 255; } }
         public abstract ItemType ItemType { get; }
+
         public int count;
         public string name, description;
 
@@ -142,7 +143,7 @@ namespace FrontierIsland
         /// <returns></returns>
         public virtual Sprite GetIcon()
         { 
-            return GameController.Instance.ItemHandlerPrefabs.GetIcon(ItemType);
+            return GameController.Instance.ItemIcons[ItemType];
         }
 
         /// <summary>
@@ -218,6 +219,14 @@ namespace FrontierIsland
 
         public virtual bool Similar(ItemStack item)
         {
+            if (HasNBT)
+            {
+                if (item.HasNBT)
+                { 
+                    return ItemType == item.ItemType && item.NBT.Equals(NBT);
+                }
+                return false;
+            }
             return ItemType == item.ItemType;
         }
 

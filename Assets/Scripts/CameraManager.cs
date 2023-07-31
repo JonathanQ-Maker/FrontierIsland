@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
+using UnityEngine.EventSystems;
 
 namespace FrontierIsland
 {
@@ -35,6 +35,17 @@ namespace FrontierIsland
             }
         }
 
+        public bool IsMouseOverGameWindow 
+        { 
+            get 
+            { 
+                return !(0 > Input.mousePosition.x || 
+                        0 > Input.mousePosition.y || 
+                        Screen.width < Input.mousePosition.x || 
+                        Screen.height < Input.mousePosition.y); 
+            } 
+        }
+
         private void Awake()
         {
             if (instance != null && instance != this)
@@ -58,6 +69,7 @@ namespace FrontierIsland
         {
             // Drag code from https://youtu.be/rnqF6S7PfFA?t=756
 
+            if (EventSystem.current.IsPointerOverGameObject() || !IsMouseOverGameWindow) return;
             if (Input.GetMouseButtonDown(1))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -84,6 +96,7 @@ namespace FrontierIsland
 
         private void HandleScroll()
         {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
             if (Input.mouseScrollDelta.y != 0)
             {
                 // subtract because controls are inverted

@@ -1,7 +1,4 @@
-﻿
-using Unity.VisualScripting;
-
-namespace FrontierIsland
+﻿namespace FrontierIsland
 {
     public class WoodAxe : AxeTool
     {

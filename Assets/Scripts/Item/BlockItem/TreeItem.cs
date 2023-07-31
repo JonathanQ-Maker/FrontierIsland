@@ -11,6 +11,7 @@ namespace FrontierIsland
             set { NBT.PutByte("state", (byte)value); }
 
         }
+
         public TreeItem(int count, Tree.TreeState state) : base(count, "Tree", "a force of nature")
         {
             if (!HasNBT)

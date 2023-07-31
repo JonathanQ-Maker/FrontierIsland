@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace FrontierIsland
 {
-    public class HotBarWindow : InventoryWindow
+    public class HotBarUI : InventoryUI
     {
         [SerializeField]
         private Image selectionSquare;

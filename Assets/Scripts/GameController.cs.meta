@@ -6,7 +6,9 @@ MonoImporter:
   defaultReferences:
   - blockPrefabs: {fileID: 11400000, guid: d60aa006282e021498b686243adbeab0, type: 2}
   - itemHandlerPrefabs: {fileID: 11400000, guid: 3c03706794ff2da4ca008936330ed7df, type: 2}
-  - entity: {instanceID: 0}
+  - itemIcons: {fileID: 11400000, guid: b384131db15773e49a6ed2acbeaf140f, type: 2}
+  - hotBarWindow: {instanceID: 0}
+  - toolTipWindow: {instanceID: 0}
   - cube: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}

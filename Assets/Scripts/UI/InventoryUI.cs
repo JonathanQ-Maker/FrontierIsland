@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FrontierIsland
 {
-    public class InventoryWindow : MonoBehaviour
+    public class InventoryUI : MonoBehaviour
     {
         [SerializeField]
         private InventoryItem invItemPrefab;

@@ -49,8 +49,8 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5223908427987386213}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -132,7 +132,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockPrefabs: {fileID: 11400000, guid: d60aa006282e021498b686243adbeab0, type: 2}
   itemHandlerPrefabs: {fileID: 11400000, guid: 3c03706794ff2da4ca008936330ed7df, type: 2}
-  entity: {fileID: 0}
+  itemIcons: {fileID: 11400000, guid: b384131db15773e49a6ed2acbeaf140f, type: 2}
+  hotBarWindow: {fileID: 0}
+  toolTipWindow: {fileID: 0}
   cube: {fileID: 3649476798680871063}
 --- !u!114 &7650559311168869534
 MonoBehaviour:

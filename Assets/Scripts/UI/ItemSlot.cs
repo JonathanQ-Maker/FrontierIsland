@@ -28,8 +28,8 @@ namespace FrontierIsland
 
         public RectTransform ItemHolder { get { return itemHolder; } }
 
-        private InventoryWindow window;
-        public InventoryWindow Window
+        private InventoryUI window;
+        public InventoryUI Window
         {
             get
             {

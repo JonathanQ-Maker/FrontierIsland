@@ -13,8 +13,8 @@ namespace FrontierIsland
 
         private Mesh mesh;
 
-        public static int CHUNK_SIZE = 16;
-        public static int CHUNK_HEIGHT = 2;
+        public const int CHUNK_SIZE = 16;
+        public const int CHUNK_HEIGHT = 2;
 
         public readonly byte[] tiles = new byte[CHUNK_SIZE * CHUNK_SIZE];
         public readonly Block[] blocks = new Block[CHUNK_SIZE * CHUNK_SIZE * CHUNK_HEIGHT];

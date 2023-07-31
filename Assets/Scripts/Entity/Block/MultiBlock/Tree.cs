@@ -49,7 +49,6 @@ namespace FrontierIsland
 
         private void TrySetState(TreeState state)
         {
-            TreeState prevState = State;
             switch (state)
             {
                 case TreeState.Normal:
@@ -64,6 +63,7 @@ namespace FrontierIsland
             }
             boxCollider.size = meshFilter.mesh.bounds.size;
             boxCollider.center = meshFilter.mesh.bounds.center;
+            this.state = state;
         }
 
         public override void ReadFromNBT(CompoundTag nbt)
