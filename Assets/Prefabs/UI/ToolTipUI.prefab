@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toolTip: {fileID: 419867931307619552}
-  offset: {x: 5, y: 5}
+  canvas: {fileID: 0}
 --- !u!225 &419867932500791835
 CanvasGroup:
   m_ObjectHideFlags: 0
