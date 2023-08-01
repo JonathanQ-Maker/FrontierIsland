@@ -191,6 +191,7 @@ namespace FrontierIsland
                 hotBarWindow.Active = true;
                 hotBarWindow.Inventory = settler.Inventory;
                 hotBarWindow.SelectionIndex = settler.HeldItemIndex;
+                CameraManager.Instance.StartFocus(settler.transform.position);
             }
 
             if (settler != null)
