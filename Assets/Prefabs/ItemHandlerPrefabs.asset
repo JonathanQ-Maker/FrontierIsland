@@ -22,6 +22,7 @@ MonoBehaviour:
   - {fileID: 3426166499101197060, guid: dee09434e2fbcd140b0397cba08df0ad, type: 3}
   - {fileID: 3781773263310083259, guid: f7d73230ea94a1a459aa320d5f76a2e7, type: 3}
   - {fileID: 2157561819376520973, guid: c054bec76629c534ba22674a5c97617f, type: 3}
+  - {fileID: 1567404228859572370, guid: 92a8d89f6ab26724dbd5219caf336d66, type: 3}
   icons:
   - {fileID: 21300000, guid: f06114b2431c2c045a1ffc2703a62f92, type: 3}
   - {fileID: 21300000, guid: ae25325fbc4547249b3b8a0dc78b36d5, type: 3}

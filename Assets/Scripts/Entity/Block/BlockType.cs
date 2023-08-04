@@ -9,6 +9,7 @@
         Mushrooms,
         Crate,
         CampFire,
-        Bin
+        Bin,
+        CarpenterBench
     }
 }

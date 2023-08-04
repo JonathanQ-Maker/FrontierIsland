@@ -81,6 +81,8 @@ namespace FrontierIsland
             inventory = new Inventory(9, 1, this);
             inventory[0, 0] = new WoodAxe();
             inventory[1, 0] = new CrateItem(255);
+            inventory[2, 0] = new CarpenterBenchItem(1);
+
             //inventory[0, 0] = new RocksItem(255);
             //inventory[2, 0] = new StoneAxe();
             //inventory[3, 0] = new TreeItem(255, Tree.TreeState.Normal);
@@ -88,7 +90,7 @@ namespace FrontierIsland
             //inventory[5, 0] = new GrassItem(255);
             //inventory[6, 0] = new CampFireItem(255);
             //inventory[7, 0] = new MushroomsItem(255);
-            
+
         }
 
         protected void UpdateHeldItem()

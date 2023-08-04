@@ -13,12 +13,12 @@ namespace FrontierIsland
         /// <summary>
         /// Block material identifier for tool efficiency calculation
         /// </summary>
-        public virtual MaterialType MaterialType { get; }
+        public abstract MaterialType MaterialType { get; }
 
         /// <summary>
         /// Type identifier
         /// </summary>
-        public virtual BlockType BlockType { get; }
+        public abstract BlockType BlockType { get; }
 
         /// <summary>
         /// How long it takes in seconds to break this block

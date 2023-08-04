@@ -19,6 +19,8 @@ namespace FrontierIsland
         private ToolTipUI toolTipWindow;
         [SerializeField]
         private RectTransform helpPanel;
+        [SerializeField]
+        private Canvas mainCanvas;
 
         public ItemHandlerPrefabs ItemHandlerPrefabs
         {
@@ -38,6 +40,11 @@ namespace FrontierIsland
         public ToolTipUI ToolTipWindow
         {
             get { return toolTipWindow; }
+        }
+
+        public Canvas MainCanvas
+        {
+            get { return mainCanvas; }
         }
 
         private Settler settler;
@@ -107,7 +114,7 @@ namespace FrontierIsland
             {
                 if (Input.GetKeyDown((KeyCode)i))
                 {
-                    int selectedSlot = i - ((int)KeyCode.Alpha0) - 1;
+                    int selectedSlot = i - ((int)KeyCode.Alpha0) - 1; // minus one to align with keyboard
 
                     hotBarWindow.SelectionIndex = selectedSlot;
                     settler.HeldItemIndex = hotBarWindow.SelectionIndex;
@@ -238,7 +245,15 @@ namespace FrontierIsland
                 if (selectable is Block block)
                 {
                     Assert.IsTrue(ReferenceEquals(Terrain.Instance.GetBlock(block.Position), selectable));
-                    settler.StartHarvestBlock(block);
+
+                    if (selectable is CraftingBlock)
+                    {
+                        ((CraftingBlock)selectable).ShowUI = !((CraftingBlock)selectable).ShowUI;
+                    }
+                    else
+                    {
+                        settler.StartHarvestBlock(block);
+                    }
                 }
 
                 if (selectable is ItemHandler handler)

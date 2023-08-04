@@ -11,6 +11,7 @@ namespace FrontierIsland
         Grass,
         Mushrooms,
         CampFire,
-        Bin
+        Bin,
+        CarpenterBench
     }
 }
