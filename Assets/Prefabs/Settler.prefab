@@ -169,6 +169,7 @@ MonoBehaviour:
   moveSpeed: 3
   rightHandPivot: {fileID: 8960383458619077327}
   leftHandPivot: {fileID: 3038244315060775351}
+  canvasPrefab: {fileID: 4299489912440666258, guid: a2939185be485184289af7d181b44ff8, type: 3}
   animator: {fileID: 2808242521541095304}
 --- !u!136 &2645034606225236224
 CapsuleCollider:
@@ -180,7 +181,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.45
+  m_Radius: 0.25
   m_Height: 1.7
   m_Direction: 1
   m_Center: {x: 0, y: 0.85, z: 0}

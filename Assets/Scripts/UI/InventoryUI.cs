@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 namespace FrontierIsland
 {
@@ -50,6 +51,9 @@ namespace FrontierIsland
                 LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
             }
         }
+
+        public delegate void ItemSlotClick(int slotIndex, PointerEventData eventData);
+        public ItemSlotClick itemSlotClick;
 
         protected virtual void LoadInventory(Inventory inventory)
         {
@@ -137,6 +141,15 @@ namespace FrontierIsland
             ItemSlot slot = inventorySlots[inventorySlots.Count - 1];
             inventorySlots.RemoveAt(inventorySlots.Count - 1);
             Destroy(slot.gameObject);
+        }
+
+        /// <summary>
+        /// Called when an <see cref="ItemSlot"/> UI is clicked
+        /// </summary>
+        /// <param name="slotIndex"></param>
+        public void SlotClicked(int slotIndex, PointerEventData eventData)
+        {
+            itemSlotClick?.Invoke(slotIndex, eventData);
         }
     }
 }

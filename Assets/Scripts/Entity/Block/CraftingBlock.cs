@@ -1,5 +1,6 @@
 ﻿
 
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace FrontierIsland
@@ -14,36 +15,57 @@ namespace FrontierIsland
 
         public abstract ItemRecipe[] Recipes { get; }
 
-        public bool ShowUI
+        public bool IsViewed
         {
-            get { return stationUI == null ? false : stationUI.gameObject.activeSelf; }
-
-            set
-            {
-                if (stationUI == null)
-                {
-                    if (!value)
-                    {
-                        return;
-                    }
-
-                    stationUI = Instantiate(stationUIPrefab, GameController.Instance.MainCanvas.transform);
-                    stationUI.transform.SetSiblingIndex(0);
-                    stationUI.Station = this;
-                }
-
-                stationUI.gameObject.SetActive(value);
-                stationUI.UpdatePosition();
-            }
+            get { return Viewer != null; }
         }
 
         public abstract string Title { get; }
-        public Transform FocusTransform { get { return transform; } }
+
+        public Settler Viewer { get; protected set; }
+
+        private bool showUI = true;
+        public bool ShowUI 
+        { 
+            get { return showUI; }
+            set 
+            { 
+                showUI = value;
+                stationUI?.gameObject.SetActive(showUI);
+            }
+        }
 
         private void OnDestroy()
         {
             // clean up possible ui
-            if (stationUI != null) Destroy(stationUI.gameObject);
+            if (stationUI != null) Destroy(stationUI);
+        }
+
+        public virtual void CloseUI()
+        {
+            if (stationUI != null)
+            {
+                Destroy(stationUI.gameObject);
+                stationUI = null;
+                Viewer = null;
+            }
+        }
+
+        public bool OpenUI(Settler viewer)
+        {
+            if (IsViewed) return false;
+
+            if (stationUI == null)
+            {
+                stationUI = Instantiate(stationUIPrefab, GameController.Instance.MainCanvas.transform);
+                stationUI.transform.SetAsFirstSibling();
+                stationUI.Station = this;
+            }
+            stationUI.gameObject.SetActive(ShowUI);
+            Viewer = viewer;
+            // update position in the same frame to prevent UI correction during play
+            stationUI.UpdatePosition();
+            return true;
         }
     }
 }

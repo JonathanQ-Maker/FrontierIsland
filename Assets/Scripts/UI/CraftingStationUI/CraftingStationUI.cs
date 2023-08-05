@@ -24,7 +24,7 @@ namespace FrontierIsland
             set
             {
                 station = value;
-                focus = station.FocusTransform;
+                focus = station.transform;
             }
         }
 
@@ -102,8 +102,9 @@ namespace FrontierIsland
             }
             
             ItemStack result = ItemAtlas.Get(recipe.ResultItem);
-            string description = $"<b>{result.name} (1)</b>\n\n{builder}\n\n"
-                + $"<color=#898989><i>{result.description}</i></color>";
+            string description = $"<b>{result.name} (1)</b>\n" +
+                $"<color=#898989><i>{result.description}</i></color>\n\n"+
+                $"{builder}";
             return description;
         }
     }

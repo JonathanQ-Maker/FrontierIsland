@@ -2,7 +2,7 @@
 
 namespace FrontierIsland
 {
-    public interface ICraftingStation
+    public interface ICraftingStation : IViewable
     {
         /// <summary>
         /// Array of <see cref="ItemRecipe"/> availabe from this <see cref="ICraftingStation"/>
@@ -17,6 +17,6 @@ namespace FrontierIsland
         /// <summary>
         /// The <see cref="Transform"/> that <see cref="CraftingStationUI"/> will follow
         /// </summary>
-        Transform FocusTransform { get; }
+        Transform transform { get; }
     }
 }

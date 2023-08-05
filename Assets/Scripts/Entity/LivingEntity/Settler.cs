@@ -68,15 +68,23 @@ namespace FrontierIsland
             }
         }
 
+        public bool ShowView 
+        { 
+            set 
+            { 
+                if (viewable != null)
+                viewable.ShowUI = value; 
+            } 
+        }
         public ItemStack HeldItem { get { return Inventory[HeldItemIndex]; } }
 
         private ItemHandler heldItemhandler;
+        private IViewable viewable;
 
 
         public void Start()
         {
-            if (animator == null)
-                Debug.LogError("Missing animator");
+            GameController.Instance.settlers.Add(this);
 
             inventory = new Inventory(9, 1, this);
             inventory[0, 0] = new WoodAxe();
@@ -358,6 +366,47 @@ namespace FrontierIsland
         }
         #endregion
 
+        #region UseCraftingBlock
+        protected virtual IEnumerator UseCraftingBlock(Vector3Int[] path, CraftingBlock block)
+        {
+            yield return Inspect(path, block.transform.position);
+            if (block == null) yield break;
+
+            Vector3Int delta = Position - block.Position;
+            delta.y = 0;
+            if (delta.magnitude > 2)
+            {
+                Debug.LogError("error cannot use blocks this far away");
+            }
+            View(block);
+        }
+
+        public virtual void StartUseCraftingBlock(CraftingBlock block)
+        {
+            if (pathRequest != null)
+            {
+                pathRequest.Cancel();
+            }
+
+            Action<Vector3Int[], bool> callback = (Vector3Int[] path, bool success) =>
+            {
+                this.path = path;
+                if (success)
+                {
+                    ActionLoop = UseCraftingBlock(path, block);
+                }
+                else
+                {
+                    ActionLoop = TraversePath(path, false);
+                }
+            };
+
+            PathRequest newRequest = new PathRequest(Position, block.Position, 32, callback);
+            pathRequest = newRequest;
+            PathRequestManager.RequestPath(newRequest);
+        }
+        #endregion
+
         public virtual void DropItem(ItemStack item)
         {
             item.InstantiateHandler(Position, null);
@@ -366,6 +415,32 @@ namespace FrontierIsland
         public void OnInventoryChange(int index)
         {
             UpdateHeldItem();
+        }
+
+        protected virtual void View(IViewable viewable)
+        {
+            if (!ReferenceEquals(viewable, this.viewable))
+            {
+                if (this.viewable != null)
+                {
+                    this.viewable.CloseUI();
+                    this.viewable = null;
+                }
+
+                if (viewable.OpenUI(this))
+                {
+                    this.viewable = viewable;
+                }
+            }
+        }
+
+        public virtual void CloseView()
+        {
+            if (viewable != null)
+            {
+                viewable.CloseUI();
+                viewable = null;
+            }
         }
     }
 }

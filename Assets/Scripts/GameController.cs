@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -48,6 +49,8 @@ namespace FrontierIsland
         }
 
         private Settler settler;
+
+        public readonly List<Settler> settlers = new List<Settler>(3);
 
         public static GameController Instance { get; private set; }
         private void Awake()
@@ -107,6 +110,18 @@ namespace FrontierIsland
             West
         }
 
+        private void ItemSlotClick(int index, PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+                SelectSlot(index);
+        }
+
+        private void SelectSlot(int index)
+        { 
+            hotBarWindow.SelectionIndex = index;
+            settler.HeldItemIndex = hotBarWindow.SelectionIndex;
+        }
+
         private void HandleHotBarInput()
         {
             if (settler != null)
@@ -115,9 +130,7 @@ namespace FrontierIsland
                 if (Input.GetKeyDown((KeyCode)i))
                 {
                     int selectedSlot = i - ((int)KeyCode.Alpha0) - 1; // minus one to align with keyboard
-
-                    hotBarWindow.SelectionIndex = selectedSlot;
-                    settler.HeldItemIndex = hotBarWindow.SelectionIndex;
+                    SelectSlot(selectedSlot);
                 }
             }
         }
@@ -198,11 +211,15 @@ namespace FrontierIsland
                 hotBarWindow.Active = true;
                 hotBarWindow.Inventory = settler.Inventory;
                 hotBarWindow.SelectionIndex = settler.HeldItemIndex;
+                hotBarWindow.itemSlotClick = ItemSlotClick;
                 CameraManager.Instance.StartFocus(settler.transform.position);
+                SetAllHide(settler);
+                return;
             }
 
             if (settler != null)
             {
+                settler.CloseView();
                 if (settler.HeldItem is BlockItem)
                 {
                     if (selectable is Chunk)
@@ -248,10 +265,12 @@ namespace FrontierIsland
 
                     if (selectable is CraftingBlock)
                     {
-                        ((CraftingBlock)selectable).ShowUI = !((CraftingBlock)selectable).ShowUI;
+                        // TODO: disable UI by clicking off
+                        settler.StartUseCraftingBlock((CraftingBlock)selectable);
                     }
                     else
                     {
+                        // TODO: Harvest CraftingBlock if UI is already open
                         settler.StartHarvestBlock(block);
                     }
                 }
@@ -260,6 +279,14 @@ namespace FrontierIsland
                 {
                     settler.StartCollectItem(handler);
                 }
+            }
+        }
+
+        private void SetAllHide(Settler except)
+        {
+            foreach (Settler settler in settlers)
+            {
+                settler.ShowView = ReferenceEquals(except, settler);
             }
         }
 

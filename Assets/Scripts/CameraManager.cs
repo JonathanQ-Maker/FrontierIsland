@@ -13,7 +13,7 @@ namespace FrontierIsland
         }
 
         #region public_field
-        public float maxCameraSize = 10, maxFocusSpeed = 300;
+        public float maxCameraSize = 10, maxFocusSpeed = 30, smoothTime = 0.05f;
         #endregion
 
         Plane plane = new Plane(Vector3.up, Vector3.zero);
@@ -127,7 +127,7 @@ namespace FrontierIsland
 
             while ((targetDelta - currentDelta).magnitude > 0.1f)
             {
-                currentDelta = Vector3.SmoothDamp(currentDelta, targetDelta, ref velocity, 0.05f, maxFocusSpeed);
+                currentDelta = Vector3.SmoothDamp(currentDelta, targetDelta, ref velocity, smoothTime, maxFocusSpeed);
                 transform.position = initalCamPos + currentDelta;
                 yield return null;
             }

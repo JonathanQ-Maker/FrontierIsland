@@ -17,7 +17,7 @@ namespace FrontierIsland
     ///             InventoryItem (script, handles dragging and item icon display, item sprite)
     ///         ItemSlot Overlay (full stretch, overlays of the item slot goes here, e.g. selection square)
     /// </summary>
-    public class ItemSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
+    public class ItemSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
         public readonly static Color HoverColor = new Color(0.8f, 0.8f, 0.8f);
 
@@ -163,6 +163,11 @@ namespace FrontierIsland
             overlay.anchorMin = new Vector2(0, 0);
             overlay.offsetMax = Vector2.zero;
             overlay.offsetMin = Vector2.zero;
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            window.SlotClicked(SlotIndex, eventData);
         }
     }
 }
