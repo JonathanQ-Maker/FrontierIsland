@@ -31,7 +31,8 @@ namespace FrontierIsland
             set 
             { 
                 showUI = value;
-                stationUI?.gameObject.SetActive(showUI);
+                if (stationUI != null)
+                    stationUI.Active = ShowUI;
             }
         }
 
@@ -57,11 +58,11 @@ namespace FrontierIsland
 
             if (stationUI == null)
             {
-                stationUI = Instantiate(stationUIPrefab, GameController.Instance.MainCanvas.transform);
+                stationUI = Instantiate(stationUIPrefab, GameController.Instance.WorldCanvas.transform);
                 stationUI.transform.SetAsFirstSibling();
                 stationUI.Station = this;
             }
-            stationUI.gameObject.SetActive(ShowUI);
+            stationUI.Active = ShowUI;
             Viewer = viewer;
             // update position in the same frame to prevent UI correction during play
             stationUI.UpdatePosition();

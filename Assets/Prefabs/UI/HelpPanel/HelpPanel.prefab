@@ -181,6 +181,7 @@ GameObject:
   - component: {fileID: 579422327769639173}
   - component: {fileID: 579422327769639175}
   - component: {fileID: 579422327769639174}
+  - component: {fileID: 8828086262596509196}
   m_Layer: 5
   m_Name: HelpPanel
   m_TagString: Untagged
@@ -248,6 +249,29 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8828086262596509196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579422327769639172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1454679cba9cc3546840f373f4fe78f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minScale: 0.5
+  maxScale: 3
+  scrollSensitivity: 0.5
+  content: {fileID: 579422328175794142}
+  viewRect: {fileID: 579422328452684151}
+  graphNodePrefab: {fileID: 7775505068185205495, guid: c93cd05fc2f7633478cd07d0c537b90c, type: 3}
+  recipeMenuItemPrefab: {fileID: 23162617026372377, guid: 3d88f1d93022d304d91f00590411787b, type: 3}
+  directedLinePrefab: {fileID: 6910489096091294379, guid: 6f4f6df3182a9554fb95132508bdc0cd, type: 3}
+  edgeParent: {fileID: 579422329507798016}
+  menuContent: {fileID: 579422328659617458}
+  selectOverlay: {fileID: 9043943650862893192}
 --- !u!1 &579422327815129408
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,7 +780,6 @@ GameObject:
   m_Component:
   - component: {fileID: 579422329411901237}
   - component: {fileID: 579422329411901238}
-  - component: {fileID: 6396178627033484521}
   m_Layer: 5
   m_Name: Layout
   m_TagString: Untagged
@@ -811,29 +834,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &6396178627033484521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 579422329411901236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1454679cba9cc3546840f373f4fe78f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minScale: 0.5
-  maxScale: 3
-  scrollSensitivity: 0.5
-  content: {fileID: 579422328175794142}
-  viewRect: {fileID: 579422328452684151}
-  graphNodePrefab: {fileID: 7775505068185205495, guid: c93cd05fc2f7633478cd07d0c537b90c, type: 3}
-  recipeMenuItemPrefab: {fileID: 23162617026372377, guid: 3d88f1d93022d304d91f00590411787b, type: 3}
-  directedLinePrefab: {fileID: 6910489096091294379, guid: 6f4f6df3182a9554fb95132508bdc0cd, type: 3}
-  edgeParent: {fileID: 579422329507798016}
-  menuContent: {fileID: 579422328659617458}
-  selectOverlay: {fileID: 9043943650862893192}
 --- !u!1 &579422329507798023
 GameObject:
   m_ObjectHideFlags: 0

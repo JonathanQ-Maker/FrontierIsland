@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
@@ -19,9 +18,9 @@ namespace FrontierIsland
         [SerializeField]
         private ToolTipUI toolTipWindow;
         [SerializeField]
-        private RectTransform helpPanel;
+        private RecipeGraphUI helpPanel;
         [SerializeField]
-        private Canvas mainCanvas;
+        private Canvas mainCanvas, worldCanvas;
 
         public ItemHandlerPrefabs ItemHandlerPrefabs
         {
@@ -46,6 +45,11 @@ namespace FrontierIsland
         public Canvas MainCanvas
         {
             get { return mainCanvas; }
+        }
+
+        public Canvas WorldCanvas
+        {
+            get { return worldCanvas; }
         }
 
         private Settler settler;
@@ -199,7 +203,7 @@ namespace FrontierIsland
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                helpPanel.gameObject.SetActive(!helpPanel.gameObject.activeSelf);
+                helpPanel.Active = !helpPanel.Active;
             }
         }
 

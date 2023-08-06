@@ -68,12 +68,14 @@ namespace FrontierIsland
             }
         }
 
+        private bool showView = true;
         public bool ShowView 
-        { 
+        {
+            get { return showView; }
             set 
-            { 
-                if (viewable != null)
-                viewable.ShowUI = value; 
+            {
+                showView = value;
+                if (viewable != null) viewable.ShowUI = value; 
             } 
         }
         public ItemStack HeldItem { get { return Inventory[HeldItemIndex]; } }
@@ -430,6 +432,7 @@ namespace FrontierIsland
                 if (viewable.OpenUI(this))
                 {
                     this.viewable = viewable;
+                    this.viewable.ShowUI = ShowView;
                 }
             }
         }

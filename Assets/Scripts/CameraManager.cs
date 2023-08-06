@@ -1,7 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
-
 namespace FrontierIsland
 {
     public class CameraManager : MonoBehaviour
@@ -14,6 +12,7 @@ namespace FrontierIsland
 
         #region public_field
         public float maxCameraSize = 10, maxFocusSpeed = 30, smoothTime = 0.05f;
+        public int dragFlag, scrollFlag;
         #endregion
 
         Plane plane = new Plane(Vector3.up, Vector3.zero);
@@ -69,7 +68,7 @@ namespace FrontierIsland
         {
             // Drag code from https://youtu.be/rnqF6S7PfFA?t=756
 
-            if (EventSystem.current.IsPointerOverGameObject() || !IsMouseOverGameWindow) return;
+            if (dragFlag != 0) return;
             if (Input.GetMouseButtonDown(1))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -96,7 +95,7 @@ namespace FrontierIsland
 
         private void HandleScroll()
         {
-            if (EventSystem.current.IsPointerOverGameObject()) return;
+            if (scrollFlag != 0) return;
             if (Input.mouseScrollDelta.y != 0)
             {
                 // subtract because controls are inverted

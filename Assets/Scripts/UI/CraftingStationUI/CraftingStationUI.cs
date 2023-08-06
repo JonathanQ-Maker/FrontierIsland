@@ -41,6 +41,16 @@ namespace FrontierIsland
             }
         }
 
+        public const int CAMERA_CONTROL_MASK = 1 << 1;
+        public bool Active
+        {
+            get { return gameObject.activeSelf; }
+            set 
+            {
+                gameObject.SetActive(value);
+            }
+        }
+
         public void UpdateSelectRecipe()
         {
             if (stationItems == null) return;

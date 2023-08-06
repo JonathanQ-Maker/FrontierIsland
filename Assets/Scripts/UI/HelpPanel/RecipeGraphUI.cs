@@ -29,6 +29,26 @@ namespace FrontierIsland
 
         public ItemType CurrentItem { get; private set; }
 
+        public const int CAMERA_CONTROL_MASK = 1;
+        public bool Active 
+        {
+            get { return gameObject.activeSelf; }
+            set 
+            {
+                gameObject.SetActive(value);
+                if (value)
+                {
+                    CameraManager.Instance.dragFlag |= CAMERA_CONTROL_MASK;
+                    CameraManager.Instance.scrollFlag |= CAMERA_CONTROL_MASK;
+                }
+                else
+                {
+                    CameraManager.Instance.dragFlag &= ~CAMERA_CONTROL_MASK;
+                    CameraManager.Instance.scrollFlag &= ~CAMERA_CONTROL_MASK;
+                }
+            }
+        }
+
         private void Start()
         {
             // menu must be render first because RenderGraph()
