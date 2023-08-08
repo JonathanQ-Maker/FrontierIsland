@@ -2,10 +2,12 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using static UnityEngine.EventSystems.PointerEventData;
+using UnityEditor.PackageManager.UI;
 
 namespace FrontierIsland
 {
-    public class InventoryUI : MonoBehaviour
+    public class InventoryUI : MonoBehaviour, IDropHandler
     {
         [SerializeField]
         private InventoryItem invItemPrefab;
@@ -15,6 +17,8 @@ namespace FrontierIsland
         private ItemSlot itemSlotPrefab;
         [SerializeField]
         private RectTransform windowRect;
+
+        // TODO: remove
         public RectTransform WindowRect { get { return windowRect; } }
 
         public CustomGridLayoutGroup gridLayout;
@@ -47,8 +51,11 @@ namespace FrontierIsland
             set
             {
                 gameObject.SetActive(value);
-                LoadInventory(Inventory);
-                LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
+                if (Active)
+                {
+                    LoadInventory(Inventory);
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
+                }
             }
         }
 
@@ -109,19 +116,19 @@ namespace FrontierIsland
             {
                 if (Inventory[index] != null)
                 {
-                    if (itemSlot.inventoryItem == null)
+                    if (itemSlot.InventoryItem == null)
                     {
                         InventoryItem item = Instantiate(invItemPrefab, itemSlot.ItemHolder);
                         item.ItemSlot = itemSlot;
-                        itemSlot.inventoryItem = item;
+                        itemSlot.InventoryItem = item;
                     }
-                    itemSlot.inventoryItem.UpdateContent();
+                    itemSlot.InventoryItem.UpdateContent();
                 }
                 else
                 {
-                    if (itemSlot.inventoryItem != null)
+                    if (itemSlot.InventoryItem != null)
                     {
-                        Destroy(itemSlot.inventoryItem.gameObject);
+                        Destroy(itemSlot.InventoryItem.gameObject);
                     }
                 }
                 index++;
@@ -150,6 +157,39 @@ namespace FrontierIsland
         public void SlotClicked(int slotIndex, PointerEventData eventData)
         {
             itemSlotClick?.Invoke(slotIndex, eventData);
+        }
+
+        public void OnDrop(PointerEventData eventData)
+        {
+            if (eventData.button != InputButton.Left) return;
+            if (eventData.pointerDrag != null)
+            {
+                if (eventData.pointerDrag.TryGetComponent(out InventoryItem other))
+                {
+                    // dropped on inventory window is InventoryItem,
+                    // check if it is from a slot from this inventory.
+                    if (ReferenceEquals(other.PrevSlot.Window, this))
+                    {
+                        // put InventoryItem back if it is empty
+                        if (other.PrevSlot.InventoryItem == null)
+                        {
+                            Inventory.SetItem(other.PrevSlot.SlotIndex, other.ItemStack);
+                            other.ItemSlot = other.PrevSlot;
+                            other.PrevSlot.InventoryItem = other;
+                        }
+                        else
+                        {
+                            // otherwise add it to inventory, remaining items get dropped 
+                            Inventory.AddItem(other.ItemStack);
+                        }
+                    }
+                    else
+                    {
+                        // otherwise add it to inventory, remaining items get dropped 
+                        Inventory.AddItem(other.ItemStack);
+                    }
+                }
+            }
         }
     }
 }

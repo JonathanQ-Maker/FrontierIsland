@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace FrontierIsland
 {
@@ -40,6 +39,7 @@ namespace FrontierIsland
             RegisterItem(new MushroomsItem(1));
             RegisterItem(new CampFireItem(1));
             RegisterItem(new BinItem(1));
+            RegisterItem(new CarpenterBenchItem(1));
         }
     }
 }

@@ -98,15 +98,16 @@ namespace FrontierIsland
             {
                 InventoryItem item = Instantiate(ItemSlot.Window.InvItemPrefab, transform.parent);
                 item.ItemSlot = ItemSlot;
-                ItemSlot.inventoryItem = item;
+                ItemSlot.InventoryItem = item;
                 itemStack = ItemSlot.ItemStack.SplitStack(Mathf.CeilToInt(ItemStack.count/2f));
                 UpdateContent();
             }
             else
             {
-                ItemSlot.inventoryItem = null;
+                ItemSlot.InventoryItem = null;
                 itemStack = ItemSlot.Window.Inventory.RemoveStack(ItemSlot.SlotIndex);
             }
+            ItemSlot.OnItemChange();
             ItemSlot = null;
 
             transform.SetParent(canvas.transform);
@@ -132,17 +133,19 @@ namespace FrontierIsland
             {
                 if (Input.GetMouseButtonDown(1))
                 {
+                    Debug.Log($"Hover: {hover.name}, Inventoryitem: {hover.TryGetComponent(out InventoryItem o)}, ItemSlot: {hover.TryGetComponent(out ItemSlot s)}");
                     if (ItemStack.count > 1)
                     if (hover.TryGetComponent(out InventoryItem other))
                     {
                         if (other.ItemStack.AddFrom(ItemStack, 1))
                         {
+                            other.ItemSlot.OnItemChange();
                             UpdateContent();
                         }
                     }
                     else if (hover.TryGetComponent(out ItemSlot slot))
                     {
-                        if (slot.inventoryItem == null)
+                        if (slot.InventoryItem == null)
                         {
                             slot.Window.Inventory.SetItem(slot.SlotIndex, ItemStack.SplitStack(1));
                             hover = slot.gameObject;
@@ -150,9 +153,10 @@ namespace FrontierIsland
                         }
                         else
                         {
-                            if (slot.inventoryItem.ItemStack.AddFrom(ItemStack, 1))
+                            if (slot.InventoryItem.ItemStack.AddFrom(ItemStack, 1))
                             {
                                 UpdateContent();
+                                slot.OnItemChange();
                             }
                         }
                     }
@@ -167,14 +171,6 @@ namespace FrontierIsland
             if (eventData.button != InputButton.Left) return;
             if (ItemSlot == null)
             {
-                //if (window.Inventory.Holder != null)
-                //{
-                //    window.Inventory.Holder.DropItem(SlotIndex);
-                //}
-                //else
-                //{
-                //    window.Inventory.RemoveStack(SlotIndex);
-                //}
                 Debug.Log("Destroyed inv item");
 
                 if (ItemStack.count > 0)

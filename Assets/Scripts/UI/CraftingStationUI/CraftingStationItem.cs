@@ -33,11 +33,8 @@ namespace FrontierIsland
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            string toolTip = ItemAtlas.Get(Item).GetToolTip();
-            if (string.IsNullOrEmpty(toolTip)) return;
-
             GameController.Instance.ToolTipWindow.Active = true;
-            GameController.Instance.ToolTipWindow.Text = toolTip;
+            GameController.Instance.ToolTipWindow.LoadItemTip(ItemAtlas.Get(Item));
         }
 
         public void OnPointerExit(PointerEventData eventData)

@@ -72,10 +72,24 @@ namespace FrontierIsland
 
         public ItemStack ItemStack { get { return Window.Inventory[SlotIndex]; } }
 
-        [NonSerialized]
-        public InventoryItem inventoryItem = null;
 
-        public void OnDrop(PointerEventData eventData)
+        private InventoryItem inventoryItem = null;
+
+        public virtual InventoryItem InventoryItem 
+        {
+            get { return inventoryItem; }
+            set 
+            {
+                inventoryItem = value;
+            } 
+        }
+
+        public virtual void OnItemChange()
+        { 
+        
+        }
+
+        public virtual void OnDrop(PointerEventData eventData)
         {
             if (eventData.button != InputButton.Left) return;
             if (eventData.pointerDrag != null)
@@ -83,18 +97,18 @@ namespace FrontierIsland
                 if (eventData.pointerDrag.TryGetComponent(out InventoryItem other))
                 {
 
-                    if (inventoryItem == null)
+                    if (InventoryItem == null)
                     {
 
                         // empty slot
                         Window.Inventory.SetItem(SlotIndex, other.ItemStack);
                         other.ItemSlot = this;
-                        inventoryItem = other;
+                        InventoryItem = other;
                     }
-                    else if (inventoryItem.ItemStack.Similar(other.ItemStack))
+                    else if (InventoryItem.ItemStack.Similar(other.ItemStack))
                     {
                         // slot with similar items
-                        inventoryItem.ItemStack.CombineStack(other.ItemStack);
+                        InventoryItem.ItemStack.CombineStack(other.ItemStack);
                         if (other.ItemStack.count > 0)
                         {
                             // still have left overs
@@ -104,7 +118,7 @@ namespace FrontierIsland
                                 ItemSlot prevSlot = other.PrevSlot;
                                 Window.Inventory.SetItem(prevSlot.SlotIndex, other.ItemStack);
                                 other.ItemSlot = prevSlot;
-                                prevSlot.inventoryItem = other;
+                                prevSlot.InventoryItem = other;
                             }
                             else
                             {
@@ -115,15 +129,15 @@ namespace FrontierIsland
                     else if (other.PrevSlot.ItemStack == null)
                     {
                         // different items and our previous slot is empty, swap it
-                        other.PrevSlot.Window.Inventory.SetItem(other.PrevSlot.SlotIndex, inventoryItem.ItemStack);
+                        other.PrevSlot.Window.Inventory.SetItem(other.PrevSlot.SlotIndex, InventoryItem.ItemStack);
                         Window.Inventory.SetItem(SlotIndex, other.ItemStack);
 
-                        inventoryItem.ItemSlot = other.PrevSlot;
-                        inventoryItem.ItemSlot.inventoryItem = inventoryItem;
-                        inventoryItem.ResetPosition();
+                        InventoryItem.ItemSlot = other.PrevSlot;
+                        InventoryItem.ItemSlot.InventoryItem = InventoryItem;
+                        InventoryItem.ResetPosition();
 
                         other.ItemSlot = this;
-                        inventoryItem = other;
+                        InventoryItem = other;
                     }
                     else if (other.PrevSlot.ItemStack.Similar(other.ItemStack))
                     {
@@ -140,19 +154,20 @@ namespace FrontierIsland
             }
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
+        public virtual void OnPointerEnter(PointerEventData eventData)
         {
             image.color = HoverColor;
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        public virtual void OnPointerExit(PointerEventData eventData)
         {
             image.color = Color.white;
         }
 
+        // TODO: remove
         public void AssignInventoryItem(InventoryItem inventoryItem)
         {
-            this.inventoryItem = inventoryItem;
+            this.InventoryItem = inventoryItem;
             inventoryItem.transform.SetParent(ItemHolder);
         }
 
@@ -165,7 +180,7 @@ namespace FrontierIsland
             overlay.offsetMin = Vector2.zero;
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public virtual void OnPointerClick(PointerEventData eventData)
         {
             window.SlotClicked(SlotIndex, eventData);
         }

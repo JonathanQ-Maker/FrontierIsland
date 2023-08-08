@@ -2,7 +2,7 @@
 
 namespace FrontierIsland
 {
-    public interface ICraftingStation : IViewable
+    public interface ICraftingStation : IViewable, IInventoryHolder
     {
         /// <summary>
         /// Array of <see cref="ItemRecipe"/> availabe from this <see cref="ICraftingStation"/>

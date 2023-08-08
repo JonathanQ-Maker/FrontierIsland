@@ -36,10 +36,19 @@ namespace FrontierIsland
             }
         }
 
+        public Inventory Inventory { get { return inventory; } }
+
+        private Inventory inventory;
+
+        private void Start()
+        {
+            inventory = new Inventory(4, 2, this);
+        }
+
         private void OnDestroy()
         {
             // clean up possible ui
-            if (stationUI != null) Destroy(stationUI);
+            if (stationUI != null) CloseUI();
         }
 
         public virtual void CloseUI()
@@ -61,12 +70,24 @@ namespace FrontierIsland
                 stationUI = Instantiate(stationUIPrefab, GameController.Instance.WorldCanvas.transform);
                 stationUI.transform.SetAsFirstSibling();
                 stationUI.Station = this;
+                stationUI.Inventory = Inventory;
             }
             stationUI.Active = ShowUI;
             Viewer = viewer;
             // update position in the same frame to prevent UI correction during play
             stationUI.UpdatePosition();
             return true;
+        }
+
+        public void OnInventoryChange(int index)
+        {
+            
+        }
+
+        public void DropItem(ItemStack itemStack)
+        {
+            // TODO: implement dropping items
+            Debug.LogWarning($"CraftingBlock DropItem() not implemented");
         }
     }
 }

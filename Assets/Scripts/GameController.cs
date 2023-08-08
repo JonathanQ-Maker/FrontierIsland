@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -94,7 +95,7 @@ namespace FrontierIsland
 
             if (Input.GetKeyDown(KeyCode.F))
             {
-                Debug.Log($"ItemStack instance counts: {ItemStack.ItemCount}");
+                Debug.Log($"ItemStack instance counts: {ItemStack.ItemCount - 9}");
             }
 
             if (Input.GetKeyDown(KeyCode.D))
@@ -269,7 +270,6 @@ namespace FrontierIsland
 
                     if (selectable is CraftingBlock)
                     {
-                        // TODO: disable UI by clicking off
                         settler.StartUseCraftingBlock((CraftingBlock)selectable);
                     }
                     else

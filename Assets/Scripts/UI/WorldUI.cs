@@ -26,13 +26,10 @@ namespace FrontierIsland
          * position in the same frame as when this UI is enabled
          */
 
-        public Vector3 pos;
         public void UpdatePosition()
         {
-            // TODO: new Vector3(offset, 0, offset) only works with one camera angle
             Vector3 position = Camera.main.WorldToScreenPoint(focus.position + new Vector3(0, offset, 0));
             rectTransform.position = new Vector3(position.x, position.y, rectTransform.position.z);
-            pos = position;
         }
     }
 }

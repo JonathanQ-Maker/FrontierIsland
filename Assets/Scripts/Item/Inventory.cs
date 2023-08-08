@@ -75,7 +75,7 @@ namespace FrontierIsland
         }
 
         /// <summary>
-        /// Places <see cref="ItemStack"/> in first available slot and return index.
+        /// Adds <see cref="ItemStack"/> to inventory.
         /// </summary>
         /// <param name="item"></param>
         /// <returns><see langword="true"/> if successfully added all items to inventory</returns>
