@@ -6,15 +6,23 @@ namespace FrontierIsland
         public static readonly ItemRecipe[] CarpenterBench = new ItemRecipe[]
         {
             new ItemRecipe(ItemType.StoneAxe,
-                new ItemType[]
+                new Ingredient[]
                 {
-                    ItemType.Rocks, ItemType.Grass
+                    new Ingredient(ItemType.Rocks, 1),
+                    new Ingredient(ItemType.Grass, 2)
                 }),
 
             new ItemRecipe(ItemType.WoodAxe,
-                new ItemType[]
+                new Ingredient[]
                 {
-                    ItemType.Grass, ItemType.StoneAxe, ItemType.Crate
+                    new Ingredient(ItemType.Grass, 1),
+                    new Ingredient(ItemType.StoneAxe, 1),
+                    new Ingredient(ItemType.Crate, 3)
+                }),
+
+            new ItemRecipe(ItemType.Mushrooms,
+                new Ingredient[] {
+                    new Ingredient(ItemType.Grass, 2)
                 })
         };
 

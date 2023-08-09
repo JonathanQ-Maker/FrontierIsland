@@ -1,12 +1,15 @@
 ﻿using NBT.Tags;
 using System;
-using System.Collections;
 using UnityEngine;
 
 namespace FrontierIsland
 {
     public class Inventory : INBTSerializable
     {
+        public delegate void OnInventoryChange();
+
+        public OnInventoryChange onInventoryChange;
+
         private ItemStack[] items;
 
         private int columns, rows;
@@ -55,22 +58,25 @@ namespace FrontierIsland
 
         public virtual void SetItem(int index, ItemStack itemStack)
         {
-            items[index] = itemStack;
-            if (Holder != null)
+            if (items[index] != null)
             {
-                Holder.OnInventoryChange(index);
+                items[index].inventory = null;
             }
+            items[index] = itemStack;
+            itemStack.inventory = this;
+            onInventoryChange?.Invoke();
         }
 
         public ItemStack RemoveStack(int index)
         { 
             ItemStack item = items[index];
+            if (item != null)
+            {
+                item.inventory = null;
+            }
             items[index] = null;
             item.RemoveHandler();
-            if (Holder != null)
-            {
-                Holder.OnInventoryChange(index);
-            }
+            onInventoryChange?.Invoke();
             return item;
         }
 
@@ -92,8 +98,7 @@ namespace FrontierIsland
 
                 if (currentItem != null && currentItem.CombineStack(item))
                 {
-                    if (Holder != null)
-                        Holder.OnInventoryChange(i);
+                    onInventoryChange?.Invoke();
                     if (item.count <= 0)
                     {
                         return true;
@@ -160,6 +165,7 @@ namespace FrontierIsland
         {
             ItemStack item = this[index];
             item.count -= count;
+            onInventoryChange?.Invoke();
 
             if (item.count <= 0)
             {

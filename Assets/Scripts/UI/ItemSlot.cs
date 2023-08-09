@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.EventSystems.PointerEventData;
@@ -84,9 +83,9 @@ namespace FrontierIsland
             } 
         }
 
-        public virtual void OnItemChange()
+        public virtual void UpdateContent()
         { 
-        
+            InventoryItem?.UpdateContent();
         }
 
         public virtual void OnDrop(PointerEventData eventData)
@@ -99,16 +98,17 @@ namespace FrontierIsland
 
                     if (InventoryItem == null)
                     {
-
                         // empty slot
-                        Window.Inventory.SetItem(SlotIndex, other.ItemStack);
+                        ItemStack otherStack = other.ItemStack;
                         other.ItemSlot = this;
                         InventoryItem = other;
+                        Window.Inventory.SetItem(SlotIndex, otherStack);
                     }
                     else if (InventoryItem.ItemStack.Similar(other.ItemStack))
                     {
                         // slot with similar items
                         InventoryItem.ItemStack.CombineStack(other.ItemStack);
+                        //Window.Inventory.onInventoryChange?.Invoke();
                         if (other.ItemStack.count > 0)
                         {
                             // still have left overs
@@ -116,34 +116,40 @@ namespace FrontierIsland
                             {
                                 // previous slot is empty, put item back
                                 ItemSlot prevSlot = other.PrevSlot;
-                                Window.Inventory.SetItem(prevSlot.SlotIndex, other.ItemStack);
+                                ItemStack otherStack = other.ItemStack;
                                 other.ItemSlot = prevSlot;
                                 prevSlot.InventoryItem = other;
+                                prevSlot.Window.Inventory.SetItem(prevSlot.SlotIndex, otherStack);
                             }
                             else
                             {
-                                Window.Inventory.AddItem(other.ItemStack);
+                                // previous slot is occupied, add to origin inventory.
+                                // Any left overs is dropped
+                                other.PrevSlot.Window.Inventory.AddItem(other.ItemStack);
                             }
                         }
                     }
                     else if (other.PrevSlot.ItemStack == null)
                     {
                         // different items and our previous slot is empty, swap it
-                        other.PrevSlot.Window.Inventory.SetItem(other.PrevSlot.SlotIndex, InventoryItem.ItemStack);
-                        Window.Inventory.SetItem(SlotIndex, other.ItemStack);
+                        ItemStack thisStack = InventoryItem.ItemStack;
+                        ItemStack otherStack = other.ItemStack;
 
                         InventoryItem.ItemSlot = other.PrevSlot;
                         InventoryItem.ItemSlot.InventoryItem = InventoryItem;
                         InventoryItem.ResetPosition();
+                        other.PrevSlot.Window.Inventory.SetItem(other.PrevSlot.SlotIndex, thisStack);
 
                         other.ItemSlot = this;
                         InventoryItem = other;
+                        Window.Inventory.SetItem(SlotIndex, otherStack);
                     }
                     else if (other.PrevSlot.ItemStack.Similar(other.ItemStack))
                     {
                         // different items, previous slot is not empty
                         // and previous item is similar, combine them
                         other.PrevSlot.ItemStack.CombineStack(other.ItemStack);
+                        //Window.Inventory.onInventoryChange?.Invoke();
                         if (other.ItemStack.count > 0)
                         {
                             // still have left overs

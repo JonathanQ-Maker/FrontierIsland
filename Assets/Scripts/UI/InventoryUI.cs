@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using static UnityEngine.EventSystems.PointerEventData;
-using UnityEditor.PackageManager.UI;
 
 namespace FrontierIsland
 {
@@ -40,7 +39,12 @@ namespace FrontierIsland
 
             set
             {
+                if (inventory != null)
+                {
+                    inventory.onInventoryChange -= UpdateContent;
+                }
                 inventory = value;
+                inventory.onInventoryChange += UpdateContent;
                 LoadInventory(inventory);
             }
         }
@@ -106,10 +110,18 @@ namespace FrontierIsland
 
         protected virtual void Update()
         {
-            UpdateContent();
+            //UpdateContent();
         }
 
-        public void UpdateContent()
+        private void OnDestroy()
+        {
+            if (Inventory != null)
+            {
+                Inventory.onInventoryChange -= UpdateContent;
+            }
+        }
+
+        public virtual void UpdateContent()
         {
             int index = 0;
             foreach (ItemSlot itemSlot in inventorySlots)
@@ -122,15 +134,16 @@ namespace FrontierIsland
                         item.ItemSlot = itemSlot;
                         itemSlot.InventoryItem = item;
                     }
-                    itemSlot.InventoryItem.UpdateContent();
                 }
                 else
                 {
                     if (itemSlot.InventoryItem != null)
                     {
                         Destroy(itemSlot.InventoryItem.gameObject);
+                        itemSlot.InventoryItem = null;
                     }
                 }
+                itemSlot.UpdateContent();
                 index++;
             }
         }

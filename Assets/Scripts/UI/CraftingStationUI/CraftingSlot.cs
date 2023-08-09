@@ -23,7 +23,7 @@ namespace FrontierIsland
             set 
             {
                 requiredCount = Mathf.Max(value, 0);
-                UpdateDisplay();
+                UpdateContent();
             } 
         }
 
@@ -33,25 +33,26 @@ namespace FrontierIsland
             set 
             {
                 base.InventoryItem = value;
-                UpdateDisplay();
             } 
         }
 
-        public void UpdateDisplay()
+        public override void UpdateContent()
         {
+            base.UpdateContent();
             if (InventoryItem == null)
             {
                 if (requiredCount > 0)
                 {
-                    requiredItemImage.gameObject.SetActive(true);
+                    if (!requiredItemImage.gameObject.activeSelf)
+                        requiredItemImage.gameObject.SetActive(true);
                     requiredItemImage.sprite = GameController.Instance.ItemIcons[RequiredItem];
                 }
-                else
+                else if (requiredItemImage.gameObject.activeSelf)
                 {
                     requiredItemImage.gameObject.SetActive(false);
                 }
             }
-            else
+            else if (requiredItemImage.gameObject.activeSelf)
             {
                 requiredItemImage.gameObject.SetActive(false);
             }
@@ -86,17 +87,6 @@ namespace FrontierIsland
             {
                 CountDisplay.text = $"<color=#3D4045>0/0</color>";
             }
-        }
-
-        public override void OnItemChange()
-        {
-            UpdateDisplay();
-        }
-
-        public override void OnDrop(PointerEventData eventData)
-        {
-            base.OnDrop(eventData);
-            UpdateDisplay();
         }
 
         public override void OnPointerEnter(PointerEventData eventData)

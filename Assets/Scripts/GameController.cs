@@ -95,7 +95,7 @@ namespace FrontierIsland
 
             if (Input.GetKeyDown(KeyCode.F))
             {
-                Debug.Log($"ItemStack instance counts: {ItemStack.ItemCount - 9}");
+                Debug.Log($"ItemStack instance counts: {ItemStack.ItemCount}");
             }
 
             if (Input.GetKeyDown(KeyCode.D))

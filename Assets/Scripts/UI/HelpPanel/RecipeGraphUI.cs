@@ -82,11 +82,11 @@ namespace FrontierIsland
             }
 
             i = 0;
-            foreach (ItemType item in graphNode.ingredients[0]) // TODO: render all ingredient sets
+            foreach (Ingredient ingredient in graphNode.ingredients[0]) // TODO: render all ingredient sets
             {
                 int segments = graphNode.ingredients[0].Length + 1;
                 float angle = (i + 1) * Mathf.PI / segments + Mathf.PI;
-                RecipeNodeUI node = InstantiateNode(item, new Vector2(Mathf.Cos(angle) * r, Mathf.Sin(angle) * r));
+                RecipeNodeUI node = InstantiateNode(ingredient.item, new Vector2(Mathf.Cos(angle) * r, Mathf.Sin(angle) * r));
                 ++i;
                 CreateEdge(node.rectTransform.anchoredPosition, centerNode.rectTransform.anchoredPosition, edgeParent);
             }

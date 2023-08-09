@@ -18,5 +18,7 @@ namespace FrontierIsland
         /// The <see cref="Transform"/> that <see cref="CraftingStationUI"/> will follow
         /// </summary>
         Transform transform { get; }
+
+        void Assemble(int recipeIndex, int count);
     }
 }

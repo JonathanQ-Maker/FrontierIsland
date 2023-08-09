@@ -3,10 +3,10 @@
     public class ItemRecipe
     {
         public ItemType ResultItem { get; protected set; }
-        private ItemType[] ingredients;
-        public ItemType[] Ingredients { get { return ingredients; } }
+        private Ingredient[] ingredients;
+        public Ingredient[] Ingredients { get { return ingredients; } }
 
-        public ItemRecipe(ItemType resultItem, ItemType[] ingredients)
+        public ItemRecipe(ItemType resultItem, Ingredient[] ingredients)
         {
             ResultItem = resultItem;
             this.ingredients = ingredients;
@@ -20,6 +20,20 @@
         public bool Matches(Inventory inventory)
         {
             throw new System.NotImplementedException();
+        }
+    }
+
+    public class Ingredient
+    {
+        public readonly ItemType item;
+
+        public readonly int count;
+
+
+        public Ingredient(ItemType item, int count)
+        {
+            this.item = item;
+            this.count = count;
         }
     }
 }

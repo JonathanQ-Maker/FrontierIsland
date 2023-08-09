@@ -8,7 +8,7 @@ namespace FrontierIsland
         public class RecipeGraphNode
         {
             public HashSet<ItemType> requiredBy = new HashSet<ItemType>(1);
-            public List<ItemType[]> ingredients = new List<ItemType[]>(1);
+            public List<Ingredient[]> ingredients = new List<Ingredient[]>(1);
 
             internal RecipeGraphNode()
             { 
@@ -44,11 +44,11 @@ namespace FrontierIsland
             UpdateRequiredBy(recipe.ResultItem, recipe.Ingredients);
         }
 
-        private static void UpdateRequiredBy(ItemType requiredBy, ItemType[] ingredients)
+        private static void UpdateRequiredBy(ItemType requiredBy, Ingredient[] ingredients)
         {
             for (int i = 0; i < ingredients.Length; ++i)
             {
-                if (nodes.TryGetValue(ingredients[i], out RecipeGraphNode node)) 
+                if (nodes.TryGetValue(ingredients[i].item, out RecipeGraphNode node)) 
                 {
                     node.requiredBy.Add(requiredBy);
                 }

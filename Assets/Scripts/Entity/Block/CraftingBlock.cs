@@ -36,19 +36,31 @@ namespace FrontierIsland
             }
         }
 
-        public Inventory Inventory { get { return inventory; } }
-
         private Inventory inventory;
+        public virtual Inventory Inventory
+        {
+            get { return inventory; }
+            set
+            {
+                if (inventory != null)
+                {
+                    inventory.onInventoryChange -= OnInventoryChange;
+                }
+                inventory = value;
+                inventory.onInventoryChange += OnInventoryChange;
+            }
+        }
 
         private void Start()
         {
-            inventory = new Inventory(4, 2, this);
+            Inventory = new Inventory(4, 2, this);
         }
 
         private void OnDestroy()
         {
             // clean up possible ui
             if (stationUI != null) CloseUI();
+            Inventory.onInventoryChange -= OnInventoryChange;
         }
 
         public virtual void CloseUI()
@@ -79,7 +91,7 @@ namespace FrontierIsland
             return true;
         }
 
-        public void OnInventoryChange(int index)
+        public void OnInventoryChange()
         {
             
         }
@@ -88,6 +100,35 @@ namespace FrontierIsland
         {
             // TODO: implement dropping items
             Debug.LogWarning($"CraftingBlock DropItem() not implemented");
+        }
+
+        public virtual void Assemble(int recipeIndex, int count)
+        {
+            ItemRecipe recipe = Recipes[recipeIndex];
+            for (int i = 0; i < recipe.Ingredients.Length; ++i)
+            {
+                Ingredient ingredient = recipe.Ingredients[i];
+                if (inventory[i] == null || 
+                    ingredient.item != inventory[i].ItemType || 
+                    ingredient.count * count > inventory[i].count)
+                {
+                    return;
+                }
+            }
+
+            for (int i = 0; i < recipe.Ingredients.Length; ++i)
+            {
+                Ingredient ingredient = recipe.Ingredients[i];
+                inventory.ConsumeItem(i, ingredient.count * count);
+            }
+
+            // TODO: handle multi stack result items
+            ItemStack result = ItemAtlas.Get(recipe.ResultItem).DeepClone();
+            result.count = count;
+            if (!Viewer.Inventory.AddItem(result))
+            {
+                DropItem(result);
+            }
         }
     }
 }

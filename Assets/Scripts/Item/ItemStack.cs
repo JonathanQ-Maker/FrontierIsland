@@ -23,8 +23,10 @@ namespace FrontierIsland
      * 5. Adjust ItemHandler's Model transform such that it displays
      * properly when attached to settler's hand pivots 
      * 
-     * 6. Finally, link ItemHandler prefab to ItemHandlerPrefabs
-     * ScriptibleObject as well as an icon 
+     * 6. link ItemHandler prefab to ItemHandlerPrefabs
+     * ScriptibleObject and link icon to ItemIcons ScriptibleObject
+     * 
+     * 7. Add master ItemStack instance to ItemAtlas
      */
 
     public abstract class ItemStack : INBTSerializable, ICopyable<ItemStack>
@@ -36,13 +38,12 @@ namespace FrontierIsland
         /// </summary>
         public static int ItemCount { get { return itemCount; } }
 
-
         private CompoundTag nbt = null;
         public virtual CompoundTag NBT { get { return nbt; } set { nbt = value; } }
 
         public bool HasNBT { get { return NBT != null; } }
 
-        public virtual int MaxStackSize { get { return 255; } }
+        public virtual int MaxStackSize { get { return 256; } }
         public abstract ItemType ItemType { get; }
 
         public int count;
@@ -54,6 +55,8 @@ namespace FrontierIsland
             get { return handler; }
             protected set { handler = value; }
         }
+
+        public Inventory inventory;
 
         /// <summary>
         /// Instantiate the corresponding <see cref="ItemHandler"/> to this <see cref="ItemStack"/> to <paramref name="pos"/>
@@ -158,6 +161,7 @@ namespace FrontierIsland
                 int numAdded = Mathf.Min(MaxStackSize, count + other.count) - count;
                 count += numAdded;
                 other.count -= numAdded;
+                inventory?.onInventoryChange?.Invoke();
                 return true;
             }
             return false;
@@ -175,6 +179,7 @@ namespace FrontierIsland
             {
                 other.count -= count;
                 this.count += count;
+                inventory?.onInventoryChange?.Invoke();
                 return true;
             }
             return false;
@@ -192,6 +197,7 @@ namespace FrontierIsland
                 ItemStack newStack = DeepClone();
                 newStack.count = count;
                 this.count -= count;
+                inventory?.onInventoryChange?.Invoke();
                 return newStack;
             }
             return null;

@@ -10,11 +10,11 @@ namespace FrontierIsland
         [SerializeField]
         private CraftingStationItem stationItemPrefab;
         [SerializeField]
-        private TextMeshProUGUI title;
+        private TextMeshProUGUI title, countDisplay;
         [SerializeField]
         private RectTransform selectOverlay, recipeContent;
         [SerializeField]
-        private Slider countSldier;
+        private Slider countSlider;
 
         [NonSerialized]
         public Transform focus;
@@ -47,6 +47,8 @@ namespace FrontierIsland
             }
         }
 
+        public int Count { get { return (int)countSlider.value; } }
+
         public const int CAMERA_CONTROL_MASK = 1 << 1;
 
         private void Start()
@@ -73,11 +75,43 @@ namespace FrontierIsland
                 SetRequiredItem(i, ItemType.Tree, 0);
             }
 
-            ItemType[] ingredients = selectedRecipe.Ingredients;
+            int maxCount = ItemAtlas.Get(selectedRecipe.Ingredients[0].item).MaxStackSize / selectedRecipe.Ingredients[0].count;
+            for (int i = 1; i < selectedRecipe.Ingredients.Length; ++i)
+            { 
+                int current = ItemAtlas.Get(selectedRecipe.Ingredients[i].item).MaxStackSize / selectedRecipe.Ingredients[i].count;
+                if (current < maxCount)
+                {
+                    maxCount = current;
+                }
+            }
+            maxCount = Mathf.Min(maxCount, ItemAtlas.Get(selectedRecipe.ResultItem).MaxStackSize);
+            
+            // if maxCount 1 hide slider, otherwise show slider
+            if (maxCount == 1)
+            {
+                countSlider.gameObject.SetActive(false);
+                countDisplay.gameObject.SetActive(false);
+                countSlider.value = 1;
+            }
+            else
+            {
+                countSlider.gameObject.SetActive(true);
+                countDisplay.gameObject.SetActive(true);
+                countSlider.maxValue = maxCount;
+            }
+            UpdateRequiredItems(1);
+        }
+
+        /// <summary>
+        /// Renders Required Crafting Slot
+        /// </summary>
+        /// <param name="count">number of result items</param>
+        private void UpdateRequiredItems(int count)
+        {
+            Ingredient[] ingredients = station.Recipes[SelectIndex].Ingredients;
             for (int i = 0; i < ingredients.Length; ++i)
             {
-                // TODO: get actual count
-                SetRequiredItem(i, ingredients[i], UnityEngine.Random.Range(1, 6));
+                SetRequiredItem(i, ingredients[i].item, ingredients[i].count * count);
             }
         }
 
@@ -139,19 +173,15 @@ namespace FrontierIsland
             slot.RequiredCount = count;
         }
 
-        public void UpdateSlider()
-        { 
-            //TODO: update max count
-        }
-
         public void OnClickCraft()
         {
-            Debug.Log("Craft");
+            station.Assemble(SelectIndex, Count);
         }
 
         public void OnCountChange()
         {
-            Debug.Log($"Slider Value: {countSldier.value}");
+            countDisplay.text = $"{Count}";
+            UpdateRequiredItems(Count);
         }
     }
 }

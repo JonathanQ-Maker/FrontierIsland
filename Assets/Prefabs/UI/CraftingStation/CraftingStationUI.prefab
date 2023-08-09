@@ -298,8 +298,8 @@ MonoBehaviour:
   m_FillRect: {fileID: 0}
   m_HandleRect: {fileID: 6982015065542478091}
   m_Direction: 0
-  m_MinValue: 0
-  m_MaxValue: 1
+  m_MinValue: 1
+  m_MaxValue: 2
   m_WholeNumbers: 1
   m_Value: 1
   m_OnValueChanged:
@@ -477,9 +477,10 @@ MonoBehaviour:
   gridLayout: {fileID: 4290934919773333967}
   stationItemPrefab: {fileID: 1784823144454408279, guid: 14b764b371ef00145b49bfcb80bcc1be, type: 3}
   title: {fileID: 729529225474629877}
+  countDisplay: {fileID: 21959704929150792}
   selectOverlay: {fileID: 5639836966267677864}
   recipeContent: {fileID: 3164493048899773786}
-  countSldier: {fileID: 2895599497277983947}
+  countSlider: {fileID: 2895599497277983947}
   offset: 0.75
 --- !u!114 &6318002386418913041
 MonoBehaviour:
@@ -1052,9 +1053,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '125
-
-'
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace FrontierIsland
@@ -54,7 +53,16 @@ namespace FrontierIsland
         public virtual Inventory Inventory 
         {
             get { return inventory; }
-            set { inventory = value; }
+            set 
+            {
+                if (inventory != null)
+                {
+                    inventory.onInventoryChange -= OnInventoryChange;
+                }
+                inventory = value;
+                inventory.onInventoryChange += OnInventoryChange;
+                UpdateHeldItem();
+            }
         }
 
         private int heldItemIndex;
@@ -87,20 +95,17 @@ namespace FrontierIsland
         public void Start()
         {
             GameController.Instance.settlers.Add(this);
+            Inventory = new Inventory(9, 1, this);
 
-            inventory = new Inventory(9, 1, this);
             inventory[0, 0] = new WoodAxe();
             inventory[1, 0] = new CrateItem(255);
             inventory[2, 0] = new CarpenterBenchItem(1);
+            inventory[3, 0] = new RocksItem(256);
+            inventory[4, 0] = new GrassItem(256);
+            inventory[5, 0] = new GrassItem(106);
 
-            //inventory[0, 0] = new RocksItem(255);
-            //inventory[2, 0] = new StoneAxe();
-            //inventory[3, 0] = new TreeItem(255, Tree.TreeState.Normal);
-            //inventory[4, 0] = new BinItem(255);
-            //inventory[5, 0] = new GrassItem(255);
-            //inventory[6, 0] = new CampFireItem(255);
-            //inventory[7, 0] = new MushroomsItem(255);
 
+            UpdateHeldItem();
         }
 
         protected void UpdateHeldItem()
@@ -414,7 +419,7 @@ namespace FrontierIsland
             item.InstantiateHandler(Position, null);
         }
 
-        public void OnInventoryChange(int index)
+        public void OnInventoryChange()
         {
             UpdateHeldItem();
         }
@@ -443,6 +448,15 @@ namespace FrontierIsland
             {
                 viewable.CloseUI();
                 viewable = null;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            // unsubscribe from event
+            if (Inventory != null)
+            {
+                Inventory.onInventoryChange -= OnInventoryChange;
             }
         }
     }
