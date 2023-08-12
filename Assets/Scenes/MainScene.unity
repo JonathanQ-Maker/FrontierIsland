@@ -207,6 +207,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 682128725154699247, guid: 3da5e4a062888614599143494b292cea, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2808242521541095305, guid: 3da5e4a062888614599143494b292cea, type: 3}
       propertyPath: m_Name
       value: Settler (1)
