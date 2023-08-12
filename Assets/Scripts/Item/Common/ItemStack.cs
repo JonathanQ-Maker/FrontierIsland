@@ -12,7 +12,7 @@ namespace FrontierIsland
      * 
      * 2. Create a concrete class inheriting from ItemStack
      * 
-     * 3. Create a concrete class inheriting from ItemHandler
+     * 3. Create a concrete class inheriting from ItemHandler (optional)
      * 
      * 4. Create a prefab in Editor with ItemHandler attached to the 
      * top-most gameobject and a child gameobject called "Model" which 
@@ -238,7 +238,8 @@ namespace FrontierIsland
 
         public virtual string GetToolTip()
         {
-            return $"<size=14><color=#C5D4E9>{name}<size=12>\r\n";
+            return $"<size=14><color=#C5D4E9>{name}<size=12>\n" +
+                   $"<color=#898989><i>{description}</i></color>\n";
         }
 
         public void ReadFromNBT(CompoundTag nbt)

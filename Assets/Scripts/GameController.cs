@@ -234,6 +234,7 @@ namespace FrontierIsland
                     }
                     else if (selectable is Block)
                     {
+                        Assert.IsTrue(ReferenceEquals(Terrain.Instance.GetBlock(((Block)selectable).Position), selectable));
                         BlockFace face = GetSelectBlockFace(normal);
 
                         switch (face)

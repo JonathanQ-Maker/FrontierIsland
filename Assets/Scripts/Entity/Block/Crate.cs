@@ -15,9 +15,9 @@
             get { return BlockType.Crate; }
         }
 
-        public override ItemStack GetItemDrop()
+        public override ItemStack[] GetItemDrops()
         {
-            return new CrateItem(1);
+            return new ItemStack[] { new CrateItem(1) };
         }
     }
 }

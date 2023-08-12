@@ -97,12 +97,10 @@ namespace FrontierIsland
             GameController.Instance.settlers.Add(this);
             Inventory = new Inventory(9, 1, this);
 
-            inventory[0, 0] = new WoodAxe();
-            inventory[1, 0] = new CrateItem(255);
-            inventory[2, 0] = new CarpenterBenchItem(1);
-            inventory[3, 0] = new RocksItem(256);
-            inventory[4, 0] = new GrassItem(256);
-            inventory[5, 0] = new GrassItem(106);
+            inventory[0] = new TreeCone(99);
+            inventory[1] = new WoodLog(99);
+            inventory[2] = new Twig(99);
+            inventory[3] = new RocksItem(99);
 
 
             UpdateHeldItem();
@@ -205,12 +203,15 @@ namespace FrontierIsland
             if (block != null) // is null if destroyed by another
             {
                 // Break block and handle item drops from block
-                ItemStack drops = block.GetItemDrop();
+                ItemStack[] drops = block.GetItemDrops();
                 if (drops != null)
                 {
-                    if (!Inventory.AddItem(drops))
+                    for (int i = 0; i < drops.Length; ++i)
                     {
-                        drops.InstantiateHandler(block.Position, null);
+                        if (!Inventory.AddItem(drops[i]))
+                        {
+                            DropItem(drops[i]);
+                        }
                     }
                 }
                 Terrain.Instance.DestroyBlock(block);
@@ -414,9 +415,9 @@ namespace FrontierIsland
         }
         #endregion
 
-        public virtual void DropItem(ItemStack item)
+        public virtual void DropItem(ItemStack itemStack)
         {
-            item.InstantiateHandler(Position, null);
+            itemStack.InstantiateHandler(Position, null);
         }
 
         public void OnInventoryChange()
@@ -453,6 +454,7 @@ namespace FrontierIsland
 
         private void OnDestroy()
         {
+            CloseView();
             // unsubscribe from event
             if (Inventory != null)
             {

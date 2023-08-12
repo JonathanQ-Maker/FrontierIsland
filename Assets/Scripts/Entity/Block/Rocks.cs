@@ -24,9 +24,9 @@
             get { return BlockType.Rocks; }
         }
 
-        public override ItemStack GetItemDrop()
+        public override ItemStack[] GetItemDrops()
         {
-            return new RocksItem(1);
+            return new ItemStack[] { new RocksItem(1) };
         }
     }
 }

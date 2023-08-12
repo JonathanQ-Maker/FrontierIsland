@@ -20,7 +20,7 @@ namespace FrontierIsland
         public override string GetToolTip()
         {
             return base.GetToolTip() 
-                + $"Efficiency: <color=#F2CA6F>{Math.Round(BaseEfficiency * 100)}%</color>\r\n";
+                + $"Efficiency: <color=#F2CA6F>{Math.Round(BaseEfficiency * 100)}%</color>\n";
         }
     }
 }

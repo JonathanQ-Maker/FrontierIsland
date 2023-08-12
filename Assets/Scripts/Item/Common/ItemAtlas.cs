@@ -34,12 +34,15 @@ namespace FrontierIsland
             RegisterItem(new StoneAxe());
             RegisterItem(new RocksItem(1));
             RegisterItem(new CrateItem(1));
-            RegisterItem(new TreeItem(1, Tree.TreeState.Normal));
+            RegisterItem(new TreeItem(1, Tree.TreeState.Sapling));
             RegisterItem(new GrassItem(1));
             RegisterItem(new MushroomsItem(1));
             RegisterItem(new CampFireItem(1));
             RegisterItem(new BinItem(1));
             RegisterItem(new CarpenterBenchItem(1));
+            RegisterItem(new WoodLog(1));
+            RegisterItem(new Twig(1));
+            RegisterItem(new TreeCone(1));
         }
     }
 }

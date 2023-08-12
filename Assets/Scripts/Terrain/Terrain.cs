@@ -183,7 +183,7 @@ namespace FrontierIsland
         /// </summary>
         /// <param name="block"></param>
         /// <param name="pos"></param>
-        public void SetBlock(Block block, Vector3Int pos)
+        public void SetBlockReference(Block block, Vector3Int pos)
         {
             Chunk chunk = GetOrNewChunk(pos.x, pos.z);
             chunk.SetBlock(block, pos.x % Chunk.CHUNK_SIZE, pos.y, pos.z % Chunk.CHUNK_SIZE);
@@ -206,18 +206,7 @@ namespace FrontierIsland
         {
             Block prefab = GameController.Instance.BlockPrefabs[type];
 
-            if (prefab is MultiBlock)
-            {
-                return PlaceMultiBlock((MultiBlock)prefab, pos);
-            }
-
-            if (!CanPlaceBlock(pos))
-                return null;
-
-            Chunk chunk = GetOrNewChunk(pos.x, pos.z);
-            Block block = Instantiate(prefab, pos, Quaternion.identity, chunk.transform);
-            chunk.SetBlock(block, pos.x % Chunk.CHUNK_SIZE, pos.y, pos.z % Chunk.CHUNK_SIZE);
-            return block;
+            return PlaceBlock(prefab, pos);
         }
 
         /// <summary>
@@ -243,16 +232,6 @@ namespace FrontierIsland
                 block.ReadFromNBT(item.NBT);
             }
             return block;
-        }
-
-        /// <summary>
-        /// Destroy <paramref name="block"/> and clear from chunk data
-        /// </summary>
-        /// <param name="block"></param>
-        public void DestroyBlock(Block block)
-        {
-            SetBlock(null, block.Position);
-            Destroy(block.gameObject);
         }
 
         /// <summary>
@@ -290,7 +269,7 @@ namespace FrontierIsland
 
         /// <summary>
         /// <br>
-        /// Check if there is <see cref="MultiBlock.Size"/> worth of space at 
+        /// Check if there is <see cref="Block.Size"/> worth of space at 
         /// </br>
         /// <br>
         /// <paramref name="pos"/> starting at bottom south-west corner
@@ -300,9 +279,9 @@ namespace FrontierIsland
         /// <param name="block"></param>
         /// <param name="pos"></param>
         /// <returns><see langword="true"/> if there is space</returns>
-        public bool CanPlaceMultiBlock(MultiBlock multiBlock, Vector3Int pos)
+        public bool CanPlaceBlock(Block block, Vector3Int pos)
         {
-            Vector3Int size = multiBlock.Size;
+            Vector3Int size = block.Size;
 
             // breadth iteration order detect invalid spots faster
             for (int testY = pos.y; testY < size.y + pos.y; ++testY)
@@ -320,19 +299,21 @@ namespace FrontierIsland
         }
 
         /// <summary>
-        /// Tries to place a <see cref="MultiBlock"/> clone of <paramref name="prefab"/> at <paramref name="pos"/>
+        /// Tries to place a <see cref="Block"/> clone of <paramref name="prefab"/> at <paramref name="pos"/>
         /// 
         /// 
         /// </summary>
         /// <param name="prefab"></param>
         /// <param name="pos"></param>
-        /// <returns><see langword="null"/> if <paramref name="pos"/> does not have space for this <see cref="MultiBlock"/></returns>
-        private MultiBlock PlaceMultiBlock(MultiBlock prefab, Vector3Int pos)
+        /// <returns><see langword="null"/> if <paramref name="pos"/> does not have space for this <see cref="Block"/></returns>
+        private Block PlaceBlock(Block prefab, Vector3Int pos)
         {
-            if (!CanPlaceMultiBlock(prefab, pos)) return null;
+            if (!CanPlaceBlock(prefab, pos)) return null;
 
             Chunk chunk = GetOrNewChunk(pos.x, pos.z);
-            MultiBlock block = Instantiate(prefab, pos, Quaternion.identity, chunk.transform);
+
+            // NOTE: instantiates prefab in context of bottom south-west corner
+            Block block = Instantiate(prefab, pos, Quaternion.identity, chunk.transform);
             Vector3Int size = block.Size;
             for (int pY = pos.y; pY < size.y + pos.y; ++pY)
                 for (int pX = pos.x; pX < size.x + pos.x; ++pX)
@@ -345,21 +326,22 @@ namespace FrontierIsland
         }
 
         /// <summary>
-        /// Destroy <paramref name="multiBlock"/> and clear from chunk data
+        /// Destroy <paramref name="block"/> and clear from chunk data
         /// </summary>
-        /// <param name="multiBlock"></param>
-        public void DestroyMultiBlock(MultiBlock multiBlock)
+        /// <param name="block"></param>
+        public void DestroyBlock(Block block)
         {
-            Vector3Int pos = multiBlock.Position;
-            Vector3Int size = multiBlock.Size;
+            Vector3Int pos = block.Position;
+            Vector3Int size = block.Size;
             for (int pY = pos.y; pY < size.y + pos.y; ++pY)
                 for (int pX = pos.x; pX < size.x + pos.x; ++pX)
                     for (int pZ = pos.z; pZ < size.z + pos.z; ++pZ)
                     {
-                        Chunk chunk = GetOrNewChunk(pX, pZ);
+                        Chunk chunk = GetChunk(pX, pZ);
+                        if (chunk == null) continue;
                         chunk.SetBlock(null, pX % Chunk.CHUNK_SIZE, pY, pZ % Chunk.CHUNK_SIZE);
                     }
-            Destroy(multiBlock.gameObject);
+            Destroy(block.gameObject);
         }
         #endregion
     }

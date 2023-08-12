@@ -92,8 +92,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3370655063295453624}
-  - component: {fileID: 3218227570548776937}
   - component: {fileID: 1943560859417228357}
+  - component: {fileID: 1929735780531269932}
   m_Layer: 0
   m_Name: StoneAxe
   m_TagString: Untagged
@@ -117,20 +117,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3218227570548776937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2705863238518092546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83f5781d4729baf4ea2abba7d3bd3872, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  model: {fileID: 5078354038548020136}
-  collider: {fileID: 1943560859417228357}
 --- !u!65 &1943560859417228357
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -144,3 +130,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.5, z: 0.5}
   m_Center: {x: 0, y: 0.25, z: 0}
+--- !u!114 &1929735780531269932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2705863238518092546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a452782350d6de469a3e8320e6ecbbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  model: {fileID: 5078354038548020136}
+  collider: {fileID: 1943560859417228357}

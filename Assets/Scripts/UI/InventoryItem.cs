@@ -128,7 +128,7 @@ namespace FrontierIsland
                 if (Input.GetMouseButtonDown(1))
                 {
                     //Debug.Log($"Hover: {hover.name}, Inventoryitem: {hover.TryGetComponent(out InventoryItem o)}, ItemSlot: {hover.TryGetComponent(out ItemSlot s)}");
-                    if (ItemStack.count > 1)
+                    if (ItemStack.count > 1 && hover != null)
                     if (hover.TryGetComponent(out InventoryItem other))
                     {
                         if (other.ItemStack.AddFrom(ItemStack, 1))

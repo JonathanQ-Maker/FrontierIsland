@@ -90,6 +90,22 @@ namespace FrontierIsland
 
         public virtual void OnDrop(PointerEventData eventData)
         {
+            /*
+             * When an InventoryItem is dropped on this ItemSlot UI
+             * the ItemSlot must handle the ItemStack stored in the InventoryItem.
+             * In general, the ItemStack should be moved to the Inventory slot this 
+             * ItemSlot UI represents.
+             * 
+             * NOTE: Any unhandled/leftover ItemStack in InventoryItem after OnDrop() exits 
+             * will be dropped through the InventoryHolder
+             * 
+             * NOTE: Inventory moddification functions are called after the bidirectional
+             * accociation of ItemStack and InventoryItem are updated.
+             * This is because the InventoryUI is subscribed 
+             * to the Inventory.onInventoryChange delegate with InventoryUI.UpdateContent()
+             * which will update all visual UI components and assumes that the bidirectional
+             * accociation is correct.
+             */
             if (eventData.button != InputButton.Left) return;
             if (eventData.pointerDrag != null)
             {
@@ -168,13 +184,6 @@ namespace FrontierIsland
         public virtual void OnPointerExit(PointerEventData eventData)
         {
             image.color = Color.white;
-        }
-
-        // TODO: remove
-        public void AssignInventoryItem(InventoryItem inventoryItem)
-        {
-            this.InventoryItem = inventoryItem;
-            inventoryItem.transform.SetParent(ItemHolder);
         }
 
         public void PlaceOverlay(RectTransform overlay)

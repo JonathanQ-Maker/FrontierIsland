@@ -7,9 +7,9 @@
             get { return BlockType.Grass; }
         }
 
-        public override ItemStack GetItemDrop()
+        public override ItemStack[] GetItemDrops()
         {
-            return new GrassItem(1);
+            return new ItemStack[] { new GrassItem(1) };
         }
     }
 }

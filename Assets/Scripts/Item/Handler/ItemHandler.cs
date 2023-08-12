@@ -2,7 +2,7 @@
 
 namespace FrontierIsland
 {
-    public abstract class ItemHandler : MonoBehaviour, ISelectable
+    public class ItemHandler : MonoBehaviour, ISelectable
     {
         /// <summary>
         /// <see cref="ItemHandler"/> exists as a dropped form in the world

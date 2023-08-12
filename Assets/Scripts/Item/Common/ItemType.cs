@@ -12,6 +12,9 @@ namespace FrontierIsland
         Mushrooms,
         CampFire,
         Bin,
-        CarpenterBench
+        CarpenterBench,
+        WoodLog,
+        Twig,
+        TreeCone
     }
 }

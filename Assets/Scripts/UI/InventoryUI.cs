@@ -17,9 +17,6 @@ namespace FrontierIsland
         [SerializeField]
         private RectTransform windowRect;
 
-        // TODO: remove
-        public RectTransform WindowRect { get { return windowRect; } }
-
         public CustomGridLayoutGroup gridLayout;
         protected List<ItemSlot> inventorySlots = new List<ItemSlot>();
 

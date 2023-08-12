@@ -1,7 +1,5 @@
-﻿
+﻿using UnityEngine;
 
-using Unity.VisualScripting;
-using UnityEngine;
 
 namespace FrontierIsland
 {
@@ -98,8 +96,14 @@ namespace FrontierIsland
 
         public void DropItem(ItemStack itemStack)
         {
-            // TODO: implement dropping items
-            Debug.LogWarning($"CraftingBlock DropItem() not implemented");
+            if (Viewer == null)
+            {
+                itemStack.InstantiateHandler(Position, null);
+            }
+            else
+            {
+                Viewer.DropItem(itemStack);
+            }
         }
 
         public virtual void Assemble(int recipeIndex, int count)
@@ -122,7 +126,6 @@ namespace FrontierIsland
                 inventory.ConsumeItem(i, ingredient.count * count);
             }
 
-            // TODO: handle multi stack result items
             ItemStack result = ItemAtlas.Get(recipe.ResultItem).DeepClone();
             result.count = count;
             if (!Viewer.Inventory.AddItem(result))

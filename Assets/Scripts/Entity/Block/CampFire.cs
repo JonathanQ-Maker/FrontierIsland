@@ -15,9 +15,9 @@
             get { return BlockType.CampFire; }
         }
 
-        public override ItemStack GetItemDrop()
+        public override ItemStack[] GetItemDrops()
         {
-            return new CampFireItem(1);
+            return new ItemStack[] { new CampFireItem(1) };
         }
     }
 }

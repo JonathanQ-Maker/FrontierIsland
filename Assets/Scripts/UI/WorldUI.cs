@@ -12,6 +12,16 @@ namespace FrontierIsland
 
         public RectTransform rectTransform { get { return transform as RectTransform; } }
 
+        public bool Active
+        {
+            get { return gameObject.activeSelf; }
+            set 
+            {
+                UpdatePosition();
+                gameObject.SetActive(value);
+            }
+        }
+
         private void Update()
         {
             UpdatePosition();

@@ -5,6 +5,8 @@ namespace FrontierIsland
 {
     public abstract class Block : MonoBehaviour, INBTSerializable, ISelectable
     {
+        public virtual Vector3Int Size { get { return Vector3Int.one; } }
+
         [SerializeField]
         private Transform model;
 
@@ -54,10 +56,33 @@ namespace FrontierIsland
         }
 
         /// <summary>
-        /// Returns a new <see cref="ItemStack"/> representing the 
+        /// Returns new <see cref="ItemStack"/> representing the 
         /// content dropped from breaking this <see cref="Block"/>
         /// </summary>
         /// <returns><see langword="null"/> if no drops </returns>
-        public abstract ItemStack GetItemDrop();
+        public abstract ItemStack[] GetItemDrops();
+
+
+        protected virtual void OnDrawGizmosSelected()
+        {
+            if (Size == Vector3Int.one) return;
+            Vector3Int origin = Position;
+            float x = origin.x - 0.5f, y = origin.y, z = origin.z - 0.5f;
+            Gizmos.DrawLine(new Vector3(x, y, z), new Vector3(x, y + Size.y, z));
+            Gizmos.DrawLine(new Vector3(x, y + Size.y, z + Size.z), new Vector3(x, y + Size.y, z));
+            Gizmos.DrawLine(new Vector3(x, y + Size.y, z + Size.z), new Vector3(x, y, z + Size.z));
+            Gizmos.DrawLine(new Vector3(x, y, z + Size.z), new Vector3(x, y, z));
+
+            Gizmos.DrawLine(new Vector3(x, y, z), new Vector3(x + Size.x, y, z));
+            Gizmos.DrawLine(new Vector3(x, y + Size.y, z), new Vector3(x + Size.x, y + Size.y, z));
+            Gizmos.DrawLine(new Vector3(x, y, z + Size.z), new Vector3(x + Size.x, y, z + Size.z));
+            Gizmos.DrawLine(new Vector3(x, y + Size.y, z + Size.z), new Vector3(x + Size.x, y + Size.y, z + Size.z));
+
+            x += Size.x;
+            Gizmos.DrawLine(new Vector3(x, y, z), new Vector3(x, y + Size.y, z));
+            Gizmos.DrawLine(new Vector3(x, y + Size.y, z + Size.z), new Vector3(x, y + Size.y, z));
+            Gizmos.DrawLine(new Vector3(x, y + Size.y, z + Size.z), new Vector3(x, y, z + Size.z));
+            Gizmos.DrawLine(new Vector3(x, y, z + Size.z), new Vector3(x, y, z));
+        }
     }
 }

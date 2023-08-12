@@ -1,18 +1,20 @@
 ﻿using NBT.Tags;
+using System.Collections;
 using UnityEngine;
 
 namespace FrontierIsland
 {
-    public class Tree : MultiBlock
+    public class Tree : Block
     {
         public enum TreeState : byte
         {
+            Sapling,
             Normal,
             Grown
         }
 
         [SerializeField]
-        private Mesh normalTree, grownTree;
+        private Mesh sapling, normalTree, grownTree;
 
         [SerializeField]
         private MeshFilter meshFilter;
@@ -20,7 +22,8 @@ namespace FrontierIsland
         [SerializeField]
         private BoxCollider boxCollider;
 
-        private TreeState state;
+        [SerializeField]
+        private TreeState state = TreeState.Normal;
         public TreeState State
         {
             get { return state; }
@@ -39,6 +42,8 @@ namespace FrontierIsland
             }
         }
 
+        public override bool Solid { get { return State != TreeState.Sapling; } }
+
         public override MaterialType MaterialType
         {
             get
@@ -51,6 +56,9 @@ namespace FrontierIsland
         {
             switch (state)
             {
+                case TreeState.Sapling:
+                    meshFilter.sharedMesh = sapling;
+                    break;
                 case TreeState.Normal:
                     meshFilter.sharedMesh = normalTree;
                     break;
@@ -78,6 +86,12 @@ namespace FrontierIsland
             nbt.PutByte("state", (byte)State);
         }
 
+        private void Start()
+        {
+            TrySetState(State);
+            StartCoroutine(GrowthTimer());
+        }
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.G))
@@ -86,9 +100,26 @@ namespace FrontierIsland
             }
         }
 
-        public override ItemStack GetItemDrop()
+        public override ItemStack[] GetItemDrops()
         {
-            return new TreeItem(1, State);
+            int amount = Random.Range(2, 6);
+            if (State == TreeState.Grown)
+            {
+                amount *= 2;
+            }
+            
+            return new ItemStack[] { new WoodLog(amount), 
+                                     new TreeCone(Random.Range(1, 3)), 
+                                     new Twig(Random.Range(1, 3))};
+        }
+
+        private IEnumerator GrowthTimer()
+        {
+            for (int i = (int)State + 1; i <= (int)TreeState.Grown; ++i)
+            {
+                yield return new WaitForSeconds(Random.Range(10, 60));
+                TrySetState((TreeState)i);
+            }
         }
     }
 }

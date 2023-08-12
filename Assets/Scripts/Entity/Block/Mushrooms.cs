@@ -7,9 +7,9 @@
             get { return BlockType.Mushrooms; }
         }
 
-        public override ItemStack GetItemDrop()
+        public override ItemStack[] GetItemDrops()
         {
-            return new MushroomsItem(1);
+            return new ItemStack[] { new MushroomsItem(1) };
         }
     }
 }
