@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 1434e0d7765f1ea4ca7fd2bf0d5645c0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - invItemPrefab: {fileID: 8884787269037152499, guid: 187839c081474404a83d92b16567c9e2, type: 3}
+  - itemSlotPrefab: {fileID: 47541278762958959, guid: e393dd9851d684d459f2300289c53be3, type: 3}
+  - gridLayout: {instanceID: 0}
+  - selectionNodePrefab: {fileID: 5777099409227022748, guid: 14b764b371ef00145b49bfcb80bcc1be, type: 3}
+  - title: {instanceID: 0}
+  - countDisplay: {instanceID: 0}
+  - selectOverlay: {instanceID: 0}
+  - recipeContent: {instanceID: 0}
+  - countSlider: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -14,7 +14,7 @@ namespace FrontierIsland
         [SerializeField]
         private TextMeshProUGUI countDisplay;
 
-
+        [SerializeField] // for debug
         private ItemSlot prevSlot, itemSlot;
         public ItemSlot PrevSlot { get { return prevSlot; } }
         public ItemSlot ItemSlot 
@@ -67,6 +67,15 @@ namespace FrontierIsland
 
         public void UpdateContent()
         {
+            /* 
+             * If an null reference exception brings
+             * you here, consider the following possibilities.
+             * 
+             * Inventory.onInventoryChange not unsubscribed 
+             * from due to the fact that only GameObjects that
+             * have been enabled before will call OnDestroy()
+             * and unsubscribe
+             */
             image.sprite = ItemStack.GetIcon();
             if (ItemStack.count == 1)
             {
@@ -182,6 +191,7 @@ namespace FrontierIsland
             itemStack = null;
             image.raycastTarget = true;
             ActionLoop = null;
+            hover = null;
         }
 
         public void OnPointerEnter(PointerEventData eventData)

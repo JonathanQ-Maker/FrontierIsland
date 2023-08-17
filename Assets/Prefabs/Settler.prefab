@@ -170,7 +170,8 @@ MonoBehaviour:
   rightHandPivot: {fileID: 8960383458619077327}
   leftHandPivot: {fileID: 3038244315060775351}
   animator: {fileID: 2808242521541095304}
-  stationUIPrefab: {fileID: 6982448682815429158, guid: 31f14fadb6eea904985f4a77073b31f7, type: 3}
+  UIPrefab: {fileID: 7535589331422712901, guid: c765dd6d3b8fd3a4a8c0cef06060ec69, type: 3}
+  settlerUI: {fileID: 0}
 --- !u!136 &2645034606225236224
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -181,10 +182,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.25
-  m_Height: 1.7
+  m_Radius: 0.4
+  m_Height: 1.25
   m_Direction: 1
-  m_Center: {x: 0, y: 0.85, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &2851729800371092632
 GameObject:
   m_ObjectHideFlags: 0

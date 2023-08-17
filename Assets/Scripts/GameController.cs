@@ -55,7 +55,7 @@ namespace FrontierIsland
 
         private Settler settler;
 
-        public readonly List<Settler> settlers = new List<Settler>(3);
+        public readonly HashSet<Settler> settlers = new HashSet<Settler>(3);
 
         public static GameController Instance { get; private set; }
         private void Awake()
@@ -215,21 +215,30 @@ namespace FrontierIsland
 
         private void OnSelect(ISelectable selectable, Vector3Int pos, Vector3 normal)
         {
+            settler?.CloseUI();
             if (selectable is Settler)
             {
-                settler = (Settler)selectable;
-                hotBarWindow.Active = true;
-                hotBarWindow.Inventory = settler.Inventory;
-                hotBarWindow.SelectionIndex = settler.HeldItemIndex;
-                hotBarWindow.itemSlotClick = ItemSlotClick;
+                if (!ReferenceEquals(selectable, settler))
+                {
+                    settler = (Settler)selectable;
+                    hotBarWindow.Active = true;
+                    hotBarWindow.Inventory = settler.Inventory;
+                    hotBarWindow.SelectionIndex = settler.HeldItemIndex;
+                    hotBarWindow.itemSlotClick = ItemSlotClick;
+                    SetAllHide(settler);
+                }
+                else
+                {
+                    settler.OpenUI();
+                }
                 CameraManager.Instance.StartFocus(settler.transform.position);
-                SetAllHide(settler);
                 return;
             }
 
             if (settler != null)
             {
                 settler.CloseView();
+                settler.CloseUI();
                 if (settler.HeldItem is BlockItem)
                 {
                     if (selectable is Chunk)

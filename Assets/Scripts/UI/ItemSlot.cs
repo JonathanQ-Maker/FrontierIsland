@@ -46,6 +46,7 @@ namespace FrontierIsland
             }
         }
 
+        [SerializeField] // for debug
         private int slotIndex = -1;
 
         /// <summary>

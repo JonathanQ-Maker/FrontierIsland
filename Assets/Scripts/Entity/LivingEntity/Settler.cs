@@ -60,8 +60,11 @@ namespace FrontierIsland
                     inventory.onInventoryChange -= OnInventoryChange;
                 }
                 inventory = value;
-                inventory.onInventoryChange += OnInventoryChange;
-                UpdateHeldItem();
+                if (inventory != null)
+                {
+                    inventory.onInventoryChange += OnInventoryChange;
+                    UpdateHeldItem();
+                }
             }
         }
 
@@ -91,11 +94,28 @@ namespace FrontierIsland
         private ItemHandler heldItemhandler;
         private IViewable viewable;
 
+        [SerializeField]
+        private SettlerUI UIPrefab;
+        public SettlerUI settlerUI;
+
+        public override int Health
+        {
+            get => base.Health;
+            set
+            {
+                base.Health = value;
+                if (settlerUI != null) 
+                    settlerUI.HealthDisplay = Health;
+            }
+        }
+
+        protected Inventory craftingInventory;
 
         public void Start()
         {
             GameController.Instance.settlers.Add(this);
             Inventory = new Inventory(9, 1, this);
+            craftingInventory = new Inventory(4, 1, this);
 
             inventory[0] = new TreeCone(99);
             inventory[1] = new WoodLog(99);
@@ -134,6 +154,29 @@ namespace FrontierIsland
             State = AnimState.Walking;
             yield return base.MoveTo(targetPos, maxSpeed);
             State = AnimState.Idle;
+        }
+
+        public virtual void DropItem(ItemStack itemStack)
+        {
+            itemStack.InstantiateHandler(Position, null);
+        }
+
+        public void OnInventoryChange()
+        {
+            UpdateHeldItem();
+        }
+
+        private void OnDestroy()
+        {
+            GameController.Instance.settlers.Remove(this);
+            CloseView();
+            // unsubscribe from event
+            if (Inventory != null)
+            {
+                Inventory.onInventoryChange -= OnInventoryChange;
+                Inventory = null;
+            }
+            craftingInventory = null;
         }
 
         #region Inspect
@@ -416,16 +459,7 @@ namespace FrontierIsland
         }
         #endregion
 
-        public virtual void DropItem(ItemStack itemStack)
-        {
-            itemStack.InstantiateHandler(Position, null);
-        }
-
-        public void OnInventoryChange()
-        {
-            UpdateHeldItem();
-        }
-
+        #region View
         protected virtual void View(IViewable viewable)
         {
             if (!ReferenceEquals(viewable, this.viewable))
@@ -452,16 +486,61 @@ namespace FrontierIsland
                 viewable = null;
             }
         }
+        #endregion
 
-        private void OnDestroy()
+        #region UI
+        public void OpenUI()
         {
-            CloseView();
-            // unsubscribe from event
-            if (Inventory != null)
+            if (settlerUI == null)
             {
-                Inventory.onInventoryChange -= OnInventoryChange;
+                settlerUI = Instantiate(UIPrefab, GameController.Instance.WorldCanvas.transform);
+                settlerUI.transform.SetAsFirstSibling();
+
+                settlerUI.Init(name, RecipeCollections.Settler, craftingInventory, transform, Health, MaxHealth, Craft);
+            }
+            settlerUI.Active = ShowView;
+
+            // update position in the same frame to prevent UI correction during play
+            settlerUI.UpdatePosition();
+        }
+
+        public void CloseUI()
+        {
+            if (settlerUI != null)
+            {
+                Destroy(settlerUI.gameObject);
+                settlerUI = null;
             }
         }
+
+        public void Craft(int recipeIndex, int count)
+        {
+            ItemRecipe recipe = RecipeCollections.Settler[recipeIndex];
+            for (int i = 0; i < recipe.Ingredients.Length; ++i)
+            {
+                Ingredient ingredient = recipe.Ingredients[i];
+                if (craftingInventory[i] == null ||
+                    ingredient.item != craftingInventory[i].ItemType ||
+                    ingredient.count * count > craftingInventory[i].count)
+                {
+                    return;
+                }
+            }
+
+            for (int i = 0; i < recipe.Ingredients.Length; ++i)
+            {
+                Ingredient ingredient = recipe.Ingredients[i];
+                craftingInventory.ConsumeItem(i, ingredient.count * count);
+            }
+
+            ItemStack result = ItemAtlas.Get(recipe.ResultItem).DeepClone();
+            result.count = count;
+            if (!Inventory.AddItem(result))
+            {
+                DropItem(result);
+            }
+        }
+        #endregion
     }
 }
 

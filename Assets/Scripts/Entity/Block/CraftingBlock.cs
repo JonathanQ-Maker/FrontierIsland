@@ -6,7 +6,7 @@ namespace FrontierIsland
     public abstract class CraftingBlock : Block, ICraftingStation
     {
         [SerializeField]
-        private CraftingStationUI stationUIPrefab;
+        private CraftingStationUI UIPrefab;
         private CraftingStationUI stationUI;
 
         public override MaterialType MaterialType { get { return MaterialType.None; } }
@@ -44,8 +44,9 @@ namespace FrontierIsland
             }
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             Inventory = new Inventory(4, 2, this);
         }
 
@@ -66,19 +67,20 @@ namespace FrontierIsland
             }
         }
 
-        public bool OpenUI(Settler viewer)
+        public virtual bool OpenUI(Settler viewer)
         {
             if (!CanView(viewer)) return false;
 
             if (stationUI == null)
             {
-                stationUI = Instantiate(stationUIPrefab, GameController.Instance.WorldCanvas.transform);
+                stationUI = Instantiate(UIPrefab, GameController.Instance.WorldCanvas.transform);
                 stationUI.transform.SetAsFirstSibling();
-                stationUI.Station = this;
-                stationUI.Inventory = Inventory;
+
+                stationUI.Init(this);
             }
             stationUI.Active = ShowUI;
             Viewer = viewer;
+
             // update position in the same frame to prevent UI correction during play
             stationUI.UpdatePosition();
             return true;

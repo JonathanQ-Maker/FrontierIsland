@@ -142,5 +142,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42525eff2b9e7a14f9e8cfec495e1e63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 2175394177337629829, guid: 31f14fadb6eea904985f4a77073b31f7, type: 3}
-  stationUIPrefab: {fileID: 6982448682815429158, guid: 31f14fadb6eea904985f4a77073b31f7, type: 3}
+  model: {fileID: 5561014498526166567}
+  UIPrefab: {fileID: 2516256174156786048, guid: 31f14fadb6eea904985f4a77073b31f7, type: 3}

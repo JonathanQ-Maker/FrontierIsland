@@ -15,9 +15,7 @@ namespace FrontierIsland
         [SerializeField]
         private ItemSlot itemSlotPrefab;
         [SerializeField]
-        private RectTransform windowRect;
-
-        public CustomGridLayoutGroup gridLayout;
+        protected CustomGridLayoutGroup gridLayout;
         protected List<ItemSlot> inventorySlots = new List<ItemSlot>();
 
         public ItemSlot this[int slotIndex]
@@ -41,8 +39,11 @@ namespace FrontierIsland
                     inventory.onInventoryChange -= UpdateContent;
                 }
                 inventory = value;
-                inventory.onInventoryChange += UpdateContent;
-                LoadInventory(inventory);
+                if (inventory != null)
+                {
+                    inventory.onInventoryChange += UpdateContent;
+                    LoadInventory(inventory);
+                }
             }
         }
 
@@ -65,15 +66,6 @@ namespace FrontierIsland
 
         protected virtual void LoadInventory(Inventory inventory)
         {
-            if (inventory == null)
-            {
-                Debug.LogWarning($"Inventory set null");
-                gameObject.SetActive(false);
-            }
-            else if (!gameObject.activeSelf)
-            {
-                gameObject.SetActive(true);
-            }
 
             if (gridLayout.constraint == CustomGridLayoutGroup.Constraint.FixedColumnCount)
             {
@@ -114,7 +106,9 @@ namespace FrontierIsland
         {
             if (Inventory != null)
             {
+                Inventory inv = Inventory;
                 Inventory.onInventoryChange -= UpdateContent;
+                Inventory = null;
             }
         }
 

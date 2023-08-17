@@ -22,11 +22,11 @@ namespace FrontierIsland
             get { return items.Length; }
         }
 
+        // TODO: refactor to get rid of holder
         private IInventoryHolder holder;
         public IInventoryHolder Holder
         {
             get { return holder; }
-            set { holder = value; }
         }
 
 
@@ -47,7 +47,7 @@ namespace FrontierIsland
         {
             this.columns = columns;
             this.rows = rows;
-            Holder = holder;
+            this.holder = holder;
             items = new ItemStack[columns * rows];
         }
 

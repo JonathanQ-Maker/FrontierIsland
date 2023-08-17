@@ -15,9 +15,10 @@ public class DebugTracker
 
     public string Name { get; private set; }
 
-    public DebugTracker(string name)
+    public DebugTracker(string name, bool logConstruct=true)
     {
-        Debug.Log($"Tracker \"{name}\"created");
+        if (logConstruct) 
+            Debug.Log($"Tracker \"{name}\"created");
         Name = name;
         ++count;
         if (!counts.ContainsKey(Name))
