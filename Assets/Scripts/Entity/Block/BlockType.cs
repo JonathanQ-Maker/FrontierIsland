@@ -3,13 +3,14 @@
     public enum BlockType : short
     {
         // IMPORTANT NOTE: DO NOT SKIP VALUES
-        Rocks,
+        StoneMound,
         Tree,
         Grass,
         Mushrooms,
         Crate,
         CampFire,
         Bin,
-        CarpenterBench
+        CarpenterBench,
+        Stone
     }
 }

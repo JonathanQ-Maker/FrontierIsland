@@ -5,7 +5,7 @@ namespace FrontierIsland
     {
         WoodAxe,
         StoneAxe,
-        Rocks,
+        Stone,
         Crate,
         Tree,
         Grass,

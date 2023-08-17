@@ -65,7 +65,6 @@ namespace FrontierIsland
 
         protected virtual void OnDrawGizmosSelected()
         {
-            if (Size == Vector3Int.one) return;
             Vector3Int origin = Position;
             float x = origin.x - 0.5f, y = origin.y, z = origin.z - 0.5f;
             Gizmos.DrawLine(new Vector3(x, y, z), new Vector3(x, y + Size.y, z));
@@ -83,6 +82,11 @@ namespace FrontierIsland
             Gizmos.DrawLine(new Vector3(x, y + Size.y, z + Size.z), new Vector3(x, y + Size.y, z));
             Gizmos.DrawLine(new Vector3(x, y + Size.y, z + Size.z), new Vector3(x, y, z + Size.z));
             Gizmos.DrawLine(new Vector3(x, y, z + Size.z), new Vector3(x, y, z));
+        }
+
+        protected virtual void Start()
+        {
+            // intentionally left blank
         }
     }
 }

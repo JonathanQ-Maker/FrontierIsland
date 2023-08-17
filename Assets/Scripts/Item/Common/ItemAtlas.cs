@@ -32,7 +32,7 @@ namespace FrontierIsland
         {
             RegisterItem(new WoodAxe());
             RegisterItem(new StoneAxe());
-            RegisterItem(new RocksItem(1));
+            RegisterItem(new StoneItem(1));
             RegisterItem(new CrateItem(1));
             RegisterItem(new TreeItem(1, Tree.TreeState.Sapling));
             RegisterItem(new GrassItem(1));

@@ -111,6 +111,7 @@ namespace FrontierIsland
 
         private IEnumerator Focus(Vector3 pos)
         {
+            // TODO: allow focus in y axis
             Ray ray = Camera.main.ScreenPointToRay(new Vector2(Screen.width/2, Screen.height/2));
 
             Vector3 initalCamPos    = transform.position;

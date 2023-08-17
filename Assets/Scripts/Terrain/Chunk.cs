@@ -1,6 +1,7 @@
 using NBT.Tags;
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -304,6 +305,7 @@ namespace FrontierIsland
             mesh.uv = uvs.ToArray(); // uv assignment must be after vertices
             mesh.triangles = triangles.ToArray();
             mesh.RecalculateNormals();
+            MeshUtility.Optimize(mesh);
 
             // update mesh collider
             if (gameObject.activeSelf)

@@ -103,6 +103,11 @@ namespace FrontierIsland
                 System.GC.Collect();
                 Debug.Log("Force Garbage collector");
             }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Debug.Log($"DebugTracker instance counts: {DebugTracker.Count}");
+            }
         }
 
 
@@ -269,13 +274,12 @@ namespace FrontierIsland
                 {
                     Assert.IsTrue(ReferenceEquals(Terrain.Instance.GetBlock(block.Position), selectable));
 
-                    if (selectable is CraftingBlock)
+                    if (selectable is CraftingBlock && !Input.GetKey(KeyCode.LeftControl))
                     {
                         settler.StartUseCraftingBlock((CraftingBlock)selectable);
                     }
                     else
                     {
-                        // TODO: Harvest CraftingBlock if UI is already open
                         settler.StartHarvestBlock(block);
                     }
                 }

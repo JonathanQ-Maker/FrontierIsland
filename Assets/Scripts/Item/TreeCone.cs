@@ -8,9 +8,11 @@ namespace FrontierIsland
         {
             if (!HasNBT)
             {
-                NBT = new CompoundTag(1);
-                NBT.PutByte("state", (byte)Tree.TreeState.Sapling);
+                NBT = new CompoundTag(1);    
             }
+
+            // TreeState: sapling, Sheared: false.
+            NBT.PutByte("state", 0);
         }
 
         public override ItemType ItemType { get { return ItemType.TreeCone; } }

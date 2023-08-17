@@ -8,9 +8,9 @@ namespace FrontierIsland
     {
         public enum AnimState
         {
-            Idle = 0,
-            Walking = 1,
-            Harvesting = 2
+            Idle        = 0,
+            Walking     = 1,
+            Harvesting  = 2
         }
 
         [SerializeField]
@@ -100,7 +100,8 @@ namespace FrontierIsland
             inventory[0] = new TreeCone(99);
             inventory[1] = new WoodLog(99);
             inventory[2] = new Twig(99);
-            inventory[3] = new RocksItem(99);
+            inventory[3] = new StoneItem(99);
+            inventory[4] = new CarpenterBenchItem(1);
 
 
             UpdateHeldItem();
@@ -113,7 +114,7 @@ namespace FrontierIsland
             {
                 if (heldItem == null || !ReferenceEquals(heldItemhandler, heldItem.Handler))
                 {
-                    heldItemhandler.Destruct();
+                    heldItemhandler.Item.RemoveHandler();
 
                     // although Destroy() will set this to null, maunally setting to null allows GC to collect it
                     heldItemhandler = null;

@@ -13,11 +13,6 @@ namespace FrontierIsland
 
         public abstract ItemRecipe[] Recipes { get; }
 
-        public bool IsViewed
-        {
-            get { return Viewer != null; }
-        }
-
         public abstract string Title { get; }
 
         public Settler Viewer { get; protected set; }
@@ -73,7 +68,7 @@ namespace FrontierIsland
 
         public bool OpenUI(Settler viewer)
         {
-            if (IsViewed) return false;
+            if (!CanView(viewer)) return false;
 
             if (stationUI == null)
             {
@@ -89,9 +84,9 @@ namespace FrontierIsland
             return true;
         }
 
-        public void OnInventoryChange()
+        public virtual void OnInventoryChange()
         {
-            
+            // intentionally left empty
         }
 
         public void DropItem(ItemStack itemStack)
@@ -106,32 +101,9 @@ namespace FrontierIsland
             }
         }
 
-        public virtual void Assemble(int recipeIndex, int count)
+        public bool CanView(Settler viewer)
         {
-            ItemRecipe recipe = Recipes[recipeIndex];
-            for (int i = 0; i < recipe.Ingredients.Length; ++i)
-            {
-                Ingredient ingredient = recipe.Ingredients[i];
-                if (inventory[i] == null || 
-                    ingredient.item != inventory[i].ItemType || 
-                    ingredient.count * count > inventory[i].count)
-                {
-                    return;
-                }
-            }
-
-            for (int i = 0; i < recipe.Ingredients.Length; ++i)
-            {
-                Ingredient ingredient = recipe.Ingredients[i];
-                inventory.ConsumeItem(i, ingredient.count * count);
-            }
-
-            ItemStack result = ItemAtlas.Get(recipe.ResultItem).DeepClone();
-            result.count = count;
-            if (!Viewer.Inventory.AddItem(result))
-            {
-                DropItem(result);
-            }
+            return Viewer == null;
         }
     }
 }

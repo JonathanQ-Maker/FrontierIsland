@@ -3,6 +3,8 @@
     public class CarpenterBench : CraftingBlock
     {
         // TODO: display first item in crafting inventory
+
+        public override MaterialType MaterialType { get { return MaterialType.Wood; } }
         public override BlockType BlockType { get { return BlockType.CarpenterBench; } }
 
         public override ItemRecipe[] Recipes { get { return RecipeCollections.CarpenterBench; } }

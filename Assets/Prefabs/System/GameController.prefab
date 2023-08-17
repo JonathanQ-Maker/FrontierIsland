@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6556208929112956969, guid: a8c0bca5f3b0bc54f8e52d9554ba2e39, type: 3}
+  - {fileID: 2100000, guid: 4e0f020e8b8f5ae4d801f48790f95fb8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -135,6 +135,9 @@ MonoBehaviour:
   itemIcons: {fileID: 11400000, guid: b384131db15773e49a6ed2acbeaf140f, type: 2}
   hotBarWindow: {fileID: 0}
   toolTipWindow: {fileID: 0}
+  helpPanel: {fileID: 0}
+  mainCanvas: {fileID: 0}
+  worldCanvas: {fileID: 0}
   cube: {fileID: 3649476798680871063}
 --- !u!114 &7650559311168869534
 MonoBehaviour:

@@ -137,6 +137,7 @@ namespace FrontierIsland
             {
                 // Sets ToBeDestroyed flag when Destroying this handler, prevents race conditions
                 Handler.Destruct();
+                handler = null;
             }
         }
 

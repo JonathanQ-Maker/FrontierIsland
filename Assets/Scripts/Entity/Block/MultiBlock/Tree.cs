@@ -13,16 +13,22 @@ namespace FrontierIsland
             Grown
         }
 
-        [SerializeField]
-        private Mesh sapling, normalTree, grownTree;
+        private bool sheared = false;
+        public bool Sheared { get { return sheared; } }
 
         [SerializeField]
-        private MeshFilter meshFilter;
+        private Mesh sapling;
+        [SerializeField]
+        private Mesh treeTrunk, treeLeaves;
+        [SerializeField]
+        private Mesh grownTreeTrunk, grownTreeLeaves;
+
+        [SerializeField]
+        private MeshFilter trunkMeshFilter, leavesMeshFilter;
 
         [SerializeField]
         private BoxCollider boxCollider;
 
-        [SerializeField]
         private TreeState state = TreeState.Normal;
         public TreeState State
         {
@@ -52,52 +58,78 @@ namespace FrontierIsland
             }
         }
 
-        private void TrySetState(TreeState state)
+        private void SetState(TreeState state)
         {
+            this.state = state;
             switch (state)
             {
                 case TreeState.Sapling:
-                    meshFilter.sharedMesh = sapling;
+                    trunkMeshFilter.sharedMesh = sapling;
+                    leavesMeshFilter.gameObject.SetActive(false);
                     break;
                 case TreeState.Normal:
-                    meshFilter.sharedMesh = normalTree;
+                    trunkMeshFilter.sharedMesh = treeTrunk;
+                    leavesMeshFilter.sharedMesh = treeLeaves;
+                    leavesMeshFilter.gameObject.SetActive(!Sheared);
                     break;
                 case TreeState.Grown:
-                    meshFilter.sharedMesh = grownTree;
+                    trunkMeshFilter.sharedMesh = grownTreeTrunk;
+                    leavesMeshFilter.sharedMesh = grownTreeLeaves;
+                    leavesMeshFilter.gameObject.SetActive(!Sheared);
                     break;
                 default:
                     Debug.LogWarning($"Set unexpected state {state}");
                     break;
             }
-            boxCollider.size = meshFilter.mesh.bounds.size;
-            boxCollider.center = meshFilter.mesh.bounds.center;
-            this.state = state;
+            Bounds bounds = trunkMeshFilter.sharedMesh.bounds;
+            if (State != TreeState.Sapling)
+            {
+                bounds.Encapsulate(leavesMeshFilter.sharedMesh.bounds);
+            }
+            boxCollider.size = bounds.size;
+            boxCollider.center = bounds.center;
+        }
+
+        private void SetSheared(bool sheared)
+        {
+            this.sheared = sheared;
+            leavesMeshFilter.gameObject.SetActive(!sheared && State != TreeState.Sapling);
         }
 
         public override void ReadFromNBT(CompoundTag nbt)
         {
             base.ReadFromNBT(nbt);
-            TrySetState((TreeState)nbt.GetByte("state"));
+            
+            // Left most bit encodes sheared,
+            // rest encodes TreeState
+            byte state = nbt.GetByte("state");
+            TreeState treeState = (TreeState)(state & ~(1 << 7));
+            bool sheared = (state & (1 << 7)) != 0;
+            SetState(treeState);
+            SetSheared(sheared);
         }
 
         public override void WriteToNBT(CompoundTag nbt)
         {
             base.WriteToNBT(nbt);
-            nbt.PutByte("state", (byte)State);
-        }
-
-        private void Start()
-        {
-            TrySetState(State);
-            StartCoroutine(GrowthTimer());
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.G))
+            int state = (int)State;
+            if (Sheared)
             {
-                TrySetState(TreeState.Grown);
+                state |= 1 << 7; // set bit
             }
+            else
+            { 
+                state &= ~(1 << 7); // clear bit
+            }
+            nbt.PutByte("state", (byte)state);
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            SetState(State);
+            SetSheared(Sheared);
+            StartCoroutine(GrowthTimer());
         }
 
         public override ItemStack[] GetItemDrops()
@@ -115,10 +147,19 @@ namespace FrontierIsland
 
         private IEnumerator GrowthTimer()
         {
-            for (int i = (int)State + 1; i <= (int)TreeState.Grown; ++i)
+            while((int)State < (int)TreeState.Grown)
             {
-                yield return new WaitForSeconds(Random.Range(10, 60));
-                TrySetState((TreeState)i);
+                yield return new WaitForSeconds(Random.Range(5, 5));
+
+                // Grow leaves before growing tree
+                if (State != TreeState.Sapling && Sheared)
+                {
+                    SetSheared(false);
+                }
+                else
+                {
+                    SetState((TreeState)((int)State + 1));
+                }
             }
         }
     }

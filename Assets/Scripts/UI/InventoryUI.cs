@@ -110,7 +110,7 @@ namespace FrontierIsland
             //UpdateContent();
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             if (Inventory != null)
             {

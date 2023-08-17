@@ -10,8 +10,9 @@ namespace FrontierIsland
 
         public override float Hardness { get { return 0.5f; } }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             RandomRotate();
         }
 

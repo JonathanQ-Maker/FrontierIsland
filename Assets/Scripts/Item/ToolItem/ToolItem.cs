@@ -4,7 +4,7 @@ namespace FrontierIsland
 {
     public abstract class ToolItem : ItemStack
     {
-        protected virtual float BaseEfficiency { get; }
+        protected abstract float BaseEfficiency { get; }
         public override int MaxStackSize { get { return 1; } }
 
         protected ToolItem(string name, string description) : base(1, name, description)

@@ -169,8 +169,8 @@ MonoBehaviour:
   moveSpeed: 3
   rightHandPivot: {fileID: 8960383458619077327}
   leftHandPivot: {fileID: 3038244315060775351}
-  canvasPrefab: {fileID: 4299489912440666258, guid: a2939185be485184289af7d181b44ff8, type: 3}
   animator: {fileID: 2808242521541095304}
+  stationUIPrefab: {fileID: 6982448682815429158, guid: 31f14fadb6eea904985f4a77073b31f7, type: 3}
 --- !u!136 &2645034606225236224
 CapsuleCollider:
   m_ObjectHideFlags: 0

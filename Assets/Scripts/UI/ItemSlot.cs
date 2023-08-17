@@ -199,5 +199,10 @@ namespace FrontierIsland
         {
             window.SlotClicked(SlotIndex, eventData);
         }
+
+        protected virtual void OnDestroy()
+        {
+            window = null;
+        }
     }
 }

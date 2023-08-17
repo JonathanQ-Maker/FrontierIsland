@@ -5,6 +5,6 @@
         None,
         Soil,
         Wood,
-        Rock
+        Stone
     }
 }

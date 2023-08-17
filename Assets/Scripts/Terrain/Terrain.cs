@@ -27,7 +27,7 @@ namespace FrontierIsland
                 Destroy(this);
             }
             else
-            {
+            { 
                 Instance = this;
             }
 
@@ -37,6 +37,8 @@ namespace FrontierIsland
 
         void Start()
         {
+            UnityEngine.Random.InitState(312);
+
             // FOR TESTING
             for (int x = 0; x < WidthTiles; ++x)
             {
@@ -47,10 +49,10 @@ namespace FrontierIsland
             }
 
 
-            for (int i = 0; i < (int)(LengthTiles * 0.8f) * 5; ++i)
+            for (int i = 0; i < 5; ++i)
             {
-                PlaceBlock((BlockType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(BlockType)).Length), 
-                    new Vector3Int(UnityEngine.Random.Range(0, LengthTiles-1), 0, UnityEngine.Random.Range(0, WidthTiles-1)));
+                PlaceBlock(BlockType.Stone,
+                    new Vector3Int(UnityEngine.Random.Range(0, LengthTiles - 1), 0, UnityEngine.Random.Range(0, WidthTiles - 1)));
             }
 
             foreach (Chunk c in chunks)
