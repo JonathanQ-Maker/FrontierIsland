@@ -11,6 +11,13 @@ public class ItemIconsEditor : Editor
         meshCombiner = (MeshCombiner)target;
     }
 
+    public void SaveMesh(string path)
+    {
+        MeshUtility.Optimize(meshCombiner.combinedMesh);
+        AssetDatabase.CreateAsset(meshCombiner.combinedMesh, path);
+        AssetDatabase.SaveAssets();
+    }
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
@@ -27,7 +34,7 @@ public class ItemIconsEditor : Editor
             if (string.IsNullOrEmpty(path)) return;
 
             path = FileUtil.GetProjectRelativePath(path);
-            meshCombiner.SaveMesh(path);
+            SaveMesh(path);
         }
     }
 }

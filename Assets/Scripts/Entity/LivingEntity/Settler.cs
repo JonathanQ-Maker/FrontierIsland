@@ -473,11 +473,8 @@ namespace FrontierIsland
         {
             if (!ReferenceEquals(viewable, this.viewable))
             {
-                if (this.viewable != null)
-                {
-                    this.viewable.CloseUI();
-                    this.viewable = null;
-                }
+                CloseView();
+                CloseUI();
 
                 if (viewable.OpenUI(this))
                 {
@@ -500,6 +497,9 @@ namespace FrontierIsland
         #region UI
         public void OpenUI()
         {
+            // clear any currently opened view
+            CloseView();
+
             if (settlerUI == null)
             {
                 settlerUI = Instantiate(UIPrefab, GameController.Instance.WorldCanvas.transform);

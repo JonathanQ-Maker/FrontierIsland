@@ -305,7 +305,7 @@ namespace FrontierIsland
             mesh.uv = uvs.ToArray(); // uv assignment must be after vertices
             mesh.triangles = triangles.ToArray();
             mesh.RecalculateNormals();
-            MeshUtility.Optimize(mesh);
+            mesh.Optimize();
 
             // update mesh collider
             if (gameObject.activeSelf)

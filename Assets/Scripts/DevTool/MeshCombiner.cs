@@ -1,11 +1,10 @@
-using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 public class MeshCombiner : MonoBehaviour
 {
-    private Mesh combinedMesh;
+    public Mesh combinedMesh;
     public void CombineMesh()
     {
         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>(true);
@@ -41,12 +40,5 @@ public class MeshCombiner : MonoBehaviour
         
         MeshFilter meshFilter = GetComponent<MeshFilter>();
         meshFilter.sharedMesh = combinedMesh;
-    }
-
-    public void SaveMesh(string path)
-    {
-        MeshUtility.Optimize(combinedMesh);
-        AssetDatabase.CreateAsset(combinedMesh, path);
-        AssetDatabase.SaveAssets();
     }
 }
