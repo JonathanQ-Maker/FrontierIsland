@@ -77,7 +77,7 @@ namespace FrontierIsland
             RecipeCollections.SetUp();
         }
 
-
+        // TODO: cube color based on correct/not correct use
         public Transform cube;
 
 
@@ -243,7 +243,7 @@ namespace FrontierIsland
                 {
                     if (selectable is Chunk)
                     {
-                        settler.StartPlaceBlock(pos + Vector3Int.up);
+                        settler.StartUseHeldItem(pos + Vector3Int.up);
                         return;
                     }
                     else if (selectable is Block)
@@ -254,19 +254,19 @@ namespace FrontierIsland
                         switch (face)
                         {
                             case BlockFace.North:
-                                settler.StartPlaceBlock(pos + Vector3Int.forward);
+                                settler.StartUseHeldItem(pos + Vector3Int.forward);
                                 break;
                             case BlockFace.East:
-                                settler.StartPlaceBlock(pos + Vector3Int.right);
+                                settler.StartUseHeldItem(pos + Vector3Int.right);
                                 break;
                             case BlockFace.South:
-                                settler.StartPlaceBlock(pos + Vector3Int.back);
+                                settler.StartUseHeldItem(pos + Vector3Int.back);
                                 break;
                             case BlockFace.West:
-                                settler.StartPlaceBlock(pos + Vector3Int.left);
+                                settler.StartUseHeldItem(pos + Vector3Int.left);
                                 break;
                             case BlockFace.Top:
-                                settler.StartPlaceBlock(pos + Vector3Int.up);
+                                settler.StartUseHeldItem(pos + Vector3Int.up);
                                 break;
                         }
                         return;

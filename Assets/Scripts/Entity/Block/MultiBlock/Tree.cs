@@ -58,6 +58,8 @@ namespace FrontierIsland
             }
         }
 
+        public bool CanShear { get { return !Sheared && State != TreeState.Sapling; } }
+
         private void SetState(TreeState state)
         {
             this.state = state;
@@ -94,6 +96,16 @@ namespace FrontierIsland
         {
             this.sheared = sheared;
             leavesMeshFilter.gameObject.SetActive(!sheared && State != TreeState.Sapling);
+        }
+
+        public ItemStack Shear()
+        {
+            if (!CanShear)
+            {
+                return null;
+            }
+            SetSheared(true);
+            return new Leaves(3);
         }
 
         public override void ReadFromNBT(CompoundTag nbt)

@@ -2500,6 +2500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   craftingUI: {fileID: 2039545054079834410}
   menu: {fileID: 2039545053514112643}
+  menuTitle: {fileID: 3828633453408238496}
   healthSlider: {fileID: 2039545053878519574}
   offset: 2
 --- !u!1 &6880662292838632404

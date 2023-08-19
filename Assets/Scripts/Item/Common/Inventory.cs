@@ -58,25 +58,16 @@ namespace FrontierIsland
 
         public virtual void SetItem(int index, ItemStack itemStack)
         {
-            if (items[index] != null)
-            {
-                items[index].inventory = null;
-            }
             items[index] = itemStack;
-            itemStack.inventory = this;
-            onInventoryChange?.Invoke();
+            InventoryChanged();
         }
 
         public ItemStack RemoveStack(int index)
         { 
             ItemStack item = items[index];
-            if (item != null)
-            {
-                item.inventory = null;
-            }
             items[index] = null;
             item.RemoveHandler();
-            onInventoryChange?.Invoke();
+            InventoryChanged();
             return item;
         }
 
@@ -98,7 +89,7 @@ namespace FrontierIsland
 
                 if (currentItem != null && currentItem.CombineStack(item))
                 {
-                    onInventoryChange?.Invoke();
+                    InventoryChanged();
                     if (item.count <= 0)
                     {
                         return true;
@@ -165,13 +156,18 @@ namespace FrontierIsland
         {
             ItemStack item = this[index];
             item.count -= count;
-            onInventoryChange?.Invoke();
+            InventoryChanged();
 
             if (item.count <= 0)
             {
                 item.RemoveHandler();
                 RemoveStack(index);
             }
+        }
+
+        public void InventoryChanged()
+        {
+            onInventoryChange?.Invoke();
         }
 
         public void ReadFromNBT(CompoundTag nbt)

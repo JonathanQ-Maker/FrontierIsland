@@ -2,6 +2,7 @@
 {
     public class Bin : Block
     {
+        // TODO: make functional
         public override MaterialType MaterialType
         {
             get

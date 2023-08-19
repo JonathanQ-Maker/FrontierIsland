@@ -15,7 +15,7 @@
             get { return ItemType.WoodAxe; }
         }
 
-        protected override float BaseEfficiency
+        public override float EfficiencyEffective
         {
             get { return 1.25f; }
         }

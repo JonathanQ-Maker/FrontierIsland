@@ -56,7 +56,25 @@ namespace FrontierIsland
             protected set { handler = value; }
         }
 
-        public Inventory inventory;
+        public ItemStack(int count, string name, string description)
+        {
+            this.name           = name;
+            this.description    = description;
+            this.count          = count;
+            itemCount++;
+        }
+
+        ~ItemStack()
+        {
+            Debug.Log($"Deleting ItemStack {ItemType}");
+            itemCount--;
+
+            if (Handler != null && !Handler.ToBeDestroyed)
+            {
+                throw new System.Exception($"ItemStack finalizer is called but Handler still exists\n" +
+                    $"ItemStack: {ToString()}, Handler: {Handler}@{Handler.transform.position}");
+            }
+        }
 
         /// <summary>
         /// Instantiate the corresponding <see cref="ItemHandler"/> to this <see cref="ItemStack"/> to <paramref name="pos"/>
@@ -162,7 +180,6 @@ namespace FrontierIsland
                 int numAdded = Mathf.Min(MaxStackSize, count + other.count) - count;
                 count += numAdded;
                 other.count -= numAdded;
-                inventory?.onInventoryChange?.Invoke();
                 return true;
             }
             return false;
@@ -180,7 +197,6 @@ namespace FrontierIsland
             {
                 other.count -= count;
                 this.count += count;
-                inventory?.onInventoryChange?.Invoke();
                 return true;
             }
             return false;
@@ -198,31 +214,12 @@ namespace FrontierIsland
                 ItemStack newStack = DeepClone();
                 newStack.count = count;
                 this.count -= count;
-                inventory?.onInventoryChange?.Invoke();
                 return newStack;
             }
             return null;
         }
 
-        public ItemStack(int count, string name, string description)
-        {
-            this.name           = name;
-            this.description    = description;
-            this.count          = count;
-            itemCount++;
-        }
-
-        ~ItemStack()
-        {
-            Debug.Log($"Deleting ItemStack {ItemType}");
-            itemCount--;
-
-            if (Handler != null && !Handler.ToBeDestroyed)
-            {
-                throw new System.Exception($"ItemStack finalizer is called but Handler still exists\n" +
-                    $"ItemStack: {ToString()}, Handler: {Handler}@{Handler.transform.position}");
-            }
-        }
+        
 
         public virtual bool Similar(ItemStack item)
         {
@@ -266,5 +263,49 @@ namespace FrontierIsland
         }
 
         public abstract ItemStack DeepClone();
+
+        /// <summary>
+        /// <br>
+        /// Efficiency of breaking blocks that the <see cref="ItemStack"/> is effective against.
+        /// </br>
+        /// <br>
+        /// harvest time = hardness / efficiency
+        /// </br>
+        /// </summary>
+        public virtual float EfficiencyEffective { get { return 1; } }
+
+        /// <summary>
+        /// Is <see cref="ItemStack"/> effective at breaking <paramref name="block"/>
+        /// </summary>
+        /// <param name="block"></param>
+        /// <returns></returns>
+        public virtual bool IsEffective(Block block)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// Can this <see cref="ItemStack"/> be used on <paramref name="selectable"/>
+        /// </summary>
+        /// <param name="on"></param>
+        /// <returns></returns>
+        public virtual bool CanUseItem(ISelectable selectable)
+        {
+            return false;
+        }
+
+
+        public virtual void OnItemUse(Settler user, Vector3Int position)
+        {
+            // intentionally left blank
+        }
+
+        public virtual ItemStack[] HarvestBlock(Block block)
+        {
+            // safe to destroy first then call GetItemDrops()
+            // because destroy happens at end of frame
+            Terrain.Instance.DestroyBlock(block);
+            return block.GetItemDrops();
+        }
     }
 }

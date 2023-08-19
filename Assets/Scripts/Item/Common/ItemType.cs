@@ -15,6 +15,8 @@ namespace FrontierIsland
         CarpenterBench,
         WoodLog,
         Twig,
-        TreeCone
+        TreeCone,
+        FistHatchet,
+        Leaves
     }
 }

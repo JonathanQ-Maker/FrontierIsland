@@ -1,19 +1,24 @@
-﻿namespace FrontierIsland
+﻿using UnityEngine;
+
+namespace FrontierIsland
 {
-    public abstract class AxeTool : ToolItem
+    public abstract class AxeTool : ItemStack
     {
-        public AxeTool(string name, string description) : base(name, description)
+        public override int MaxStackSize { get { return 1; } }
+        public AxeTool(string name, string description) : base(1, name, description)
         {
 
         }
 
-        public override float GetEfficiency(Block block)
+        public override string GetToolTip()
         {
-            if (block.MaterialType == MaterialType.Wood)
-            {
-                return BaseEfficiency;
-            }
-            return base.GetEfficiency(block);
+            return base.GetToolTip()
+                + $"Efficiency: <color=#F2CA6F>{Mathf.Round(EfficiencyEffective * 100)}%</color>\n";
+        }
+
+        public override bool IsEffective(Block block)
+        {
+            return block.MaterialType == MaterialType.Wood;
         }
     }
 }

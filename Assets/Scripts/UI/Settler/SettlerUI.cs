@@ -1,4 +1,5 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,8 @@ namespace FrontierIsland
 
         [SerializeField]
         private Transform menu;
+        [SerializeField]
+        private TextMeshProUGUI menuTitle;
 
         [SerializeField]
         private Slider healthSlider;
@@ -43,6 +46,7 @@ namespace FrontierIsland
             int maxHealth, 
             CraftingUI.OnCraft onCraft)
         {
+            menuTitle.text = name;
             craftingUI.Init(name, recipes, craftingInv);
             this.focus = focus;
             healthSlider.maxValue = maxHealth;

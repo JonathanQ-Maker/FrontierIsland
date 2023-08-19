@@ -103,7 +103,7 @@ namespace FrontierIsland
                 item.ItemSlot = ItemSlot;
                 ItemSlot.InventoryItem = item;
                 itemStack = ItemSlot.ItemStack.SplitStack(Mathf.CeilToInt(ItemStack.count/2f));
-                //ItemSlot.Window.Inventory.onInventoryChange?.Invoke();
+                ItemSlot.Window.Inventory.InventoryChanged();
                 UpdateContent();
             }
             else
@@ -142,7 +142,7 @@ namespace FrontierIsland
                     {
                         if (other.ItemStack.AddFrom(ItemStack, 1))
                         {
-                            //other.ItemSlot.Window.Inventory.onInventoryChange?.Invoke();
+                            other.ItemSlot.Window.Inventory.InventoryChanged();
                             UpdateContent();
                         }
                     }
@@ -158,7 +158,7 @@ namespace FrontierIsland
                         {
                             if (slot.InventoryItem.ItemStack.AddFrom(ItemStack, 1))
                             {
-                                //slot.Window.Inventory.onInventoryChange?.Invoke();
+                                slot.Window.Inventory.InventoryChanged();
                                 UpdateContent();
                             }
                         }

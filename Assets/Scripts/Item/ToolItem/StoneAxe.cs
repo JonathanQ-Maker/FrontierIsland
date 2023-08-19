@@ -10,6 +10,7 @@ namespace FrontierIsland
         }
         public StoneAxe(string name, string description) : base(name, description)
         {
+
         }
 
         public override ItemType ItemType
@@ -17,7 +18,7 @@ namespace FrontierIsland
             get { return ItemType.StoneAxe; }
         }
 
-        protected override float BaseEfficiency
+        public override float EfficiencyEffective
         {
             get { return 1.5f; }
         }

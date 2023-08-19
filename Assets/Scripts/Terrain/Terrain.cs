@@ -212,31 +212,6 @@ namespace FrontierIsland
         }
 
         /// <summary>
-        /// Tries to instantiate a <see cref="Block"/> represented by <paramref name="item"/> at <paramref name="pos"/>
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="pos"></param>
-        /// <returns>
-        /// <br>
-        /// <see langword="null"/> if <paramref name="pos"/> does not have space for the <see cref="Block"/> 
-        /// represented by <paramref name="item"/>
-        /// </br>
-        /// <br>
-        /// Otherwise, return the <see cref="Block"/> placed
-        /// </br>
-        /// </returns>
-        public Block PlaceBlockItem(BlockItem item, Vector3Int pos)
-        {
-            Block block = PlaceBlock(item.BlockType, pos);
-
-            if (item.HasNBT && block != null)
-            {
-                block.ReadFromNBT(item.NBT);
-            }
-            return block;
-        }
-
-        /// <summary>
         /// Get <see cref="Block"/> reference at <paramref name="pos"/>
         /// <br>
         /// NOTE: should check if within bounds

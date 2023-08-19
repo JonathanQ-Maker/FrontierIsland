@@ -125,7 +125,7 @@ namespace FrontierIsland
                     {
                         // slot with similar items
                         InventoryItem.ItemStack.CombineStack(other.ItemStack);
-                        //Window.Inventory.onInventoryChange?.Invoke();
+                        Window.Inventory.InventoryChanged();
                         if (other.ItemStack.count > 0)
                         {
                             // still have left overs
@@ -166,7 +166,7 @@ namespace FrontierIsland
                         // different items, previous slot is not empty
                         // and previous item is similar, combine them
                         other.PrevSlot.ItemStack.CombineStack(other.ItemStack);
-                        //Window.Inventory.onInventoryChange?.Invoke();
+                        Window.Inventory.InventoryChanged();
                         if (other.ItemStack.count > 0)
                         {
                             // still have left overs

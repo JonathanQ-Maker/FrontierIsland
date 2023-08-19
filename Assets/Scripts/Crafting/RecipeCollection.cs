@@ -11,7 +11,7 @@ namespace FrontierIsland
                     new Ingredient(ItemType.WoodLog, 5),
                     new Ingredient(ItemType.Twig, 3),
                 }),
-            
+
             new ItemRecipe(ItemType.StoneAxe,
                 new Ingredient[]
                 {
@@ -21,8 +21,14 @@ namespace FrontierIsland
 
             new ItemRecipe(ItemType.CampFire,
                 new Ingredient[]
-                { 
+                {
                     new Ingredient(ItemType.Twig, 6)
+                }),
+
+            new ItemRecipe(ItemType.Bin,
+                new Ingredient[]
+                {
+                    new Ingredient(ItemType.WoodLog, 8)
                 })
         };
 
@@ -32,6 +38,12 @@ namespace FrontierIsland
                 new Ingredient[]
                 {
                     new Ingredient(ItemType.WoodLog, 5),
+                    new Ingredient(ItemType.Stone, 2)
+                }),
+
+            new ItemRecipe(ItemType.FistHatchet,
+                new Ingredient[]
+                { 
                     new Ingredient(ItemType.Stone, 2)
                 })
         };

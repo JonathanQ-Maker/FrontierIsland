@@ -122,6 +122,7 @@ namespace FrontierIsland
             inventory[2] = new Twig(99);
             inventory[3] = new StoneItem(99);
             inventory[4] = new CarpenterBenchItem(1);
+            inventory[5] = new FistHatchet();
 
 
             UpdateHeldItem();
@@ -211,12 +212,19 @@ namespace FrontierIsland
         #region HarvestBlock
         protected virtual float GetHarvestTime(Block block)
         {
-            float efficiency = 1f;
-            if (HeldItem != null && HeldItem is ToolItem)
+            if (HeldItem != null && HeldItem.IsEffective(block))
             {
-                efficiency = ((ToolItem)HeldItem).GetEfficiency(block);
+                return block.Hardness / HeldItem.EfficiencyEffective;
             }
-            return block.Hardness / efficiency;
+            return block.Hardness;
+        }
+
+        protected virtual ItemStack[] HarvestWithHand(Block block)
+        {
+            // safe to destroy first then call GetItemDrops()
+            // because destroy happens at end of frame
+            Terrain.Instance.DestroyBlock(block);
+            return block.GetItemDrops();
         }
 
         protected virtual IEnumerator HarvestBlock(Vector3Int[] path, Block block)
@@ -236,18 +244,22 @@ namespace FrontierIsland
             ItemStack heldItem = HeldItem;
             while (finishTime > Time.time)
             {
+                yield return null;
+
+                // check after yield return null to make sure
+                // for code in the bottom that all conditions 
+                // in the following is true
                 if (!ReferenceEquals(HeldItem, heldItem) || block == null)
                 {
                     State = AnimState.Idle;
                     yield break;
                 }
-                yield return null;
             }
 
             if (block != null) // is null if destroyed by another
             {
                 // Break block and handle item drops from block
-                ItemStack[] drops = block.GetItemDrops();
+                ItemStack[] drops = HeldItem == null ? HarvestWithHand(block) : HeldItem.HarvestBlock(block);
                 if (drops != null)
                 {
                     for (int i = 0; i < drops.Length; ++i)
@@ -258,8 +270,9 @@ namespace FrontierIsland
                         }
                     }
                 }
-                Terrain.Instance.DestroyBlock(block);
             }
+
+            //TODO: deal with instant block harvest animation
             State = AnimState.Idle;
         }
 
@@ -292,8 +305,8 @@ namespace FrontierIsland
         }
         #endregion
 
-        #region PlaceBlock
-        protected virtual IEnumerator PlaceBlock(Vector3Int[] path, Vector3Int targetPos)
+        #region UseHeldItem
+        protected virtual IEnumerator UseHeldItem(Vector3Int[] path, Vector3Int targetPos)
         {
             yield return Inspect(path, targetPos);
 
@@ -302,20 +315,16 @@ namespace FrontierIsland
             State = AnimState.Harvesting;
             yield return new WaitForSeconds(0.5f);
 
-            if (HeldItem is not BlockItem blockItem || blockItem.count <= 0)
+            if (HeldItem == null)
             {
                 State = AnimState.Idle;
                 yield break;
             }
-
-            if (Terrain.Instance.PlaceBlockItem(blockItem, targetPos) != null)
-            {
-                Inventory.ConsumeItem(HeldItemIndex, 1);
-            }
+            HeldItem.OnItemUse(this, targetPos);
             State = AnimState.Idle;
         }
 
-        public virtual void StartPlaceBlock(Vector3Int targetPos)
+        public virtual void StartUseHeldItem(Vector3Int targetPos)
         {
             if (pathRequest != null)
             {
@@ -329,22 +338,22 @@ namespace FrontierIsland
                 if (Terrain.Instance.Walkable(currentPos.x, currentPos.z + 1))
                 {
                     // can walk north
-                    ActionLoop = PlaceBlock(new Vector3Int[] { currentPos + Vector3Int.forward, currentPos}, targetPos);
+                    ActionLoop = UseHeldItem(new Vector3Int[] { currentPos + Vector3Int.forward, currentPos}, targetPos);
                 }
                 else if (Terrain.Instance.Walkable(currentPos.x + 1, currentPos.z))
                 {
                     // can walk east
-                    ActionLoop = PlaceBlock(new Vector3Int[] { currentPos + Vector3Int.right, currentPos }, targetPos);
+                    ActionLoop = UseHeldItem(new Vector3Int[] { currentPos + Vector3Int.right, currentPos }, targetPos);
                 }
                 else if (Terrain.Instance.Walkable(currentPos.x, currentPos.z - 1))
                 {
                     // can walk south
-                    ActionLoop = PlaceBlock(new Vector3Int[] { currentPos + Vector3Int.back, currentPos }, targetPos);
+                    ActionLoop = UseHeldItem(new Vector3Int[] { currentPos + Vector3Int.back, currentPos }, targetPos);
                 }
                 else if (Terrain.Instance.Walkable(currentPos.x - 1, currentPos.z))
                 {
                     // can walk west
-                    ActionLoop = PlaceBlock(new Vector3Int[] { currentPos + Vector3Int.left, currentPos }, targetPos);
+                    ActionLoop = UseHeldItem(new Vector3Int[] { currentPos + Vector3Int.left, currentPos }, targetPos);
                 }
                 return; // cannot find an open spot to move out of the way, exit
             }
@@ -356,7 +365,7 @@ namespace FrontierIsland
                     this.path = path;
                     if (success)
                     {
-                        ActionLoop = PlaceBlock(path, targetPos);
+                        ActionLoop = UseHeldItem(path, targetPos);
                     }
                     else
                     {
