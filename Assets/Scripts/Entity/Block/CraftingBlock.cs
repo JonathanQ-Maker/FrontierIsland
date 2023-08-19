@@ -53,6 +53,7 @@ namespace FrontierIsland
         private void OnDestroy()
         {
             // clean up possible ui
+            Viewer?.CloseView();
             if (stationUI != null) CloseUI();
             Inventory.onInventoryChange -= OnInventoryChange;
         }

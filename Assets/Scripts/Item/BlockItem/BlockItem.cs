@@ -6,6 +6,8 @@ namespace FrontierIsland
     {
         public abstract BlockType BlockType { get; }
 
+        public override bool CanPlaceBlock { get { return true; } }
+
         public BlockItem(int count, string name, string description) : base(count, name, description)
         {
         }
@@ -37,7 +39,7 @@ namespace FrontierIsland
             return block;
         }
 
-        public override void OnItemUse(Settler user, Vector3Int position)
+        public override void OnUsePlaceBlock(Settler user, Vector3Int position, BlockFace blockFace)
         {
             if (PlaceBlock(user, position) != null)
             {

@@ -110,16 +110,6 @@ namespace FrontierIsland
             }
         }
 
-
-        public enum BlockFace
-        {
-            Top,
-            North,
-            East,
-            South,
-            West
-        }
-
         private void ItemSlotClick(int index, PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
@@ -215,7 +205,6 @@ namespace FrontierIsland
 
         private void OnSelect(ISelectable selectable, Vector3Int pos, Vector3 normal)
         {
-            settler?.CloseUI();
             if (selectable is Settler)
             {
                 if (!ReferenceEquals(selectable, settler))
@@ -234,68 +223,64 @@ namespace FrontierIsland
                 CameraManager.Instance.StartFocus(settler.transform.position);
                 return;
             }
+            
+            // sanity check
+            if (selectable is Block)
+                Assert.IsTrue(ReferenceEquals(Terrain.Instance.GetBlock(((Block)selectable).Position), selectable));
+            
 
             if (settler != null)
             {
-                settler.CloseView();
-                settler.CloseUI();
-                if (settler.HeldItem is BlockItem)
+                // TODO: refactor into Viewable Block
+                if (selectable is CraftingBlock craftingBlock && !Input.GetKey(KeyCode.LeftControl)) 
                 {
-                    if (selectable is Chunk)
-                    {
-                        settler.StartUseHeldItem(pos + Vector3Int.up);
-                        return;
-                    }
-                    else if (selectable is Block)
-                    {
-                        Assert.IsTrue(ReferenceEquals(Terrain.Instance.GetBlock(((Block)selectable).Position), selectable));
-                        BlockFace face = GetSelectBlockFace(normal);
+                    settler.StartUseCraftingBlock(craftingBlock);
+                    return;
+                }
 
-                        switch (face)
-                        {
-                            case BlockFace.North:
-                                settler.StartUseHeldItem(pos + Vector3Int.forward);
-                                break;
-                            case BlockFace.East:
-                                settler.StartUseHeldItem(pos + Vector3Int.right);
-                                break;
-                            case BlockFace.South:
-                                settler.StartUseHeldItem(pos + Vector3Int.back);
-                                break;
-                            case BlockFace.West:
-                                settler.StartUseHeldItem(pos + Vector3Int.left);
-                                break;
-                            case BlockFace.Top:
-                                settler.StartUseHeldItem(pos + Vector3Int.up);
-                                break;
-                        }
-                        return;
+                settler.CloseUI();
+                settler.CloseView();
+
+                if (settler.HeldItem != null && settler.HeldItem.CanPlaceBlock)
+                {
+                    BlockFace face = GetSelectBlockFace(normal);
+                    switch (face)
+                    {
+                        case BlockFace.North:
+                            settler.StartUsePlaceBlock(pos + Vector3Int.forward, face);
+                            break;
+                        case BlockFace.East:
+                            settler.StartUsePlaceBlock(pos + Vector3Int.right, face);
+                            break;
+                        case BlockFace.South:
+                            settler.StartUsePlaceBlock(pos + Vector3Int.back, face);
+                            break;
+                        case BlockFace.West:
+                            settler.StartUsePlaceBlock(pos + Vector3Int.left, face);
+                            break;
+                        case BlockFace.Top:
+                            settler.StartUsePlaceBlock(pos + Vector3Int.up, face);
+                            break;
                     }
+                    return;
+                }
+
+                if (selectable is Block block)
+                {
+                    settler.StartHarvestBlock(block);
+                    return;
+                }
+
+                if (selectable is ItemHandler handler)
+                {
+                    settler.StartCollectItem(handler);
+                    return;
                 }
 
 
                 if (selectable is Chunk)
                 {
                     settler.StartMoveTo(pos);
-                }
-
-                if (selectable is Block block)
-                {
-                    Assert.IsTrue(ReferenceEquals(Terrain.Instance.GetBlock(block.Position), selectable));
-
-                    if (selectable is CraftingBlock && !Input.GetKey(KeyCode.LeftControl))
-                    {
-                        settler.StartUseCraftingBlock((CraftingBlock)selectable);
-                    }
-                    else
-                    {
-                        settler.StartHarvestBlock(block);
-                    }
-                }
-
-                if (selectable is ItemHandler handler)
-                {
-                    settler.StartCollectItem(handler);
                 }
             }
         }

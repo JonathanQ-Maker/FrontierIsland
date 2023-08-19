@@ -56,6 +56,14 @@ namespace FrontierIsland
             protected set { handler = value; }
         }
 
+        /// <summary>
+        /// Can this <see cref="ItemStack"/> be used to place block
+        /// </summary>
+        /// <param name="on"></param>
+        /// <returns></returns>
+        public virtual bool CanPlaceBlock { get { return false; } }
+
+
         public ItemStack(int count, string name, string description)
         {
             this.name           = name;
@@ -285,17 +293,12 @@ namespace FrontierIsland
         }
 
         /// <summary>
-        /// Can this <see cref="ItemStack"/> be used on <paramref name="selectable"/>
+        /// Called when used to place block
         /// </summary>
-        /// <param name="on"></param>
-        /// <returns></returns>
-        public virtual bool CanUseItem(ISelectable selectable)
-        {
-            return false;
-        }
-
-
-        public virtual void OnItemUse(Settler user, Vector3Int position)
+        /// <param name="user"></param>
+        /// <param name="position"></param>
+        /// <param name="blockFace"></param>
+        public virtual void OnUsePlaceBlock(Settler user, Vector3Int position, BlockFace blockFace)
         {
             // intentionally left blank
         }

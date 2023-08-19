@@ -89,4 +89,13 @@ namespace FrontierIsland
             // intentionally left blank
         }
     }
+
+    public enum BlockFace
+    {
+        Top,
+        North,
+        East,
+        South,
+        West
+    }
 }

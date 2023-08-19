@@ -86,7 +86,8 @@ namespace FrontierIsland
             set 
             {
                 showView = value;
-                if (viewable != null) viewable.ShowUI = value; 
+                if (viewable != null) viewable.ShowUI = value;
+                if (settlerUI != null) settlerUI.Active = value;
             } 
         }
         public ItemStack HeldItem { get { return Inventory[HeldItemIndex]; } }
@@ -306,7 +307,7 @@ namespace FrontierIsland
         #endregion
 
         #region UseHeldItem
-        protected virtual IEnumerator UseHeldItem(Vector3Int[] path, Vector3Int targetPos)
+        protected virtual IEnumerator UsePlaceBlock(Vector3Int[] path, Vector3Int targetPos, BlockFace blockFace)
         {
             yield return Inspect(path, targetPos);
 
@@ -320,11 +321,11 @@ namespace FrontierIsland
                 State = AnimState.Idle;
                 yield break;
             }
-            HeldItem.OnItemUse(this, targetPos);
+            HeldItem.OnUsePlaceBlock(this, targetPos, blockFace);
             State = AnimState.Idle;
         }
 
-        public virtual void StartUseHeldItem(Vector3Int targetPos)
+        public virtual void StartUsePlaceBlock(Vector3Int targetPos, BlockFace blockFace)
         {
             if (pathRequest != null)
             {
@@ -334,26 +335,26 @@ namespace FrontierIsland
             Vector3Int currentPos = Position;
             if (targetPos.x == currentPos.x && targetPos.z == currentPos.z)
             {
-                // trying to place block at where Settler is standing
+                // trying to use item at where Settler is standing
                 if (Terrain.Instance.Walkable(currentPos.x, currentPos.z + 1))
                 {
                     // can walk north
-                    ActionLoop = UseHeldItem(new Vector3Int[] { currentPos + Vector3Int.forward, currentPos}, targetPos);
+                    ActionLoop = UsePlaceBlock(new Vector3Int[] { currentPos + Vector3Int.forward, currentPos}, targetPos, blockFace);
                 }
                 else if (Terrain.Instance.Walkable(currentPos.x + 1, currentPos.z))
                 {
                     // can walk east
-                    ActionLoop = UseHeldItem(new Vector3Int[] { currentPos + Vector3Int.right, currentPos }, targetPos);
+                    ActionLoop = UsePlaceBlock(new Vector3Int[] { currentPos + Vector3Int.right, currentPos }, targetPos, blockFace);
                 }
                 else if (Terrain.Instance.Walkable(currentPos.x, currentPos.z - 1))
                 {
                     // can walk south
-                    ActionLoop = UseHeldItem(new Vector3Int[] { currentPos + Vector3Int.back, currentPos }, targetPos);
+                    ActionLoop = UsePlaceBlock(new Vector3Int[] { currentPos + Vector3Int.back, currentPos }, targetPos, blockFace);
                 }
                 else if (Terrain.Instance.Walkable(currentPos.x - 1, currentPos.z))
                 {
                     // can walk west
-                    ActionLoop = UseHeldItem(new Vector3Int[] { currentPos + Vector3Int.left, currentPos }, targetPos);
+                    ActionLoop = UsePlaceBlock(new Vector3Int[] { currentPos + Vector3Int.left, currentPos }, targetPos, blockFace);
                 }
                 return; // cannot find an open spot to move out of the way, exit
             }
@@ -365,7 +366,7 @@ namespace FrontierIsland
                     this.path = path;
                     if (success)
                     {
-                        ActionLoop = UseHeldItem(path, targetPos);
+                        ActionLoop = UsePlaceBlock(path, targetPos, blockFace);
                     }
                     else
                     {
@@ -448,6 +449,8 @@ namespace FrontierIsland
             {
                 pathRequest.Cancel();
             }
+
+            if (ReferenceEquals(viewable, block)) return;
 
             Action<Vector3Int[], bool> callback = (Vector3Int[] path, bool success) =>
             {

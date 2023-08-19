@@ -9,6 +9,19 @@ namespace FrontierIsland
         public Transform focus;
         public float offset = 0.75f;
 
+        public override bool Active 
+        { 
+            get => base.Active;
+            set 
+            {
+                base.Active = value;
+
+                // have to be called in the same frame as when enabled.
+                // see note above UpdatePosition()
+                UpdatePosition();
+            }
+        }
+
         public void Init(ICraftingStation station)
         {
             Init(station.Title, station.Recipes, station.Inventory);

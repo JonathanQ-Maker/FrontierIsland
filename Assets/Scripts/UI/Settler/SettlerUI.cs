@@ -36,6 +36,10 @@ namespace FrontierIsland
             set
             {
                 gameObject.SetActive(value);
+
+                // have to be called in the same frame as when enabled.
+                // see note above UpdatePosition()
+                UpdatePosition();
             }
         }
 
