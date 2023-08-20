@@ -17,6 +17,7 @@ namespace FrontierIsland
         Twig,
         TreeCone,
         FistHatchet,
-        Leaves
+        Leaves,
+        TreeSap
     }
 }

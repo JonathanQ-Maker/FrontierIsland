@@ -35,7 +35,7 @@ namespace FrontierIsland
             RegisterItem(new StoneAxe());
             RegisterItem(new StoneItem(1));
             RegisterItem(new CrateItem(1));
-            RegisterItem(new TreeItem(1, Tree.TreeState.Sapling));
+            RegisterItem(new TreeItem(1, TreeBlock.TreeStage.Sapling));
             RegisterItem(new GrassItem(1));
             RegisterItem(new MushroomsItem(1));
             RegisterItem(new CampFireItem(1));

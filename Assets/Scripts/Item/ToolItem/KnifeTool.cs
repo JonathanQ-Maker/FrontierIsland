@@ -16,7 +16,7 @@
 
         public override ItemStack[] HarvestBlock(Block block)
         {
-            if (block is Tree tree)
+            if (block is TreeBlock tree)
             {
                 if (tree.CanShear)
                 {

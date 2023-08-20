@@ -4,14 +4,14 @@ namespace FrontierIsland
 {
     public class TreeItem : BlockItem
     {
-        public Tree.TreeState State 
+        public TreeBlock.TreeStage State 
         { 
-            get { return (Tree.TreeState)NBT.GetByte("state"); } 
+            get { return (TreeBlock.TreeStage)NBT.GetByte("state"); } 
             set { NBT.PutByte("state", (byte)value); }
 
         }
 
-        public TreeItem(int count, Tree.TreeState state) : base(count, "Tree", "a force of nature")
+        public TreeItem(int count, TreeBlock.TreeStage state) : base(count, "Tree", "a force of nature")
         {
             if (!HasNBT)
             {
