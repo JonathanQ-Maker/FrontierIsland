@@ -124,6 +124,7 @@ namespace FrontierIsland
             inventory[3] = new StoneItem(99);
             inventory[4] = new CarpenterBenchItem(1);
             inventory[5] = new FistHatchet();
+            inventory[6] = new TreeSap(10);
 
 
             UpdateHeldItem();
@@ -228,8 +229,10 @@ namespace FrontierIsland
             return block.GetItemDrops();
         }
 
-        protected virtual IEnumerator HarvestBlock(Vector3Int[] path, Block block)
+        protected virtual IEnumerator HarvestBlock(Vector3Int[] path, Vector3Int targetPos)
         {
+            Block block = Terrain.Instance.GetBlock(targetPos);
+            if (block == null) yield break;
             yield return Inspect(path, block.transform.position);
             if (block == null) yield break;
 
@@ -277,7 +280,7 @@ namespace FrontierIsland
             State = AnimState.Idle;
         }
 
-        public virtual void StartHarvestBlock(Block block)
+        public virtual void StartHarvestBlock(Vector3Int targetPos)
         {
             if (pathRequest != null)
             {
@@ -291,7 +294,7 @@ namespace FrontierIsland
                     this.path = path;
                     if (success)
                     {
-                        ActionLoop = HarvestBlock(path, block);
+                        ActionLoop = HarvestBlock(path, targetPos);
                     }
                     else
                     {
@@ -300,7 +303,7 @@ namespace FrontierIsland
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Position, block.Position, 32, callback);
+            PathRequest newRequest = new PathRequest(Position, targetPos, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
         }
@@ -420,6 +423,7 @@ namespace FrontierIsland
                 {
                     ActionLoop = TraversePath(path, false);
                 }
+                // TODO: auto cleanup
             };
 
             PathRequest newRequest = new PathRequest(Position, handler.Position, 32, callback);
@@ -428,36 +432,38 @@ namespace FrontierIsland
         }
         #endregion
 
-        #region UseCraftingBlock
-        protected virtual IEnumerator UseCraftingBlock(Vector3Int[] path, CraftingBlock block)
+        #region ViewCraftingBlock
+        protected virtual IEnumerator ViewCraftingBlock(Vector3Int[] path, Vector3Int targetPos)
         {
-            yield return Inspect(path, block.transform.position);
-            if (block == null) yield break;
-
-            Vector3Int delta = Position - block.Position;
-            delta.y = 0;
-            if (delta.magnitude > 2)
+            yield return Inspect(path, targetPos);
+            if (Terrain.Instance.GetBlock(targetPos) is CraftingBlock block)
             {
-                Debug.LogError("error cannot use blocks this far away");
+
+                Vector3Int delta = Position - block.Position;
+                delta.y = 0;
+                if (delta.magnitude > 2)
+                {
+                    Debug.LogError("error cannot use blocks this far away");
+                }
+                View(block);
             }
-            View(block);
         }
 
-        public virtual void StartUseCraftingBlock(CraftingBlock block)
+        public virtual void StartViewCraftingBlock(Vector3Int targetPos)
         {
             if (pathRequest != null)
             {
                 pathRequest.Cancel();
             }
 
-            if (ReferenceEquals(viewable, block)) return;
+            if (ReferenceEquals(viewable, Terrain.Instance.GetBlock(targetPos))) return;
 
             Action<Vector3Int[], bool> callback = (Vector3Int[] path, bool success) =>
             {
                 this.path = path;
                 if (success)
                 {
-                    ActionLoop = UseCraftingBlock(path, block);
+                    ActionLoop = ViewCraftingBlock(path, targetPos);
                 }
                 else
                 {
@@ -465,9 +471,27 @@ namespace FrontierIsland
                 }
             };
 
-            PathRequest newRequest = new PathRequest(Position, block.Position, 32, callback);
+            PathRequest newRequest = new PathRequest(Position, targetPos, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
+        }
+        #endregion
+
+        #region Using
+        protected virtual IEnumerator Using(IEnumerator useCoroutine, IUseable useable)
+        {
+            State = useable.UseState;
+            yield return useCoroutine;
+            State = AnimState.Idle;
+        }
+
+        /// <summary>
+        /// Starts crafting with the current <see cref="IViewable"/>
+        /// </summary>
+        /// <param name="crafting"></param>
+        public virtual void StartUsing(IEnumerator useCoroutine, IUseable useable)
+        {
+            ActionLoop = Using(useCoroutine, useable);
         }
         #endregion
 
@@ -528,16 +552,7 @@ namespace FrontierIsland
         public void Craft(int recipeIndex, int count)
         {
             ItemRecipe recipe = RecipeCollections.Settler[recipeIndex];
-            for (int i = 0; i < recipe.Ingredients.Length; ++i)
-            {
-                Ingredient ingredient = recipe.Ingredients[i];
-                if (craftingInventory[i] == null ||
-                    ingredient.item != craftingInventory[i].ItemType ||
-                    ingredient.count * count > craftingInventory[i].count)
-                {
-                    return;
-                }
-            }
+            if (!recipe.Match(craftingInventory, count)) return;
 
             for (int i = 0; i < recipe.Ingredients.Length; ++i)
             {

@@ -19,7 +19,14 @@ namespace FrontierIsland
                 {
                     StopCoroutine(actionLoop);
                 }
-                actionLoop = value;
+                if (value != null)
+                { 
+                    actionLoop = AutoCleanUp(value);
+                }
+                else
+                {
+                    actionLoop = value;
+                }
                 if (actionLoop != null)
                     StartCoroutine(actionLoop);
             }
@@ -73,6 +80,18 @@ namespace FrontierIsland
         public void OnSelect()
         {
             //throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Wrapper for ActionLoop coroutines that 
+        /// cleans up after coroutine has exited
+        /// </summary>
+        /// <param name="coroutine"></param>
+        /// <returns></returns>
+        private IEnumerator AutoCleanUp(IEnumerator coroutine)
+        {
+            yield return coroutine;
+            ActionLoop = null;
         }
 
         public virtual void StartLookAt(Vector3Int targetPos)

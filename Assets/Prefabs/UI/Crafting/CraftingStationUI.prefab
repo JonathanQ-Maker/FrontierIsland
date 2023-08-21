@@ -116,7 +116,7 @@ GameObject:
   - component: {fileID: 4820217549213607803}
   - component: {fileID: 3046314609527669819}
   m_Layer: 5
-  m_Name: CraftingContent
+  m_Name: Crafting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

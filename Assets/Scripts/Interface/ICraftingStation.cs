@@ -1,23 +1,16 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace FrontierIsland
 {
-    public interface ICraftingStation : IViewable, IInventoryHolder
+    public interface ICraftingStation : IViewable, IInventoryHolder, IUseable
     {
         /// <summary>
         /// Array of <see cref="ItemRecipe"/> availabe from this <see cref="ICraftingStation"/>
         /// </summary>
         ItemRecipe[] Recipes { get; }
 
-        /// <summary>
-        /// The display title for <see cref="CraftingStationUI"/>
-        /// </summary>
-        string Title { get; }
-
-        /// <summary>
-        /// The <see cref="Transform"/> that <see cref="CraftingStationUI"/> will follow
-        /// </summary>
-        Transform transform { get; }
+        bool Functional { get; }
 
         /// <summary>
         /// <br>
@@ -27,32 +20,21 @@ namespace FrontierIsland
         /// </summary>
         /// <param name="recipeIndex"></param>
         /// <param name="count"></param>
-        void Craft(int recipeIndex, int count)
-        {
-            ItemRecipe recipe = Recipes[recipeIndex];
-            for (int i = 0; i < recipe.Ingredients.Length; ++i)
-            {
-                Ingredient ingredient = recipe.Ingredients[i];
-                if (Inventory[i] == null ||
-                    ingredient.item != Inventory[i].ItemType ||
-                    ingredient.count * count > Inventory[i].count)
-                {
-                    return;
-                }
-            }
+        void Craft(int recipeIndex, int count);
 
-            for (int i = 0; i < recipe.Ingredients.Length; ++i)
-            {
-                Ingredient ingredient = recipe.Ingredients[i];
-                Inventory.ConsumeItem(i, ingredient.count * count);
-            }
+        /// <summary>
+        /// Coroutine to perform the crafting animation
+        /// </summary>
+        /// <param name="recipeIndex"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        IEnumerator Crafting(int recipeIndex, int count);
 
-            ItemStack result = ItemAtlas.Get(recipe.ResultItem).DeepClone();
-            result.count = count;
-            if (!Viewer.Inventory.AddItem(result))
-            {
-                DropItem(result);
-            }
-        }
+        /// <summary>
+        /// Called when the craft button is clicked
+        /// </summary>
+        /// <param name="recipeIndex"></param>
+        /// <param name="count"></param>
+        void OnCraft(int recipeIndex, int count);
     }
 }

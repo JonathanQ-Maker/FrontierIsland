@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 
 namespace FrontierIsland
@@ -44,19 +45,38 @@ namespace FrontierIsland
             }
         }
 
+        protected bool active = false;
+        public bool Functional { get { return active; } }
+
+        public Settler.AnimState UseState { get { return Settler.AnimState.Harvesting; } }
+
         protected override void Start()
         {
             base.Start();
             Inventory = new Inventory(4, 2, this);
+            active = true;
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             // clean up possible ui
             Viewer?.CloseView();
             if (stationUI != null) CloseUI();
             Inventory.onInventoryChange -= OnInventoryChange;
+            active = false;
         }
+
+
+        protected virtual void OnEnable()
+        {
+            active = true;
+        }
+
+        protected virtual void OnDisable()
+        {
+            active = false;
+        }
+
 
         public virtual void CloseUI()
         {
@@ -107,6 +127,51 @@ namespace FrontierIsland
         public bool CanView(Settler viewer)
         {
             return Viewer == null;
+        }
+
+        public virtual void Craft(int recipeIndex, int count)
+        {
+            ItemRecipe recipe = Recipes[recipeIndex];
+            if (!recipe.Match(Inventory, count)) return;
+
+            for (int i = 0; i < recipe.Ingredients.Length; ++i)
+            {
+                Ingredient ingredient = recipe.Ingredients[i];
+                Inventory.ConsumeItem(i, ingredient.count * count);
+            }
+
+            ItemStack result = ItemAtlas.Get(recipe.ResultItem).DeepClone();
+            result.count = count;
+            if (!Viewer.Inventory.AddItem(result))
+            {
+                DropItem(result);
+            }
+        }
+
+        public virtual IEnumerator Crafting(int recipeIndex, int count)
+        {
+            for (int i = 0; i < count; ++i)
+            {
+                float finishTime = Time.time + Recipes[recipeIndex].CraftTime;
+                while (finishTime > Time.time)
+                {
+                    yield return null;
+
+                    // check after yield return null to make sure
+                    // for code in the bottom that all conditions 
+                    // in the following is true
+                    if (!Functional)
+                    {
+                        yield break;
+                    }
+                }
+                Craft(recipeIndex, 1);
+            }
+        }
+
+        public virtual void OnCraft(int recipeIndex, int count)
+        {
+            Viewer.StartUsing(Crafting(recipeIndex, count), this);
         }
     }
 }

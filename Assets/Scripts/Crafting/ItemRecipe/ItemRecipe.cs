@@ -3,13 +3,19 @@
     public class ItemRecipe
     {
         public ItemType ResultItem { get; protected set; }
-        private Ingredient[] ingredients;
-        public Ingredient[] Ingredients { get { return ingredients; } }
+        public float CraftTime { get; protected set; }
+        public Ingredient[] Ingredients { get; protected set; }
 
-        public ItemRecipe(ItemType resultItem, Ingredient[] ingredients)
+        public ItemRecipe(ItemType resultItem, Ingredient[] ingredients) : this(resultItem, ingredients, 3)
+        { 
+        
+        }
+
+        public ItemRecipe(ItemType resultItem, Ingredient[] ingredients, float craftTime)
         {
             ResultItem = resultItem;
-            this.ingredients = ingredients;
+            CraftTime = craftTime;
+            Ingredients = ingredients;
         }
 
         /// <summary>
@@ -17,9 +23,20 @@
         /// </summary>
         /// <param name="inventory"></param>
         /// <returns></returns>
-        public bool Matches(Inventory inventory)
+        public bool Match(Inventory inventory, int count)
         {
-            throw new System.NotImplementedException();
+            for (int i = 0; i < Ingredients.Length; ++i)
+            {
+                Ingredient ingredient = Ingredients[i];
+                ItemStack item = inventory[i];
+                if (item == null ||
+                    ingredient.item != item.ItemType ||
+                    ingredient.count * count > item.count)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 

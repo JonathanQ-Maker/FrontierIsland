@@ -233,7 +233,7 @@ namespace FrontierIsland
                 // TODO: refactor into Viewable Block
                 if (selectable is CraftingBlock craftingBlock && !Input.GetKey(KeyCode.LeftControl)) 
                 {
-                    settler.StartUseCraftingBlock(craftingBlock);
+                    settler.StartViewCraftingBlock(craftingBlock.Position);
                     return;
                 }
 
@@ -266,7 +266,7 @@ namespace FrontierIsland
 
                 if (selectable is Block block)
                 {
-                    settler.StartHarvestBlock(block);
+                    settler.StartHarvestBlock(block.Position);
                     return;
                 }
 

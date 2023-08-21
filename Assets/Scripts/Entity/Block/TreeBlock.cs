@@ -114,13 +114,13 @@ namespace FrontierIsland
                     Debug.LogWarning($"Set unexpected stage {stage}");
                     break;
             }
-            Bounds bounds = trunkMeshFilter.sharedMesh.bounds;
-            if (Stage != TreeStage.Sapling)
-            {
-                bounds.Encapsulate(leavesMeshFilter.sharedMesh.bounds);
-            }
-            boxCollider.size = bounds.size;
-            boxCollider.center = bounds.center;
+            //Bounds bounds = trunkMeshFilter.sharedMesh.bounds;
+            //if (Stage != TreeStage.Sapling)
+            //{
+            //    bounds.Encapsulate(leavesMeshFilter.sharedMesh.bounds);
+            //}
+            //boxCollider.size = bounds.size;
+            //boxCollider.center = bounds.center;
         }
 
         public ItemStack Shear()

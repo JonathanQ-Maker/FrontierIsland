@@ -39,5 +39,15 @@ namespace FrontierIsland
         /// <see langword="true"/> if ui is shown
         /// </summary>
         bool ShowUI { get; set; }
+
+        /// <summary>
+        /// The display title
+        /// </summary>
+        string Title { get; }
+
+        /// <summary>
+        /// The <see cref="Transform"/> that <see cref="IViewable"/> will follow
+        /// </summary>
+        Transform transform { get; }
     }
 }

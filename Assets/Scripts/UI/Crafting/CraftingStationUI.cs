@@ -26,7 +26,7 @@ namespace FrontierIsland
         {
             Init(station.Title, station.Recipes, station.Inventory);
             focus = station.transform;
-            onCraft = station.Craft;
+            onCraft = station.OnCraft;
         }
 
         protected override void Update()
