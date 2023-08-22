@@ -39,8 +39,10 @@ namespace FrontierIsland
         public delegate void OnCraft(int selectIndex, int count);
         public OnCraft onCraft;
 
+        DebugTracker tracker;
         protected virtual void Start()
         {
+            tracker = new DebugTracker("CraftingUI");
             UpdateSelectRecipe();
         }
 
@@ -153,7 +155,7 @@ namespace FrontierIsland
             slot.RequiredCount = count;
         }
 
-        public void OnClickCraft()
+        public virtual void OnClickCraft()
         {
             // did not use onCraft?.Invoke() because
             // we want it to report error when onCraft

@@ -31,13 +31,6 @@ namespace FrontierIsland
 
     public abstract class ItemStack : INBTSerializable, ICopyable<ItemStack>
     {
-        private static int itemCount = 0; // Total number of item instances
-
-        /// <summary>
-        /// For memory leak debugging
-        /// </summary>
-        public static int ItemCount { get { return itemCount; } }
-
         private CompoundTag nbt = null;
         public virtual CompoundTag NBT { get { return nbt; } set { nbt = value; } }
 
@@ -69,19 +62,6 @@ namespace FrontierIsland
             this.name           = name;
             this.description    = description;
             this.count          = count;
-            itemCount++;
-        }
-
-        ~ItemStack()
-        {
-            Debug.Log($"Deleting ItemStack {ItemType}");
-            itemCount--;
-
-            if (Handler != null && !Handler.ToBeDestroyed)
-            {
-                throw new System.Exception($"ItemStack finalizer is called but Handler still exists\n" +
-                    $"ItemStack: {ToString()}, Handler: {Handler}@{Handler.transform.position}");
-            }
         }
 
         /// <summary>

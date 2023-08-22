@@ -91,12 +91,6 @@ namespace FrontierIsland
             HandleFocus();
             HandleHelpPanel();
 
-
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                Debug.Log($"ItemStack instance counts: {ItemStack.ItemCount}");
-            }
-
             if (Input.GetKeyDown(KeyCode.D))
             {
                 System.GC.Collect();
@@ -230,15 +224,15 @@ namespace FrontierIsland
 
             if (settler != null)
             {
+                settler.CloseUI();
+                settler.CloseView();
+
                 // TODO: refactor into Viewable Block
                 if (selectable is CraftingBlock craftingBlock && !Input.GetKey(KeyCode.LeftControl)) 
                 {
                     settler.StartViewCraftingBlock(craftingBlock.Position);
                     return;
                 }
-
-                settler.CloseUI();
-                settler.CloseView();
 
                 if (settler.HeldItem != null && settler.HeldItem.CanPlaceBlock)
                 {

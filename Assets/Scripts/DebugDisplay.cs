@@ -8,6 +8,7 @@ public class DebugDisplay : MonoBehaviour
     {
         displayText.text =
             $"FPS: {(int)(1 / Time.smoothDeltaTime)}\n" +
-            $"Screen Size: {Screen.width}x{Screen.height}\n";
+            $"Screen Size: {Screen.width}x{Screen.height}\n" +
+            $"Debug Trackers: {DebugTracker.Count}";
     }
 }

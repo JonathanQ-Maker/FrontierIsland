@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -50,10 +51,12 @@ namespace FrontierIsland
 
         public Settler.AnimState UseState { get { return Settler.AnimState.Harvesting; } }
 
+        DebugTracker tracker;
         protected override void Start()
         {
+            tracker = new DebugTracker("CrafingBlock");
             base.Start();
-            Inventory = new Inventory(4, 2, this);
+            Inventory = CreateInventory();
             active = true;
         }
 
@@ -77,6 +80,10 @@ namespace FrontierIsland
             active = false;
         }
 
+        protected virtual Inventory CreateInventory()
+        { 
+            return new Inventory(4, 2, this);
+        }
 
         public virtual void CloseUI()
         {
@@ -150,9 +157,25 @@ namespace FrontierIsland
 
         public virtual IEnumerator Crafting(int recipeIndex, int count)
         {
+            if (!Functional || stationUI == null)
+            {
+                yield break;
+            }
+
+            ProgressUI progressUI = stationUI.ProgressUI;
+
             for (int i = 0; i < count; ++i)
             {
-                float finishTime = Time.time + Recipes[recipeIndex].CraftTime;
+                float craftTime = Recipes[recipeIndex].CraftTime;
+                float finishTime = Time.time + craftTime;
+                int lastTimeDisplay = Mathf.CeilToInt(craftTime);
+
+                // display has to be updated before (yield return null)
+                // to avoid displaying previous state for a split second 
+                progressUI.Title = $"{ItemAtlas.Get(Recipes[recipeIndex].ResultItem).name} {i}/{count}";
+                progressUI.ProgressSlider.value = 0;
+                progressUI.TimeDisplay = lastTimeDisplay;
+
                 while (finishTime > Time.time)
                 {
                     yield return null;
@@ -160,18 +183,40 @@ namespace FrontierIsland
                     // check after yield return null to make sure
                     // for code in the bottom that all conditions 
                     // in the following is true
-                    if (!Functional)
+                    if (!Functional || stationUI == null)
                     {
                         yield break;
+                    }
+
+                    float timeLeft = finishTime - Time.time;
+                    progressUI.ProgressSlider.value = (craftTime - timeLeft) / craftTime;
+
+                    // optimization to reduce string garbage
+                    int newTimeDisplay = Mathf.CeilToInt(timeLeft);
+                    if (newTimeDisplay != lastTimeDisplay)
+                    {
+                        progressUI.TimeDisplay = newTimeDisplay;
+                        lastTimeDisplay = newTimeDisplay;
                     }
                 }
                 Craft(recipeIndex, 1);
             }
+            stationUI.OnFinishCrafting();
         }
 
         public virtual void OnCraft(int recipeIndex, int count)
         {
-            Viewer.StartUsing(Crafting(recipeIndex, count), this);
+            if (Recipes[recipeIndex].Match(Inventory, count))
+            {
+                Viewer.StartUsing(Crafting(recipeIndex, count), this);
+                stationUI.CraftingUI.Active = false;
+                stationUI.ProgressUI.Active = true;
+            }
+        }
+
+        public virtual void OnAbort()
+        {
+            Viewer.StopAction();
         }
     }
 }

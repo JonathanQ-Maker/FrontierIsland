@@ -3,49 +3,43 @@ using UnityEngine;
 
 namespace FrontierIsland
 {
-    public class CraftingStationUI : CraftingUI
+    public class CraftingStationUI : WorldUI
     {
-        [NonSerialized]
-        public Transform focus;
-        public float offset = 0.75f;
 
-        public override bool Active 
-        { 
-            get => base.Active;
-            set 
-            {
-                base.Active = value;
+        [SerializeField]
+        private ProgressUI progressUI;
+        public ProgressUI ProgressUI { get { return progressUI; } }
 
-                // have to be called in the same frame as when enabled.
-                // see note above UpdatePosition()
-                UpdatePosition();
-            }
-        }
+        [SerializeField]
+        private CraftingUI craftingUI;
+        public CraftingUI CraftingUI { get { return craftingUI; } }
+        private ICraftingStation station;
 
         public void Init(ICraftingStation station)
         {
-            Init(station.Title, station.Recipes, station.Inventory);
+            this.station = station;
+            craftingUI.Init(station.Title, station.Recipes, station.Inventory);
             focus = station.transform;
-            onCraft = station.OnCraft;
+            craftingUI.onCraft = station.OnCraft;
+            progressUI.onAbort = OnAbort;
         }
 
-        protected override void Update()
+        public void OnAbort()
         {
-            base.Update();
-            UpdatePosition();
+            OnFinishCrafting();
+            station.OnAbort();
         }
 
-        /*
-         * NOTE: Although this UI will update its position each frame
-         * when it is first enabled it will wait until next frame to
-         * update position. This allows the viewer to see the UI at the
-         * wrong position for a split frame. Solve this by updating 
-         * position in the same frame as when this UI is enabled
-         */
-        public void UpdatePosition()
+        public void OnFinishCrafting()
         {
-            Vector3 position = Camera.main.WorldToScreenPoint(focus.position + new Vector3(0, offset, 0));
-            rectTransform.position = new Vector3(position.x, position.y, rectTransform.position.z);
+            progressUI.Active = false;
+            craftingUI.Active = true;
+        }
+
+        DebugTracker tracker;
+        private void Start()
+        {
+            tracker = new DebugTracker("CraftingStationUI");
         }
     }
 }

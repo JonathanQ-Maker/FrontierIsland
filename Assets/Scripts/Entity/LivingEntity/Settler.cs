@@ -182,6 +182,11 @@ namespace FrontierIsland
             craftingInventory = null;
         }
 
+        public virtual void StopAction()
+        {
+            ActionLoop = null;
+        }
+
         #region Inspect
         protected virtual IEnumerator Inspect(Vector3Int[] path, Vector3 target)
         {

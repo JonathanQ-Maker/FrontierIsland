@@ -36,5 +36,7 @@ namespace FrontierIsland
         /// <param name="recipeIndex"></param>
         /// <param name="count"></param>
         void OnCraft(int recipeIndex, int count);
+
+        void OnAbort();
     }
 }

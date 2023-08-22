@@ -45,7 +45,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 0.5958981, b: 0, a: 1}
   m_Intensity: 1.5
-  m_Range: 5
+  m_Range: 15
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 8935957915231530822}
+  UIPrefab: {fileID: 2516256174156786048, guid: 31f14fadb6eea904985f4a77073b31f7, type: 3}
   fireDisplay: {fileID: 4506113325820156307}
 --- !u!1 &7277341814337925975
 GameObject:
