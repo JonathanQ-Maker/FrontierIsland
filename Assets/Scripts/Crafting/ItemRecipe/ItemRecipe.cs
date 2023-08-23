@@ -3,18 +3,11 @@
     public class ItemRecipe
     {
         public ItemType ResultItem { get; protected set; }
-        public float CraftTime { get; protected set; }
         public Ingredient[] Ingredients { get; protected set; }
 
-        public ItemRecipe(ItemType resultItem, Ingredient[] ingredients) : this(resultItem, ingredients, 3)
-        { 
-        
-        }
-
-        public ItemRecipe(ItemType resultItem, Ingredient[] ingredients, float craftTime)
+        public ItemRecipe(ItemType resultItem, Ingredient[] ingredients)
         {
             ResultItem = resultItem;
-            CraftTime = craftTime;
             Ingredients = ingredients;
         }
 

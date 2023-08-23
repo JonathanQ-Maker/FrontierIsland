@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-namespace FrontierIsland
+﻿namespace FrontierIsland
 {
     public static class RecipeCollections
     {

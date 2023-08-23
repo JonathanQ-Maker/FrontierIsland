@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using UnityEngine;
-
-namespace FrontierIsland
+﻿namespace FrontierIsland
 {
-    public interface ICraftingStation : IViewable, IInventoryHolder, IUseable
+    public interface ICraftingStation : IViewable, IInventoryHolder
     {
         /// <summary>
         /// Array of <see cref="ItemRecipe"/> availabe from this <see cref="ICraftingStation"/>
@@ -21,22 +18,5 @@ namespace FrontierIsland
         /// <param name="recipeIndex"></param>
         /// <param name="count"></param>
         void Craft(int recipeIndex, int count);
-
-        /// <summary>
-        /// Coroutine to perform the crafting animation
-        /// </summary>
-        /// <param name="recipeIndex"></param>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        IEnumerator Crafting(int recipeIndex, int count);
-
-        /// <summary>
-        /// Called when the craft button is clicked
-        /// </summary>
-        /// <param name="recipeIndex"></param>
-        /// <param name="count"></param>
-        void OnCraft(int recipeIndex, int count);
-
-        void OnAbort();
     }
 }

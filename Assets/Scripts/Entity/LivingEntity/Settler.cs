@@ -10,7 +10,7 @@ namespace FrontierIsland
         {
             Idle        = 0,
             Walking     = 1,
-            Harvesting  = 2
+            Working     = 2
         }
 
         [SerializeField]
@@ -247,7 +247,7 @@ namespace FrontierIsland
             {
                 Debug.LogError("error cannot harvest blocks this far away");
             }
-            State = AnimState.Harvesting;
+            State = AnimState.Working;
 
             float finishTime = GetHarvestTime(block) + Time.time;
             ItemStack heldItem = HeldItem;
@@ -321,7 +321,7 @@ namespace FrontierIsland
 
             if (!Terrain.Instance.CanPlaceBlock(targetPos)) yield break;
 
-            State = AnimState.Harvesting;
+            State = AnimState.Working;
             yield return new WaitForSeconds(0.5f);
 
             if (HeldItem == null)
@@ -400,7 +400,7 @@ namespace FrontierIsland
             {
                 Debug.LogError("error");
             }
-            State = AnimState.Harvesting;
+            State = AnimState.Working;
             yield return new WaitForSeconds(0.25f);
 
             if (handler != null && !handler.ToBeDestroyed && handler.transform.parent == null) // check if picked up by another
@@ -437,11 +437,11 @@ namespace FrontierIsland
         }
         #endregion
 
-        #region ViewCraftingBlock
-        protected virtual IEnumerator ViewCraftingBlock(Vector3Int[] path, Vector3Int targetPos)
+        #region ViewBlock
+        protected virtual IEnumerator ViewBlock(Vector3Int[] path, Vector3Int targetPos)
         {
             yield return Inspect(path, targetPos);
-            if (Terrain.Instance.GetBlock(targetPos) is CraftingBlock block)
+            if (Terrain.Instance.GetBlock(targetPos) is ViewableBlock block)
             {
 
                 Vector3Int delta = Position - block.Position;
@@ -454,7 +454,7 @@ namespace FrontierIsland
             }
         }
 
-        public virtual void StartViewCraftingBlock(Vector3Int targetPos)
+        public virtual void StartViewBlock(Vector3Int targetPos)
         {
             if (pathRequest != null)
             {
@@ -468,7 +468,7 @@ namespace FrontierIsland
                 this.path = path;
                 if (success)
                 {
-                    ActionLoop = ViewCraftingBlock(path, targetPos);
+                    ActionLoop = ViewBlock(path, targetPos);
                 }
                 else
                 {
@@ -479,24 +479,6 @@ namespace FrontierIsland
             PathRequest newRequest = new PathRequest(Position, targetPos, 32, callback);
             pathRequest = newRequest;
             PathRequestManager.RequestPath(newRequest);
-        }
-        #endregion
-
-        #region Using
-        protected virtual IEnumerator Using(IEnumerator useCoroutine, IUseable useable)
-        {
-            State = useable.UseState;
-            yield return useCoroutine;
-            State = AnimState.Idle;
-        }
-
-        /// <summary>
-        /// Starts crafting with the current <see cref="IViewable"/>
-        /// </summary>
-        /// <param name="crafting"></param>
-        public virtual void StartUsing(IEnumerator useCoroutine, IUseable useable)
-        {
-            ActionLoop = Using(useCoroutine, useable);
         }
         #endregion
 

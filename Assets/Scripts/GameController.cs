@@ -182,7 +182,7 @@ namespace FrontierIsland
 
         private void HandleFocus()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && settler != null)
             {
                 CameraManager.Instance.StartFocus(settler.transform.position);
             }
@@ -227,10 +227,9 @@ namespace FrontierIsland
                 settler.CloseUI();
                 settler.CloseView();
 
-                // TODO: refactor into Viewable Block
-                if (selectable is CraftingBlock craftingBlock && !Input.GetKey(KeyCode.LeftControl)) 
+                if (selectable is ViewableBlock craftingBlock && !Input.GetKey(KeyCode.LeftControl)) 
                 {
-                    settler.StartViewCraftingBlock(craftingBlock.Position);
+                    settler.StartViewBlock(craftingBlock.Position);
                     return;
                 }
 
