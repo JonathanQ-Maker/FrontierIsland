@@ -196,7 +196,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: -1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -406,7 +406,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: -1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1094,7 +1094,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: -1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1186,7 +1186,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: -1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1207,19 +1207,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 419867931307619553, guid: 9ca02f603fa1e0d4bbec543446a0b7fe, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 104.1
+      value: 86.75
       objectReference: {fileID: 0}
     - target: {fileID: 419867931307619553, guid: 9ca02f603fa1e0d4bbec543446a0b7fe, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 57.04
+      value: 73.47
       objectReference: {fileID: 0}
     - target: {fileID: 419867931307619553, guid: 9ca02f603fa1e0d4bbec543446a0b7fe, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 62.05
+      value: 53.375
       objectReference: {fileID: 0}
     - target: {fileID: 419867931307619553, guid: 9ca02f603fa1e0d4bbec543446a0b7fe, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -33.52
+      value: -41.735
       objectReference: {fileID: 0}
     - target: {fileID: 419867932500791826, guid: 9ca02f603fa1e0d4bbec543446a0b7fe, type: 3}
       propertyPath: m_Name
@@ -1267,11 +1267,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 419867932500791837, guid: 9ca02f603fa1e0d4bbec543446a0b7fe, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 124.1
+      value: 106.75
       objectReference: {fileID: 0}
     - target: {fileID: 419867932500791837, guid: 9ca02f603fa1e0d4bbec543446a0b7fe, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 67.04
+      value: 83.47
       objectReference: {fileID: 0}
     - target: {fileID: 419867932500791837, guid: 9ca02f603fa1e0d4bbec543446a0b7fe, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1651,7 +1651,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: -1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0

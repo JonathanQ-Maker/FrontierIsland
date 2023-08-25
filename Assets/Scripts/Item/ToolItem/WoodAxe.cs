@@ -2,6 +2,8 @@
 {
     public class WoodAxe : AxeTool
     {
+        public override int FuelValue { get { return 100; } }
+
         public WoodAxe() : this("Wood Axe", "An axe made \r\nentirely out of wood")
         { 
         

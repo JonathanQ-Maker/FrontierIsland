@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using UnityEditor.MPE;
 using UnityEngine;
 
 namespace FrontierIsland
@@ -11,7 +10,7 @@ namespace FrontierIsland
         [SerializeField]
         private Light fireLight;
         public float maxIntensity = 1.5f;
-        public int cookStages = 50;
+        public int maxProgress = 50, maxFuel = 500;
         protected ItemStack cookItem;
 
         public const int INPUT_INDEX = 0, OUTPUT_INDEX = 1, FUEL_INDEX = 2;
@@ -40,34 +39,41 @@ namespace FrontierIsland
             set { fireDisplay.gameObject.SetActive(value); }
         }
 
-        private float fuel = 1;
+        private int fuel;
         /// <summary>
         /// Amount of fuel left [0, 1]
         /// </summary>
-        public float Fuel 
+        public int Fuel 
         { 
             get { return fuel; }
             set 
             {
-                fuel = value;
-                fireLight.intensity = value * maxIntensity;
+                fuel = Mathf.Min(value, maxFuel);
+
+                float ratio = (float)value / maxFuel;
+                fireLight.intensity = ratio * maxIntensity;
                 Ignited = Fuel > 0;
-                if (UI != null) UI.FuelDisplay = value;
+                if (UI != null) UI.FuelDisplay = ratio;
+
+                // set fire scale
+                Vector3 scale = fireDisplay.localScale;
+                scale.y = ratio;
+                fireDisplay.localScale = scale;
             }
         }
 
         // TODO: allow bar to be full
-        private float progress;
+        private int progress;
         /// <summary>
         /// Current cook progress [0, 1]
         /// </summary>
-        public float Progress
+        public int Progress
         {
             get { return progress; }
             set 
             {
-                progress = value;
-                if (UI != null) UI.ProgressDisplay = value;
+                progress = Mathf.Min(value, maxProgress);
+                if (UI != null) UI.ProgressDisplay = (float)value / maxProgress;
             }
         }
 
@@ -104,10 +110,12 @@ namespace FrontierIsland
 
         public void AddFuel()
         {
-            if (FuelItem != null && FuelItem.IsFuel && Fuel < 0.9f)
+            // only allow add fuel if less than 80% of max fuel
+            // to prevent too much over fuel
+            if (FuelItem != null && FuelItem.FuelValue > 0 && Fuel < maxFuel * 0.8f)
             {
                 Inventory.ConsumeItem(FUEL_INDEX, 1);
-                Fuel += 0.5f;
+                Fuel += FuelItem.FuelValue;
                 TryCook();
             }
         }
@@ -171,9 +179,9 @@ namespace FrontierIsland
         {
             while (Fuel > 0)
             {
-                Progress += 1f / cookStages;
-                Fuel -= 0.005f;
-                if (Progress >= 1)
+                ++Progress;
+                --Fuel;
+                if (Progress >= maxProgress)
                 {
                     Progress = 0;
                     OnCookComplete();
@@ -200,15 +208,18 @@ namespace FrontierIsland
                 Inventory.ConsumeItem(i, ingredient.count * count);
             }
 
-            ItemStack result = ItemAtlas.Get(recipe.ResultItem).DeepClone();
-            result.count = count;
             if (OutputItem == null)
             {
+                ItemStack result = ItemAtlas.Get(recipe.ResultItem).DeepClone();
+                result.count = count;
                 OutputItem = result;
             }
             else
             {
-                OutputItem.CombineStack(result);
+                // little cheat to not create
+                // new ItemStack instances reducing
+                // memory usage
+                OutputItem.count += count;
                 Inventory.InventoryChanged();
             }
         }
@@ -224,11 +235,10 @@ namespace FrontierIsland
             cookItem = null;
         }
 
-        DebugTracker tracker;
         protected override void Start()
         {
             base.Start();
-            tracker = new DebugTracker("Camp Fire");
+            Fuel = fuel;
         }
     }
 }

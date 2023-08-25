@@ -9,11 +9,6 @@
 
         }
 
-        public override string GetToolTip()
-        {
-            return base.GetToolTip();
-        }
-
         public override ItemStack[] HarvestBlock(Block block)
         {
             if (block is TreeBlock tree)

@@ -73,8 +73,6 @@ namespace FrontierIsland
 
         public ItemStack ItemStack { get { return Container.Inventory[SlotIndex]; } }
 
-        public bool allowDrop = true;
-
         private InventoryItem inventoryItem = null;
 
         public virtual InventoryItem InventoryItem 
@@ -114,14 +112,7 @@ namespace FrontierIsland
             {
                 if (eventData.pointerDrag.TryGetComponent(out InventoryItem other))
                 {
-                    if (!allowDrop && other.PrevSlot.InventoryItem == null)
-                    {
-                        ItemStack itemStack = other.ItemStack;
-                        other.ItemSlot = other.PrevSlot;
-                        other.PrevSlot.InventoryItem = other;
-                        other.ItemSlot.Container.Inventory.SetItem(other.ItemSlot.SlotIndex, itemStack);
-                    }
-                    else if (InventoryItem == null)
+                    if (InventoryItem == null)
                     {
                         // empty slot
                         ItemStack otherStack = other.ItemStack;

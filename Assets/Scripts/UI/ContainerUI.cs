@@ -169,7 +169,7 @@ namespace FrontierIsland
                     if (ReferenceEquals(other.PrevSlot.Container, this))
                     {
                         // put InventoryItem back if it is empty
-                        if (other.PrevSlot.allowDrop && other.PrevSlot.InventoryItem == null)
+                        if (other.PrevSlot.InventoryItem == null)
                         {
                             ItemStack itemStack = other.ItemStack;
                             other.ItemSlot = other.PrevSlot;

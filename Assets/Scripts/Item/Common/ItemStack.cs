@@ -1,5 +1,6 @@
 using UnityEngine;
 using NBT.Tags;
+using Unity.VisualScripting;
 
 namespace FrontierIsland
 {
@@ -56,7 +57,7 @@ namespace FrontierIsland
         /// <returns></returns>
         public virtual bool CanPlaceBlock { get { return false; } }
 
-        public virtual bool IsFuel { get { return false; } }
+        public virtual int FuelValue { get { return 0; } }
 
         #region InstanceTracker
         private static int instanceCount;
@@ -238,6 +239,7 @@ namespace FrontierIsland
         public virtual string GetToolTip()
         {
             return $"<size=14><color=#C5D4E9>{name}<size=12>\n" +
+                   (FuelValue > 0 ? $"Fuel Value: {FuelValue}\n" : "") +
                    $"<color=#898989><i>{description}</i></color>\n";
         }
 

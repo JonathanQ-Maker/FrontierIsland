@@ -141,32 +141,26 @@ namespace FrontierIsland
                     {
                         if (hover.TryGetComponent(out InventoryItem other))
                         {
-                            if (other.ItemSlot.allowDrop)
+                            if (other.ItemStack.AddFrom(ItemStack, 1))
                             {
-                                if (other.ItemStack.AddFrom(ItemStack, 1))
-                                {
-                                    other.ItemSlot.Container.Inventory.InventoryChanged();
-                                    UpdateContent();
-                                }
+                                other.ItemSlot.Container.Inventory.InventoryChanged();
+                                UpdateContent();
                             }
                         }
                         else if (hover.TryGetComponent(out ItemSlot slot))
                         {
-                            if (slot.allowDrop)
+                            if (slot.InventoryItem == null)
                             {
-                                if (slot.InventoryItem == null)
+                                slot.Container.Inventory.SetItem(slot.SlotIndex, ItemStack.SplitStack(1));
+                                hover = slot.gameObject;
+                                UpdateContent();
+                            }
+                            else
+                            {
+                                if (slot.InventoryItem.ItemStack.AddFrom(ItemStack, 1))
                                 {
-                                    slot.Container.Inventory.SetItem(slot.SlotIndex, ItemStack.SplitStack(1));
-                                    hover = slot.gameObject;
+                                    slot.Container.Inventory.InventoryChanged();
                                     UpdateContent();
-                                }
-                                else
-                                {
-                                    if (slot.InventoryItem.ItemStack.AddFrom(ItemStack, 1))
-                                    {
-                                        slot.Container.Inventory.InventoryChanged();
-                                        UpdateContent();
-                                    }
                                 }
                             }
                         }

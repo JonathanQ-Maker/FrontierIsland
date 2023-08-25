@@ -4,6 +4,8 @@ namespace FrontierIsland
 {
     public class TreeCone : BlockItem
     {
+        public override int FuelValue { get { return 50; } }
+
         public TreeCone(int count) : base(count, "Tree Cone", "Tree fruit")
         {
             if (!HasNBT)

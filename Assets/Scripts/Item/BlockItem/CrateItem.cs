@@ -2,6 +2,7 @@
 {
     public class CrateItem : BlockItem
     {
+        public override int FuelValue { get { return 500; } }
         public CrateItem(int count) : base(count, "Crate", "box made of wood planks")
         {
 

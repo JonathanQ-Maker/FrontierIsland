@@ -242,7 +242,8 @@ MonoBehaviour:
   fireDisplay: {fileID: 4506113325820156307}
   fireLight: {fileID: 9120471636224154019}
   maxIntensity: 1.5
-  cookStages: 50
+  maxProgress: 50
+  maxFuel: 500
 --- !u!1 &7277341814337925975
 GameObject:
   m_ObjectHideFlags: 0
