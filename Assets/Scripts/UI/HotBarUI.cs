@@ -20,9 +20,9 @@ namespace FrontierIsland
             }
         }
 
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
             if (gridLayout.constraint != CustomGridLayoutGroup.Constraint.FixedRowCount || gridLayout.constraintCount != 1)
             {
                 throw new FormatException("Hotbar is not one row");
@@ -34,14 +34,14 @@ namespace FrontierIsland
             if (inventory == null) return;
 
             // for adding slots
-            for (int i = inventorySlots.Count; i < inventory.Columns; i = inventorySlots.Count)
+            for (int i = Count; i < inventory.Columns; i = Count)
             {
-                AddInventorySlot();
+                AddItemSlot(gridLayout.gameObject.transform);
             }
 
 
             // for removing slots
-            for (int i = inventorySlots.Count; i > inventory.Columns; i = inventorySlots.Count)
+            for (int i = Count; i > inventory.Columns; i = Count)
             {
                 RemoveInventorySlot();
             }
@@ -54,7 +54,7 @@ namespace FrontierIsland
 
         protected void UpdateSelectionVisual()
         {
-            inventorySlots[SelectionIndex].PlaceOverlay(selectionSquare.rectTransform);
+            this[SelectionIndex].PlaceOverlay(selectionSquare.rectTransform);
         }
     }
 }

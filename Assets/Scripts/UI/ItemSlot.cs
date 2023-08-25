@@ -27,26 +27,27 @@ namespace FrontierIsland
 
         public RectTransform ItemHolder { get { return itemHolder; } }
 
-        private InventoryUI window;
-        public InventoryUI Window
+        [SerializeField]
+        private ContainerUI container;
+        public ContainerUI Container
         {
             get
             {
-                return window;
+                return container;
             }
 
             set
             {
-                if (window == null)
+                if (container == null)
                 {
-                    window = value;
+                    container = value;
                     return;
                 }
-                Debug.LogWarning("Cannot re-assign window");
+                Debug.LogWarning("Cannot re-assign container");
             }
         }
 
-        [SerializeField] // for debug
+        [SerializeField]
         private int slotIndex = -1;
 
         /// <summary>
@@ -70,8 +71,9 @@ namespace FrontierIsland
             }
         }
 
-        public ItemStack ItemStack { get { return Window.Inventory[SlotIndex]; } }
+        public ItemStack ItemStack { get { return Container.Inventory[SlotIndex]; } }
 
+        public bool allowDrop = true;
 
         private InventoryItem inventoryItem = null;
 
@@ -112,20 +114,26 @@ namespace FrontierIsland
             {
                 if (eventData.pointerDrag.TryGetComponent(out InventoryItem other))
                 {
-
-                    if (InventoryItem == null)
+                    if (!allowDrop && other.PrevSlot.InventoryItem == null)
+                    {
+                        ItemStack itemStack = other.ItemStack;
+                        other.ItemSlot = other.PrevSlot;
+                        other.PrevSlot.InventoryItem = other;
+                        other.ItemSlot.Container.Inventory.SetItem(other.ItemSlot.SlotIndex, itemStack);
+                    }
+                    else if (InventoryItem == null)
                     {
                         // empty slot
                         ItemStack otherStack = other.ItemStack;
                         other.ItemSlot = this;
                         InventoryItem = other;
-                        Window.Inventory.SetItem(SlotIndex, otherStack);
+                        Container.Inventory.SetItem(SlotIndex, otherStack);
                     }
                     else if (InventoryItem.ItemStack.Similar(other.ItemStack))
                     {
                         // slot with similar items
                         InventoryItem.ItemStack.CombineStack(other.ItemStack);
-                        Window.Inventory.InventoryChanged();
+                        Container.Inventory.InventoryChanged();
                         if (other.ItemStack.count > 0)
                         {
                             // still have left overs
@@ -136,13 +144,13 @@ namespace FrontierIsland
                                 ItemStack otherStack = other.ItemStack;
                                 other.ItemSlot = prevSlot;
                                 prevSlot.InventoryItem = other;
-                                prevSlot.Window.Inventory.SetItem(prevSlot.SlotIndex, otherStack);
+                                prevSlot.Container.Inventory.SetItem(prevSlot.SlotIndex, otherStack);
                             }
                             else
                             {
                                 // previous slot is occupied, add to origin inventory.
                                 // Any left overs is dropped
-                                other.PrevSlot.Window.Inventory.AddItem(other.ItemStack);
+                                other.PrevSlot.Container.Inventory.AddItem(other.ItemStack);
                             }
                         }
                     }
@@ -155,22 +163,22 @@ namespace FrontierIsland
                         InventoryItem.ItemSlot = other.PrevSlot;
                         InventoryItem.ItemSlot.InventoryItem = InventoryItem;
                         InventoryItem.ResetPosition();
-                        other.PrevSlot.Window.Inventory.SetItem(other.PrevSlot.SlotIndex, thisStack);
+                        other.PrevSlot.Container.Inventory.SetItem(other.PrevSlot.SlotIndex, thisStack);
 
                         other.ItemSlot = this;
                         InventoryItem = other;
-                        Window.Inventory.SetItem(SlotIndex, otherStack);
+                        Container.Inventory.SetItem(SlotIndex, otherStack);
                     }
                     else if (other.PrevSlot.ItemStack.Similar(other.ItemStack))
                     {
                         // different items, previous slot is not empty
                         // and previous item is similar, combine them
                         other.PrevSlot.ItemStack.CombineStack(other.ItemStack);
-                        Window.Inventory.InventoryChanged();
+                        Container.Inventory.InventoryChanged();
                         if (other.ItemStack.count > 0)
                         {
                             // still have left overs
-                            Window.Inventory.AddItem(other.ItemStack);
+                            Container.Inventory.AddItem(other.ItemStack);
                         }
                     }
                 }
@@ -198,12 +206,12 @@ namespace FrontierIsland
 
         public virtual void OnPointerClick(PointerEventData eventData)
         {
-            window.SlotClicked(SlotIndex, eventData);
+            container.SlotClicked(SlotIndex, eventData);
         }
 
         protected virtual void OnDestroy()
         {
-            window = null;
+            container = null;
         }
     }
 }

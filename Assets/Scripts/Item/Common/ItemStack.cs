@@ -56,12 +56,25 @@ namespace FrontierIsland
         /// <returns></returns>
         public virtual bool CanPlaceBlock { get { return false; } }
 
+        public virtual bool IsFuel { get { return false; } }
 
+        #region InstanceTracker
+        private static int instanceCount;
+        public static int InstanceCount { get { return instanceCount; } }
+
+        ~ItemStack()
+        {
+            --instanceCount;
+            Debug.Log($"[ItemStack]: Deleted \"{name}\", {InstanceCount} left");
+        }
+        #endregion
         public ItemStack(int count, string name, string description)
         {
             this.name           = name;
             this.description    = description;
             this.count          = count;
+
+            ++instanceCount;
         }
 
         /// <summary>

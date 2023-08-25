@@ -1,43 +1,24 @@
 ﻿
 namespace FrontierIsland
 {
-    public abstract class CraftingBlock : ViewableBlock, ICraftingStation
+    public abstract class CraftingBlock : ContainerBlock, ICraftingStation
     {
         public override MaterialType MaterialType { get { return MaterialType.None; } }
 
         public abstract ItemRecipe[] Recipes { get; }
 
-        private Inventory inventory;
-        public virtual Inventory Inventory
-        {
-            get { return inventory; }
-            set
-            {
-                if (inventory != null)
-                {
-                    inventory.onInventoryChange -= OnInventoryChange;
-                }
-                inventory = value;
-                inventory.onInventoryChange += OnInventoryChange;
-            }
-        }
-
         protected bool active = false;
         public bool Functional { get { return active; } }
 
-        DebugTracker tracker;
         protected override void Start()
         {
-            tracker = new DebugTracker("CrafingBlock");
             base.Start();
-            Inventory = CreateInventory();
             active = true;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            Inventory.onInventoryChange -= OnInventoryChange;
             active = false;
         }
 
@@ -52,31 +33,14 @@ namespace FrontierIsland
             active = false;
         }
 
-        protected virtual Inventory CreateInventory()
+        protected override Inventory CreateInventory()
         { 
-            return new Inventory(4, 2, this);
+            return new Inventory(4, 1, this);
         }
 
         protected override void InitUI()
         {
             ((CraftingStationUI)ui).Init(this);
-        }
-
-        public virtual void OnInventoryChange()
-        {
-            // intentionally left empty
-        }
-
-        public void DropItem(ItemStack itemStack)
-        {
-            if (Viewer == null)
-            {
-                itemStack.InstantiateHandler(Position, null);
-            }
-            else
-            {
-                Viewer.DropItem(itemStack);
-            }
         }
 
         public virtual void Craft(int recipeIndex, int count)

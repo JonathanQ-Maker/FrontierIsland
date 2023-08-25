@@ -2,6 +2,7 @@
 
 namespace FrontierIsland
 {
+    [RequireComponent(typeof(BoxCollider))]
     public class ItemHandler : MonoBehaviour, ISelectable
     {
         /// <summary>

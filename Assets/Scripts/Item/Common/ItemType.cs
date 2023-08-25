@@ -3,6 +3,7 @@ namespace FrontierIsland
 {
     public enum ItemType : short
     {
+		// IMPORTANT NOTE: DO NOT SKIP VALUES
         WoodAxe,
         StoneAxe,
         Stone,

@@ -29,12 +29,9 @@ namespace FrontierIsland
         {
             Block block = Terrain.Instance.PlaceBlock(BlockType, pos);
 
-            if (block != null)
+            if (block != null && HasNBT)
             {
-                if (HasNBT && block)
-                {
-                    block.ReadFromNBT(NBT);
-                }
+                block.ReadFromNBT(NBT);
             }
             return block;
         }

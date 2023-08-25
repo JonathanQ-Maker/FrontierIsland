@@ -227,9 +227,15 @@ namespace FrontierIsland
                 settler.CloseUI();
                 settler.CloseView();
 
-                if (selectable is ViewableBlock craftingBlock && !Input.GetKey(KeyCode.LeftControl)) 
+                if (selectable is ContainerBlock craftingBlock && !Input.GetKey(KeyCode.LeftControl)) 
                 {
                     settler.StartViewBlock(craftingBlock.Position);
+                    return;
+                }
+
+                if (selectable is ItemHandler handler)
+                {
+                    settler.StartCollectItem(handler);
                     return;
                 }
 
@@ -260,12 +266,6 @@ namespace FrontierIsland
                 if (selectable is Block block)
                 {
                     settler.StartHarvestBlock(block.Position);
-                    return;
-                }
-
-                if (selectable is ItemHandler handler)
-                {
-                    settler.StartCollectItem(handler);
                     return;
                 }
 

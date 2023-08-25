@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace FrontierIsland
 {
+    // TODO: remove built in OnInventoryChange()
     public class Inventory : INBTSerializable
     {
         public delegate void OnInventoryChange();

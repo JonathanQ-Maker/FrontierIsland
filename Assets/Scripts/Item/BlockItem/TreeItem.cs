@@ -8,7 +8,6 @@ namespace FrontierIsland
         { 
             get { return (TreeBlock.TreeStage)NBT.GetByte("state"); } 
             set { NBT.PutByte("state", (byte)value); }
-
         }
 
         public TreeItem(int count, TreeBlock.TreeStage state) : base(count, "Tree", "a force of nature")

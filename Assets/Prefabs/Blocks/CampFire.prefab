@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 974032101436545281}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8935957915231530822}
-  m_RootOrder: 1
+  m_Father: {fileID: 4506113325820156307}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &9120471636224154019
 Light:
@@ -238,8 +238,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 8935957915231530822}
-  UIPrefab: {fileID: 2516256174156786048, guid: 31f14fadb6eea904985f4a77073b31f7, type: 3}
+  UIPrefab: {fileID: 5099985113530533209, guid: 32d401d9e8c4fa64da9a7e6206a6975c, type: 3}
   fireDisplay: {fileID: 4506113325820156307}
+  fireLight: {fileID: 9120471636224154019}
+  maxIntensity: 1.5
+  cookStages: 50
 --- !u!1 &7277341814337925975
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,6 +274,7 @@ Transform:
   m_Children:
   - {fileID: 8337244616993606417}
   - {fileID: 6521002076747221276}
+  - {fileID: 7938607185927366535}
   m_Father: {fileID: 8935957915231530822}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -409,7 +413,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4506113325820156307}
-  - {fileID: 7938607185927366535}
   m_Father: {fileID: 6354843566793925710}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -961,7 +961,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2808242521541095307, guid: 3da5e4a062888614599143494b292cea, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 19.000006
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 2808242521541095307, guid: 3da5e4a062888614599143494b292cea, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1383,7 +1383,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'FPS: 0
 
-    Screen Size: 100x100'
+    Screen Size: 100x100
+
+    Debug Trackers: 0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

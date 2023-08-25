@@ -118,13 +118,9 @@ namespace FrontierIsland
             Inventory = new Inventory(9, 1, this);
             craftingInventory = new Inventory(4, 1, this);
 
-            inventory[0] = new TreeCone(99);
-            inventory[1] = new WoodLog(99);
-            inventory[2] = new Twig(99);
-            inventory[3] = new StoneItem(99);
-            inventory[4] = new CarpenterBenchItem(1);
-            inventory[5] = new FistHatchet();
-            inventory[6] = new TreeSap(10);
+            inventory[0] = new WoodLog(99);
+            inventory[1] = new TreeSap(99);
+            inventory[2] = new CampFireItem(1);
 
 
             UpdateHeldItem();
@@ -441,7 +437,7 @@ namespace FrontierIsland
         protected virtual IEnumerator ViewBlock(Vector3Int[] path, Vector3Int targetPos)
         {
             yield return Inspect(path, targetPos);
-            if (Terrain.Instance.GetBlock(targetPos) is ViewableBlock block)
+            if (Terrain.Instance.GetBlock(targetPos) is ContainerBlock block)
             {
 
                 Vector3Int delta = Position - block.Position;

@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +31,7 @@ namespace FrontierIsland
             }
         }
 
-        public int Count { get { return (int)countSlider.value; } }
+        public int CraftCount { get { return (int)countSlider.value; } }
 
         public const int CAMERA_CONTROL_MASK = 1 << 1;
 
@@ -40,8 +41,13 @@ namespace FrontierIsland
         public OnCraft onCraft;
 
         DebugTracker tracker;
-        protected virtual void Start()
+        protected override void Start()
         {
+            base.Start();
+            if (ItemSlotPrefab is not CraftingSlot)
+            {
+                throw new Exception("ItemSlot is not CraftingSlot");
+            }
             tracker = new DebugTracker("CraftingUI");
             UpdateSelectRecipe();
         }
@@ -60,9 +66,9 @@ namespace FrontierIsland
             ItemRecipe selectedRecipe = itemRecipes[SelectIndex];
             selectOverlay.SetParent(selectionNodes[SelectIndex].transform, false);
 
-            for (int i = 0; i < inventorySlots.Count; ++i)
+            for (int i = 0; i < Count; ++i)
             {
-                // Clear required item
+                // Clear required item by setting 0
                 SetRequiredItem(i, ItemType.Tree, 0);
             }
 
@@ -160,13 +166,13 @@ namespace FrontierIsland
             // did not use onCraft?.Invoke() because
             // we want it to report error when onCraft
             // is empty.
-            onCraft(SelectIndex, Count);
+            onCraft(SelectIndex, CraftCount);
         }
 
         public void OnCountChange()
         {
-            countDisplay.text = $"{Count}";
-            UpdateRequiredItems(Count);
+            countDisplay.text = $"{CraftCount}";
+            UpdateRequiredItems(CraftCount);
         }
 
         protected override void OnDestroy()

@@ -99,17 +99,17 @@ namespace FrontierIsland
 
             if (Input.GetKey(KeyCode.LeftControl) && ItemStack.count > 1)
             {
-                InventoryItem item = Instantiate(ItemSlot.Window.InvItemPrefab, transform.parent);
+                InventoryItem item = Instantiate(ItemSlot.Container.InvItemPrefab, transform.parent);
                 item.ItemSlot = ItemSlot;
                 ItemSlot.InventoryItem = item;
                 itemStack = ItemSlot.ItemStack.SplitStack(Mathf.CeilToInt(ItemStack.count/2f));
-                ItemSlot.Window.Inventory.InventoryChanged();
+                ItemSlot.Container.Inventory.InventoryChanged();
                 UpdateContent();
             }
             else
             {
                 ItemSlot.InventoryItem = null;
-                itemStack = ItemSlot.Window.Inventory.RemoveStack(ItemSlot.SlotIndex);
+                itemStack = ItemSlot.Container.Inventory.RemoveStack(ItemSlot.SlotIndex);
             }
             ItemSlot = null;
 
@@ -138,28 +138,36 @@ namespace FrontierIsland
                 {
                     //Debug.Log($"Hover: {hover.name}, Inventoryitem: {hover.TryGetComponent(out InventoryItem o)}, ItemSlot: {hover.TryGetComponent(out ItemSlot s)}");
                     if (ItemStack.count > 1 && hover != null)
-                    if (hover.TryGetComponent(out InventoryItem other))
                     {
-                        if (other.ItemStack.AddFrom(ItemStack, 1))
+                        if (hover.TryGetComponent(out InventoryItem other))
                         {
-                            other.ItemSlot.Window.Inventory.InventoryChanged();
-                            UpdateContent();
-                        }
-                    }
-                    else if (hover.TryGetComponent(out ItemSlot slot))
-                    {
-                        if (slot.InventoryItem == null)
-                        {
-                            slot.Window.Inventory.SetItem(slot.SlotIndex, ItemStack.SplitStack(1));
-                            hover = slot.gameObject;
-                            UpdateContent();
-                        }
-                        else
-                        {
-                            if (slot.InventoryItem.ItemStack.AddFrom(ItemStack, 1))
+                            if (other.ItemSlot.allowDrop)
                             {
-                                slot.Window.Inventory.InventoryChanged();
-                                UpdateContent();
+                                if (other.ItemStack.AddFrom(ItemStack, 1))
+                                {
+                                    other.ItemSlot.Container.Inventory.InventoryChanged();
+                                    UpdateContent();
+                                }
+                            }
+                        }
+                        else if (hover.TryGetComponent(out ItemSlot slot))
+                        {
+                            if (slot.allowDrop)
+                            {
+                                if (slot.InventoryItem == null)
+                                {
+                                    slot.Container.Inventory.SetItem(slot.SlotIndex, ItemStack.SplitStack(1));
+                                    hover = slot.gameObject;
+                                    UpdateContent();
+                                }
+                                else
+                                {
+                                    if (slot.InventoryItem.ItemStack.AddFrom(ItemStack, 1))
+                                    {
+                                        slot.Container.Inventory.InventoryChanged();
+                                        UpdateContent();
+                                    }
+                                }
                             }
                         }
                     }
@@ -177,7 +185,7 @@ namespace FrontierIsland
                 if (ItemStack.count > 0)
                 {
                     // drop remaining items, then delete item reference
-                    PrevSlot.Window.Inventory.Holder?.DropItem(itemStack);
+                    PrevSlot.Container.Inventory.Holder?.DropItem(itemStack);
                 }
                 Destroy(gameObject);
             }

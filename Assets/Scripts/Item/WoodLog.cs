@@ -2,6 +2,11 @@
 {
     public class WoodLog : ItemStack
     {
+        public override bool IsFuel
+        {
+            get { return true; }
+        }
+
         public WoodLog(int count) : base(count, "Wood Log", "Big pieces of wood")
         {
 

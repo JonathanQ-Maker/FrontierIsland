@@ -47,13 +47,9 @@
                 })
         };
 
-        public static readonly ItemRecipe[] CampFire = new ItemRecipe[]
+        public static readonly CampFireRecipe[] CampFire = new CampFireRecipe[]
         {
-            new ItemRecipe(ItemType.Crate,
-                new Ingredient[]
-                {
-                    new Ingredient(ItemType.TreeSap, 1)
-                })
+            new CampFireRecipe(ItemType.Crate, new Ingredient(ItemType.TreeSap, 1))
         };
 
         public static void SetUp()

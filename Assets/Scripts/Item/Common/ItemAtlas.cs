@@ -25,6 +25,14 @@ namespace FrontierIsland
             return items[(int)itemType];
         }
 
+        /// <summary>
+        /// Number of unique items
+        /// </summary>
+        public static int Count
+        {
+            get { return items.Length; }
+        }
+
 
         /// <summary>
         /// Registers all game items
