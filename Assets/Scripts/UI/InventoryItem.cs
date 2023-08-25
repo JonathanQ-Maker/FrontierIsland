@@ -28,14 +28,27 @@ namespace FrontierIsland
             } 
         }
 
+        /// <summary>
+        /// <see cref="FrontierIsland.ItemStack"/> held by the <see cref="FrontierIsland.ItemSlot"/>
+        /// this <see cref="InventoryItem"/> is on
+        /// </summary>
+        public ItemStack SlotItemStack { get { return ItemSlot == null ? null : ItemSlot.ItemStack; } }
+
         private ItemStack itemStack;
+
+        /// <summary>
+        /// <see cref="FrontierIsland.ItemStack"/> held by this <see cref="InventoryItem"/>
+        /// </summary>
         public ItemStack ItemStack
         {
             get
             {
-                if (ItemSlot != null)
-                    return ItemSlot.ItemStack;
                 return itemStack;
+            }
+
+            set 
+            {
+                itemStack = value;
             }
         }
 
@@ -76,14 +89,15 @@ namespace FrontierIsland
              * have been enabled before will call OnDestroy()
              * and unsubscribe
              */
-            image.sprite = ItemStack.GetIcon();
-            if (ItemStack.count == 1)
+            ItemStack item = SlotItemStack == null ? ItemStack : SlotItemStack;
+            image.sprite = item.GetIcon();
+            if (item.count == 1)
             {
                 countDisplay.text = string.Empty;
             }
             else
             {
-                countDisplay.text = $"{ItemStack.count}";
+                countDisplay.text = $"{item.count}";
             }
         }
 
@@ -97,12 +111,12 @@ namespace FrontierIsland
         {
             if (eventData.button != InputButton.Left) return;
 
-            if (Input.GetKey(KeyCode.LeftControl) && ItemStack.count > 1)
+            if (Input.GetKey(KeyCode.LeftControl) && SlotItemStack.count > 1)
             {
                 InventoryItem item = Instantiate(ItemSlot.Container.InvItemPrefab, transform.parent);
                 item.ItemSlot = ItemSlot;
                 ItemSlot.InventoryItem = item;
-                itemStack = ItemSlot.ItemStack.SplitStack(Mathf.CeilToInt(ItemStack.count/2f));
+                itemStack = ItemSlot.ItemStack.SplitStack(Mathf.CeilToInt(SlotItemStack.count/2f));
                 ItemSlot.Container.Inventory.InventoryChanged();
                 UpdateContent();
             }
@@ -141,7 +155,7 @@ namespace FrontierIsland
                     {
                         if (hover.TryGetComponent(out InventoryItem other))
                         {
-                            if (other.ItemStack.AddFrom(ItemStack, 1))
+                            if (other.SlotItemStack.AddFrom(ItemStack, 1))
                             {
                                 other.ItemSlot.Container.Inventory.InventoryChanged();
                                 UpdateContent();
@@ -157,7 +171,7 @@ namespace FrontierIsland
                             }
                             else
                             {
-                                if (slot.InventoryItem.ItemStack.AddFrom(ItemStack, 1))
+                                if (slot.InventoryItem.SlotItemStack.AddFrom(ItemStack, 1))
                                 {
                                     slot.Container.Inventory.InventoryChanged();
                                     UpdateContent();
@@ -176,7 +190,7 @@ namespace FrontierIsland
             if (eventData.button != InputButton.Left) return;
             if (ItemSlot == null)
             {
-                if (ItemStack.count > 0)
+                if (ItemStack != null && ItemStack.count > 0)
                 {
                     // drop remaining items, then delete item reference
                     PrevSlot.Container.Inventory.Holder?.DropItem(itemStack);
@@ -198,9 +212,9 @@ namespace FrontierIsland
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (ItemStack == null) return;
+            if (SlotItemStack == null) return;
             GameController.Instance.ToolTipWindow.Active = true;
-            GameController.Instance.ToolTipWindow.LoadItemTip(ItemStack);
+            GameController.Instance.ToolTipWindow.LoadItemTip(SlotItemStack);
         }
 
         public void OnPointerExit(PointerEventData eventData)

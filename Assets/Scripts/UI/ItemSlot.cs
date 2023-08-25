@@ -115,15 +115,14 @@ namespace FrontierIsland
                     if (InventoryItem == null)
                     {
                         // empty slot
-                        ItemStack otherStack = other.ItemStack;
                         other.ItemSlot = this;
                         InventoryItem = other;
-                        Container.Inventory.SetItem(SlotIndex, otherStack);
+                        Container.Inventory.SetItem(SlotIndex, other.ItemStack);
                     }
-                    else if (InventoryItem.ItemStack.Similar(other.ItemStack))
+                    else if (InventoryItem.SlotItemStack.Similar(other.ItemStack))
                     {
                         // slot with similar items
-                        InventoryItem.ItemStack.CombineStack(other.ItemStack);
+                        InventoryItem.SlotItemStack.CombineStack(other.ItemStack);
                         Container.Inventory.InventoryChanged();
                         if (other.ItemStack.count > 0)
                         {
@@ -141,14 +140,17 @@ namespace FrontierIsland
                             {
                                 // previous slot is occupied, add to origin inventory.
                                 // Any left overs is dropped
-                                other.PrevSlot.Container.Inventory.AddItem(other.ItemStack);
+                                if (other.PrevSlot.Container.Inventory.AddItem(other.ItemStack))
+                                {
+                                    other.ItemStack = null;
+                                }
                             }
                         }
                     }
                     else if (other.PrevSlot.ItemStack == null)
                     {
                         // different items and our previous slot is empty, swap it
-                        ItemStack thisStack = InventoryItem.ItemStack;
+                        ItemStack thisStack = InventoryItem.SlotItemStack;
                         ItemStack otherStack = other.ItemStack;
 
                         InventoryItem.ItemSlot = other.PrevSlot;
@@ -169,7 +171,10 @@ namespace FrontierIsland
                         if (other.ItemStack.count > 0)
                         {
                             // still have left overs
-                            Container.Inventory.AddItem(other.ItemStack);
+                            if (Container.Inventory.AddItem(other.ItemStack))
+                            {
+                                other.ItemStack = null;
+                            }
                         }
                     }
                 }

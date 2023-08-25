@@ -62,15 +62,15 @@ namespace FrontierIsland
             {
                 if (InventoryItem != null)
                 {
-                    if (InventoryItem.ItemStack.ItemType == RequiredItem)
+                    if (InventoryItem.SlotItemStack.ItemType == RequiredItem)
                     {
-                        if (InventoryItem.ItemStack.count >= RequiredCount)
+                        if (InventoryItem.SlotItemStack.count >= RequiredCount)
                         {
-                            CountDisplay.text = $"<color=#528D1C>{InventoryItem.ItemStack.count}/{RequiredCount}</color>";
+                            CountDisplay.text = $"<color=#528D1C>{InventoryItem.SlotItemStack.count}/{RequiredCount}</color>";
                         }
                         else
                         {
-                            CountDisplay.text = $"<color=#9F0909>{InventoryItem.ItemStack.count}/{RequiredCount}</color>";
+                            CountDisplay.text = $"<color=#9F0909>{InventoryItem.SlotItemStack.count}/{RequiredCount}</color>";
                         }
                     }
                     else

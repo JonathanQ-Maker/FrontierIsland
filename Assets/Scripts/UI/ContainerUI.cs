@@ -175,7 +175,14 @@ namespace FrontierIsland
                             other.ItemSlot = other.PrevSlot;
                             other.PrevSlot.InventoryItem = other;
                             Inventory.SetItem(other.ItemSlot.SlotIndex, itemStack);
+                            return;
                         }
+                    }
+
+                    // otherwise add it to inventory, remaining items get dropped 
+                    if (Inventory.AddItem(other.ItemStack))
+                    {
+                        other.ItemStack = null;
                     }
                 }
             }

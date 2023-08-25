@@ -101,6 +101,16 @@ namespace FrontierIsland
             {
                 Debug.Log($"DebugTracker instance counts: {DebugTracker.Count}");
             }
+
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                for (int i = 0; i < settler.Inventory.Capacity; ++i)
+                {
+                    ItemStack itemStack = settler.Inventory[i];
+                    if (itemStack != null)
+                    Debug.Log($"[{i}]: {itemStack.name} {itemStack.count}");
+                }
+            }
         }
 
         private void ItemSlotClick(int index, PointerEventData eventData)

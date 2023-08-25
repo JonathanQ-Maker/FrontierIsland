@@ -104,18 +104,18 @@ namespace FrontierIsland
         protected override void InitUI()
         {
             UI.Init(AddFuel, transform, Inventory);
-            UI.FuelDisplay = Fuel;
-            UI.ProgressDisplay = Progress;
+            Fuel = fuel;
+            Progress = progress;
         }
 
         public void AddFuel()
         {
-            // only allow add fuel if less than 80% of max fuel
+            // only allow add fuel if less than 90% of max fuel
             // to prevent too much over fuel
-            if (FuelItem != null && FuelItem.FuelValue > 0 && Fuel < maxFuel * 0.8f)
+            if (FuelItem != null && FuelItem.FuelValue > 0 && Fuel < maxFuel * 0.9f)
             {
-                Inventory.ConsumeItem(FUEL_INDEX, 1);
                 Fuel += FuelItem.FuelValue;
+                Inventory.ConsumeItem(FUEL_INDEX, 1);
                 TryCook();
             }
         }
@@ -170,6 +170,7 @@ namespace FrontierIsland
                     if (CanCook(recipeIndex, 1))
                     {
                         ActionLoop = Cook(recipeIndex);
+                        return;
                     }
                 }
             }

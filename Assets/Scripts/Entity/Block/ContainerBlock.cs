@@ -114,8 +114,8 @@ namespace FrontierIsland
             if (ui == null)
             {
                 ui = Instantiate(UIPrefab, GameController.Instance.WorldCanvas.transform);
-                ui.transform.SetAsFirstSibling();
                 InitUI();
+                ui.transform.SetAsFirstSibling();
             }
             ui.Active = ShowUI;
             Viewer = viewer;
