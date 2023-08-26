@@ -55,6 +55,7 @@ namespace FrontierIsland
             RegisterItem(new FistHatchet());
             RegisterItem(new Leaves(1));
             RegisterItem(new TreeSap(1));
+            RegisterItem(new TreeTar(1));
 
 #if UNITY_EDITOR
             for (int i = 0; i < items.Length; ++i)

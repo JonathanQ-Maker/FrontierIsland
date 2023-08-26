@@ -19,6 +19,7 @@ namespace FrontierIsland
         TreeCone,
         FistHatchet,
         Leaves,
-        TreeSap
+        TreeSap,
+        TreeTar
     }
 }

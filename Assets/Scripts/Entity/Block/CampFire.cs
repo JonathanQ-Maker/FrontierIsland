@@ -241,5 +241,7 @@ namespace FrontierIsland
             base.Start();
             Fuel = fuel;
         }
+
+        //TODO: read write NBT
     }
 }

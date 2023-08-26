@@ -24,6 +24,7 @@ namespace FrontierIsland
             set 
             { 
                 leavesMeshFilter.gameObject.SetActive(value && Stage != TreeStage.Sapling);
+                UpdateBounds();
             }
         }
 
@@ -105,22 +106,29 @@ namespace FrontierIsland
                 case TreeStage.Normal:
                     trunkMeshFilter.sharedMesh = treeTrunk;
                     leavesMeshFilter.sharedMesh = treeLeaves;
+                    HasLeaves = true;
                     break;
                 case TreeStage.Grown:
                     trunkMeshFilter.sharedMesh = grownTreeTrunk;
                     leavesMeshFilter.sharedMesh = grownTreeLeaves;
+                    HasLeaves = true;
                     break;
                 default:
                     Debug.LogWarning($"Set unexpected stage {stage}");
                     break;
             }
-            //Bounds bounds = trunkMeshFilter.sharedMesh.bounds;
-            //if (Stage != TreeStage.Sapling)
-            //{
-            //    bounds.Encapsulate(leavesMeshFilter.sharedMesh.bounds);
-            //}
-            //boxCollider.size = bounds.size;
-            //boxCollider.center = bounds.center;
+            UpdateBounds();
+        }
+
+        protected void UpdateBounds()
+        { 
+            Bounds bounds = trunkMeshFilter.sharedMesh.bounds;
+            if (HasLeaves)
+            {
+                bounds.Encapsulate(leavesMeshFilter.sharedMesh.bounds);
+            }
+            boxCollider.size = bounds.size;
+            boxCollider.center = bounds.center;
         }
 
         public ItemStack Shear()
@@ -191,6 +199,7 @@ namespace FrontierIsland
         protected override void Start()
         {
             base.Start();
+            SetStage(Stage);
             StartCoroutine(GrowthCycle());
         }
 
@@ -211,7 +220,7 @@ namespace FrontierIsland
         {
             while (true)
             {
-                yield return new WaitForSeconds(Random.Range(5, 5));
+                yield return new WaitForSeconds(Random.Range(30, 120));
 
                 if (Stage == TreeStage.Normal && !HasLeaves)
                 {
@@ -227,10 +236,6 @@ namespace FrontierIsland
                     else if (Stage < TreeStage.Grown)
                     {
                         SetStage((TreeStage)((byte)Stage + 1));
-                        if (Stage == TreeStage.Normal)
-                        {
-                            HasLeaves = true;
-                        }
                     }
                 }
             }

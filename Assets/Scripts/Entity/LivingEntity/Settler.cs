@@ -117,12 +117,6 @@ namespace FrontierIsland
             GameController.Instance.settlers.Add(this);
             Inventory = new Inventory(9, 1, this);
             craftingInventory = new Inventory(4, 1, this);
-
-            inventory[0] = new WoodLog(99);
-            inventory[1] = new TreeSap(99);
-            inventory[2] = new CampFireItem(1);
-
-
             UpdateHeldItem();
         }
 

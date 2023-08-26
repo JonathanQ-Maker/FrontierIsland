@@ -27,7 +27,8 @@
             new ItemRecipe(ItemType.Bin,
                 new Ingredient[]
                 {
-                    new Ingredient(ItemType.WoodLog, 8)
+                    new Ingredient(ItemType.WoodLog, 8),
+                    new Ingredient(ItemType.TreeTar, 4)
                 })
         };
 
@@ -49,7 +50,7 @@
 
         public static readonly CampFireRecipe[] CampFire = new CampFireRecipe[]
         {
-            new CampFireRecipe(ItemType.Crate, new Ingredient(ItemType.TreeSap, 1))
+            new CampFireRecipe(ItemType.TreeTar, new Ingredient(ItemType.TreeSap, 1))
         };
 
         public static void SetUp()

@@ -49,9 +49,15 @@ namespace FrontierIsland
             }
 
 
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 50; ++i)
             {
                 PlaceBlock(BlockType.Stone,
+                    new Vector3Int(UnityEngine.Random.Range(0, LengthTiles - 1), 0, UnityEngine.Random.Range(0, WidthTiles - 1)));
+            }
+
+            for (int i = 0; i < 50; ++i)
+            {
+                PlaceBlock(BlockType.Tree,
                     new Vector3Int(UnityEngine.Random.Range(0, LengthTiles - 1), 0, UnityEngine.Random.Range(0, WidthTiles - 1)));
             }
 

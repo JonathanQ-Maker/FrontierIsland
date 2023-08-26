@@ -1,18 +1,19 @@
 ﻿namespace FrontierIsland
 {
-    public class TreeSap : ItemStack
+    public class TreeTar : ItemStack
     {
         public override int FuelValue { get { return 25; } }
-        public TreeSap(int count) : base(count, "Tree Sap", "Blood of a tree")
+
+        public TreeTar(int count) : base(count, "Tree Tar", "Organic adhesive")
         {
 
         }
 
-        public override ItemType ItemType { get { return ItemType.TreeSap; } }
+        public override ItemType ItemType { get { return ItemType.TreeTar; } }
 
         public override ItemStack DeepClone()
         {
-            TreeSap clone = new TreeSap(count);
+            TreeTar clone = new TreeTar(count);
             CopyTo(clone);
             return clone;
         }
