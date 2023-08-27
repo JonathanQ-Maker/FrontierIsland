@@ -117,6 +117,8 @@ namespace FrontierIsland
             GameController.Instance.settlers.Add(this);
             Inventory = new Inventory(9, 1, this);
             craftingInventory = new Inventory(4, 1, this);
+
+            Inventory[0] = new CampFireItem(1);
             UpdateHeldItem();
         }
 
