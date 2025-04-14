@@ -2,10 +2,13 @@
 
 Frontier Island is a Unity top down sandbox game made entirely solo by Jonathan Q.
 
-**Code located in the following directory [./Assets/Scripts/...](./Assets/Scripts/)**
+**Code located in the following directory** [./Assets/Scripts/...](./Assets/Scripts/)
 
 ## Demo Video
-[https://youtu.be/5riBAAHonb0](https://youtu.be/5riBAAHonb0)
+**[https://youtu.be/5riBAAHonb0](https://youtu.be/5riBAAHonb0)**
+[![Watch the video](https://img.youtube.com/vi/5riBAAHonb0/maxresdefault.jpg)](https://youtu.be/5riBAAHonb0)
+Click Image above for youtube video or click the link
+
 
 
 
