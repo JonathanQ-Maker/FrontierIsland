@@ -24,7 +24,7 @@
                     new Ingredient(ItemType.Twig, 6)
                 }),
 
-            new ItemRecipe(ItemType.Bin,
+            new ItemRecipe(ItemType.WoodenBarrel,
                 new Ingredient[]
                 {
                     new Ingredient(ItemType.WoodLog, 8),
@@ -53,11 +53,18 @@
             new CampFireRecipe(ItemType.TreeTar, new Ingredient(ItemType.TreeSap, 1))
         };
 
+        public static readonly CampFireRecipe[] WoodenBarrel = new CampFireRecipe[]
+        {
+            new CampFireRecipe(ItemType.TreeTar, new Ingredient(ItemType.Leaves, 1))
+        };
+
+
         public static void SetUp()
         { 
             RecipeGraph.RegisterAll(CarpenterBench);
             RecipeGraph.RegisterAll(Settler);
             RecipeGraph.RegisterAll(CampFire);
+            RecipeGraph.RegisterAll(WoodenBarrel);
         }
     }
 }

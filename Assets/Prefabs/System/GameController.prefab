@@ -133,6 +133,7 @@ MonoBehaviour:
   blockPrefabs: {fileID: 11400000, guid: d60aa006282e021498b686243adbeab0, type: 2}
   itemHandlerPrefabs: {fileID: 11400000, guid: 3c03706794ff2da4ca008936330ed7df, type: 2}
   itemIcons: {fileID: 11400000, guid: b384131db15773e49a6ed2acbeaf140f, type: 2}
+  fluidMaterials: {fileID: 11400000, guid: 2602a1f6668d2db4ab8caae7f458903a, type: 2}
   hotBarWindow: {fileID: 0}
   toolTipWindow: {fileID: 0}
   helpPanel: {fileID: 0}

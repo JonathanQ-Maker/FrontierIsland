@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a0786f3cb87d894fb40a5242ca83fa2, type: 3}
+  m_Name: ItemHandlerPrefabs
+  m_EditorClassIdentifier: 
+  prefabs:
+  - {fileID: 2523422470374986600, guid: f6c484c0587bb534aa90e9182f95755f, type: 3}
+  - {fileID: 1929735780531269932, guid: 615d1a17a2222224daf63b9f3dde0fc3, type: 3}
+  - {fileID: 8441653139190893992, guid: 0c3820192d3146b4f9202c4508d75b06, type: 3}
+  - {fileID: 8277124292247899218, guid: bcaf51b2ade62384c8b75c8e94f12961, type: 3}
+  - {fileID: 8011070711072129823, guid: 0bcd789856136b8438ea5337548e05d2, type: 3}
+  - {fileID: 1898963789151533254, guid: 39c47375d32c35b4190acc9fb23efda9, type: 3}
+  - {fileID: 7260262676611117222, guid: dee09434e2fbcd140b0397cba08df0ad, type: 3}
+  - {fileID: 2030735734072414758, guid: f7d73230ea94a1a459aa320d5f76a2e7, type: 3}
+  - {fileID: -8192662910471231058, guid: c054bec76629c534ba22674a5c97617f, type: 3}
+  - {fileID: 5665964408725211609, guid: 92a8d89f6ab26724dbd5219caf336d66, type: 3}
+  - {fileID: 7099981554517372208, guid: adaa965ffdee28e4089231cf8e618b5d, type: 3}
+  - {fileID: 6688982096486124396, guid: 68605476ebdf5ac46a85bfc7dccef3e1, type: 3}
+  - {fileID: 214416722561728462, guid: d66a68934db11734baacaf22e23b0dd3, type: 3}
+  - {fileID: 6069053991765025217, guid: bc8b94f5e27613745b1f32ec81d4be7a, type: 3}
+  - {fileID: 1015862127072788729, guid: 4d0752c7f755d3748b99a93f07f4e95a, type: 3}
+  - {fileID: 3191918824837684447, guid: 2eb08d85f27e12e4189de57ebf3a03ee, type: 3}
+  - {fileID: 7329960193138763171, guid: a27394a39fd66344aa470e1946ea0978, type: 3}
+  - {fileID: 2252775105856689403, guid: 4d8f9e5caaabffa4993770a2d636428e, type: 3}
+  - {fileID: 7528841890189951347, guid: 5128466e6233a6540bc3362d7ff274ca, type: 3}
+  - {fileID: 6288673949842495653, guid: 29da63b2482fd4743b2301ae046e997b, type: 3}
+  icons:
+  - {fileID: 21300000, guid: f06114b2431c2c045a1ffc2703a62f92, type: 3}
+  - {fileID: 21300000, guid: ae25325fbc4547249b3b8a0dc78b36d5, type: 3}
+  - {fileID: 21300000, guid: 98a258cc6b5117243a8195010078671e, type: 3}
+  - {fileID: 21300000, guid: dd8d4aa130b43dd4084426df08000c40, type: 3}
+  - {fileID: 21300000, guid: 557f8490558783045b3b7fa230f5847e, type: 3}
+  - {fileID: 21300000, guid: 17ec205bb27462f43b2c6a9f8bf79604, type: 3}
+  - {fileID: 21300000, guid: ed13a6b4db60ff04d8e7635a1c689f7a, type: 3}
+  - {fileID: 21300000, guid: 03a6ff7055b1ff84c99f0a6b40d42ba7, type: 3}
+  - {fileID: 21300000, guid: 386a942546218614dbe012981e2c3380, type: 3}

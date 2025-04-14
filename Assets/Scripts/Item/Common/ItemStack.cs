@@ -222,17 +222,17 @@ namespace FrontierIsland
 
         
 
-        public virtual bool Similar(ItemStack item)
+        public virtual bool Similar(ItemStack other)
         {
             if (HasNBT)
             {
-                if (item.HasNBT)
+                if (other.HasNBT)
                 { 
-                    return ItemType == item.ItemType && item.NBT.Equals(NBT);
+                    return ItemType == other.ItemType && other.NBT.Equals(NBT);
                 }
                 return false;
             }
-            return ItemType == item.ItemType;
+            return other != null && ItemType == other.ItemType;
         }
 
         public virtual string GetToolTip()

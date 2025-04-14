@@ -47,7 +47,7 @@ namespace FrontierIsland
             RegisterItem(new GrassItem(1));
             RegisterItem(new MushroomsItem(1));
             RegisterItem(new CampFireItem(1));
-            RegisterItem(new BinItem(1));
+            RegisterItem(new WoodenBarrelItem(1));
             RegisterItem(new CarpenterBenchItem(1));
             RegisterItem(new WoodLog(1));
             RegisterItem(new Twig(1));
@@ -56,13 +56,16 @@ namespace FrontierIsland
             RegisterItem(new Leaves(1));
             RegisterItem(new TreeSap(1));
             RegisterItem(new TreeTar(1));
+            RegisterItem(new WoodBucketEmpty());
+            RegisterItem(new WoodBucketLechate());
+            RegisterItem(new WoodBucketWater());
 
 #if UNITY_EDITOR
             for (int i = 0; i < items.Length; ++i)
             {
                 if (items[i] == null)
                 {
-                    Debug.LogWarning($"[itemAtlas]: {(ItemType)i} is missing from ItemAtlas");
+                    Debug.LogWarning($"[FluidAtlas]: {(ItemType)i} is missing from ItemAtlas");
                 }
             }
 #endif

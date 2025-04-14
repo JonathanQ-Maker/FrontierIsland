@@ -50,7 +50,7 @@ namespace FrontierIsland
             {
                 fuel = Mathf.Min(value, maxFuel);
 
-                float ratio = (float)value / maxFuel;
+                float ratio = (float)fuel / maxFuel;
                 fireLight.intensity = ratio * maxIntensity;
                 Ignited = Fuel > 0;
                 if (UI != null) UI.FuelDisplay = ratio;
@@ -62,7 +62,6 @@ namespace FrontierIsland
             }
         }
 
-        // TODO: allow bar to be full
         private int progress;
         /// <summary>
         /// Current cook progress [0, 1]
@@ -73,7 +72,7 @@ namespace FrontierIsland
             set 
             {
                 progress = Mathf.Min(value, maxProgress);
-                if (UI != null) UI.ProgressDisplay = (float)value / maxProgress;
+                if (UI != null) UI.ProgressDisplay = (float)progress / maxProgress;
             }
         }
 
@@ -112,7 +111,7 @@ namespace FrontierIsland
         {
             // only allow add fuel if less than 90% of max fuel
             // to prevent too much over fuel
-            if (FuelItem != null && FuelItem.FuelValue > 0 && Fuel < maxFuel * 0.9f)
+            if (FuelItem != null && FuelItem.FuelValue > 0 && Fuel < maxFuel)
             {
                 Fuel += FuelItem.FuelValue;
                 Inventory.ConsumeItem(FUEL_INDEX, 1);
@@ -155,9 +154,10 @@ namespace FrontierIsland
         protected bool CanCook(int recipeIndex, int count)
         {
             ItemRecipe recipe = Recipes[recipeIndex];
-            return recipe.Match(Inventory, count) && (OutputItem == null 
+            return (OutputItem == null
                 || (OutputItem.count + count <= OutputItem.MaxStackSize
-                && OutputItem.Similar(ItemAtlas.Get(recipe.ResultItem))));
+                && OutputItem.Similar(ItemAtlas.Get(recipe.ResultItem))))
+                && recipe.Match(Inventory, count);
         }
 
         public void TryCook()

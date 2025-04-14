@@ -12,7 +12,7 @@ namespace FrontierIsland
         Grass,
         Mushrooms,
         CampFire,
-        Bin,
+        WoodenBarrel,
         CarpenterBench,
         WoodLog,
         Twig,
@@ -20,6 +20,9 @@ namespace FrontierIsland
         FistHatchet,
         Leaves,
         TreeSap,
-        TreeTar
+        TreeTar,
+        WoodBucketEmpty,
+        WoodBucketWater,
+        WoodBucketLechate
     }
 }

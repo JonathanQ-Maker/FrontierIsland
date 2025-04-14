@@ -14,8 +14,6 @@ namespace FrontierIsland
         [SerializeField]
         private Image requiredItemImage;
 
-        public ItemType RequiredItem { get; set; }
-
         private int requiredCount;
         public int RequiredCount
         {
@@ -38,31 +36,15 @@ namespace FrontierIsland
 
         public override void UpdateContent()
         {
+            hasHintItem = requiredCount > 0;
             base.UpdateContent();
-            if (InventoryItem == null)
-            {
-                if (requiredCount > 0)
-                {
-                    if (!requiredItemImage.gameObject.activeSelf)
-                        requiredItemImage.gameObject.SetActive(true);
-                    requiredItemImage.sprite = GameController.Instance.ItemIcons[RequiredItem];
-                }
-                else if (requiredItemImage.gameObject.activeSelf)
-                {
-                    requiredItemImage.gameObject.SetActive(false);
-                }
-            }
-            else if (requiredItemImage.gameObject.activeSelf)
-            {
-                requiredItemImage.gameObject.SetActive(false);
-            }
 
             // set text color
             if (requiredCount > 0)
             {
                 if (InventoryItem != null)
                 {
-                    if (InventoryItem.SlotItemStack.ItemType == RequiredItem)
+                    if (InventoryItem.SlotItemStack.ItemType == HintItemType)
                     {
                         if (InventoryItem.SlotItemStack.count >= RequiredCount)
                         {
@@ -95,7 +77,7 @@ namespace FrontierIsland
             if (InventoryItem == null && RequiredCount > 0)
             {
                 GameController.Instance.ToolTipWindow.Active = true;
-                GameController.Instance.ToolTipWindow.LoadItemTip(ItemAtlas.Get(RequiredItem));
+                GameController.Instance.ToolTipWindow.LoadItemTip(ItemAtlas.Get(HintItemType));
             }
         }
 

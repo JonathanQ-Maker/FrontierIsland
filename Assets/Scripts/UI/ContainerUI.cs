@@ -6,7 +6,7 @@ using static UnityEngine.EventSystems.PointerEventData;
 
 namespace FrontierIsland
 {
-    public abstract class ContainerUI : MonoBehaviour, IDropHandler
+    public class ContainerUI : MonoBehaviour, IDropHandler
     {
         [SerializeField]
         private InventoryItem invItemPrefab;

@@ -10,7 +10,6 @@ namespace FrontierIsland
     {
         // see: https://xinyustudio.wordpress.com/2015/07/21/unity3d-using-reorderablelist-in-custom-editor/
         ReorderableList icons;
-        bool iconCollapsed;
 
         private void OnEnable()
         {
@@ -41,16 +40,10 @@ namespace FrontierIsland
 
         public override void OnInspectorGUI()
         {
-
-            iconCollapsed = EditorGUILayout.Foldout(iconCollapsed, "Icons");
-            if (iconCollapsed)
-            {
-                icons.DoLayoutList();
-            }
+            icons.DoLayoutList();
 
 
             serializedObject.ApplyModifiedProperties();
-            EditorUtility.SetDirty(target);
         }
     }
 }

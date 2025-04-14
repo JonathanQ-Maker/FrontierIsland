@@ -118,8 +118,21 @@ namespace FrontierIsland
             Inventory = new Inventory(9, 1, this);
             craftingInventory = new Inventory(4, 1, this);
 
-            Inventory[0] = new CampFireItem(1);
+            FillInventory();
             UpdateHeldItem();
+        }
+
+        /// <summary>
+        /// Fill inventory with <see cref="ItemStack"/>
+        /// </summary>
+        protected virtual void FillInventory()
+        {
+            Inventory[0] = new Leaves(99);
+            Inventory[1] = new WoodenBarrelItem(1);
+            Inventory[2] = new CampFireItem(1);
+            Inventory[3] = new WoodBucketEmpty();
+            Inventory[4] = new WoodBucketWater();
+            Inventory[5] = new WoodBucketLechate();
         }
 
         protected void UpdateHeldItem()

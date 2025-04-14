@@ -14,6 +14,9 @@ namespace FrontierIsland
         [SerializeField]
         private ItemIcons itemIcons;
         [SerializeField]
+        private FluidMaterials fluidMaterials;
+
+        [SerializeField]
         private HotBarUI hotBarWindow;
         [SerializeField]
         private ToolTipUI toolTipWindow;
@@ -36,7 +39,12 @@ namespace FrontierIsland
         {
             get { return itemIcons; }
         }
-        
+
+        public FluidMaterials FluidMaterials
+        {
+            get { return fluidMaterials; }
+        }
+
         public ToolTipUI ToolTipWindow
         {
             get { return toolTipWindow; }

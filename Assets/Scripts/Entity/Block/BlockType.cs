@@ -9,7 +9,7 @@
         Mushrooms,
         Crate,
         CampFire,
-        Bin,
+        WoodenBarrel,
         CarpenterBench,
         Stone
     }

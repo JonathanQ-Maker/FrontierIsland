@@ -81,6 +81,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 7145179313208751764}
   itemHolder: {fileID: 5045342979555071713}
+  container: {fileID: 0}
+  slotIndex: -1
+  HintItemType: 0
+  hintItemImage: {fileID: 6222462335201072937}
+  hasHintItem: 0
   countDisplay: {fileID: 2099116295984637019}
   requiredItemImage: {fileID: 6222462335201072937}
 --- !u!222 &4659151015757085101

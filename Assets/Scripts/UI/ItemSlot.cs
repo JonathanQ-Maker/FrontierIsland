@@ -84,9 +84,18 @@ namespace FrontierIsland
             } 
         }
 
+        public ItemType HintItemType;
+        [SerializeField]
+        private Image hintItemImage;
+        protected Image HintItemImage { get { return hintItemImage; } }
+
+        public bool hasHintItem = false;
+
         public virtual void UpdateContent()
-        { 
+        {
             InventoryItem?.UpdateContent();
+            HintItemImage.sprite = GameController.Instance.ItemIcons[HintItemType];
+            HintItemImage.gameObject.SetActive(hasHintItem && InventoryItem == null);
         }
 
         public virtual void OnDrop(PointerEventData eventData)

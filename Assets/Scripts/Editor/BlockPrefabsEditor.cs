@@ -10,7 +10,6 @@ namespace FrontierIsland
     {
         // see: https://xinyustudio.wordpress.com/2015/07/21/unity3d-using-reorderablelist-in-custom-editor/
         ReorderableList list;
-        bool prefabCollapsed;
 
         private void OnEnable()
         {
@@ -41,14 +40,9 @@ namespace FrontierIsland
 
         public override void OnInspectorGUI()
         {
-            prefabCollapsed = EditorGUILayout.Foldout(prefabCollapsed, "Prefabs");
-
-            if (prefabCollapsed)
-            {
-                list.DoLayoutList();
-            }
+            list.DoLayoutList();
+            
             serializedObject.ApplyModifiedProperties();
-            EditorUtility.SetDirty(target);
         }
     }
 }

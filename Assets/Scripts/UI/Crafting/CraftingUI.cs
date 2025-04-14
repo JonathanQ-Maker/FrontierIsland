@@ -157,7 +157,7 @@ namespace FrontierIsland
         private void SetRequiredItem(int slotIndex, ItemType item, int count)
         {
             CraftingSlot slot = (CraftingSlot)this[slotIndex];
-            slot.RequiredItem = item;
+            slot.HintItemType = item;
             slot.RequiredCount = count;
         }
 
